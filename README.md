@@ -1,6 +1,6 @@
 # RNAWebRTCApp implements basic WebRTC communication using React Native and socket.io
 
-Technologies used:
+## Technologies
 
  * WebRTC data channel
  * React Native & Redux
@@ -17,6 +17,12 @@ Please use [react-native-webrtc-server](https://github.com/oney/react-native-web
 - Install RNAWebRTCApp
 - Join room
 - Both party can send message to each other
+
+Edit `/src/websocketMiddleware.js` and point to nodejs socketio server.
+
+```
+socket = io.connect('https://127.0.0.1:4443', {transports: ['websocket']});
+```
 
 ## TODO
 - [ ] Add audion support
