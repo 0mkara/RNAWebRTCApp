@@ -5,3 +5,4 @@ export * from './ConnectBtn';
 export * from './MessageInput';
 export * from './SendBtn';
 export * from './MessageText';
+export * from './GreenBtn';

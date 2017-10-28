@@ -10,6 +10,7 @@ import { CONNECT, JOIN, CREATE_OFFER, SEND_MESSAGE, DISCONNECT } from '../../act
 import { WhiteBtn, GradientInput, ConnectBtn, MessageInput, SendBtn, MessageText } from '../common';
 import { verticalScale } from '../scaling';
 import styles from './styles';
+import {Actions} from 'react-native-router-flux';
 
 class ChatRoom extends Component {
     constructor(props) {
