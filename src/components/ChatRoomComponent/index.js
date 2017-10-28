@@ -25,7 +25,6 @@ class ChatRoom extends Component {
         }
     }
     componentWillReceiveProps(nextProps) {
-        console.log(nextProps.message);
         if(nextProps.message.from !== undefined) {
             const messages = this.state.messages;
             messages.push(nextProps.message)

@@ -1,7 +1,9 @@
 // @flow
+import { AsyncStorage } from 'react-native';
 import { WEBTRC_EXCHANGE, EXCHANGE, DISCONNECT, CONNECT, JOIN } from './actions/types';
+import { MEMBERS_KEY } from './actions/StorageKeys';
 import io from 'socket.io-client';
-import { connecting, connected, disconnected, roomMembers, roomJoin } from './actions';
+import { connecting, connected, disconnected, roomMembers, roomMember, roomJoin } from './actions';
 const webSocketMiddleware = (function(){
 	let socket = null;
 
@@ -20,6 +22,19 @@ const webSocketMiddleware = (function(){
 		// exchange webrtc data
 		store.dispatch({ type: WEBTRC_EXCHANGE, payload: data });
 	}
+
+	const onMembers = (store) => socketId => {
+		console.log(socketId);
+		let socketIds = [];
+		AsyncStorage.getItem(MEMBERS_KEY, (err, data) => {
+			if(data !== null) {
+				socketIds = JSON.parse(data);
+			}
+			socketIds.push(socketId);
+			AsyncStorage.setItem(MEMBERS_KEY, JSON.stringify(socketIds));
+			store.dispatch(roomMembers(socketIds));
+		})
+	}
 	return store => next => action => {
 		//console.log(action);
 		switch(action.type) {
@@ -34,10 +49,11 @@ const webSocketMiddleware = (function(){
 				store.dispatch(connecting);
 
 				//Attempt to connect (we could send a 'failed' action on error)
-				socket = io.connect('https://127.0.0.1:4443', {transports: ['websocket']});
+				socket = io.connect('https://192.168.0.7:4443', {transports: ['websocket']});
 				socket.on('connect', onOpen(store));
 				socket.on('leave', onClose(store));
 				socket.on('exchange', onExchangeMessage(store));
+				socket.on('new_member', onMembers(store));
 				break;
 
 			//The user wants us to disconnect
@@ -51,12 +67,12 @@ const webSocketMiddleware = (function(){
 
 			//Send the 'SEND_MESSAGE' action down the websocket to the server
 			case EXCHANGE:
-				//console.log("Emit exchange");
 				socket.emit('exchange', action.payload);
 				break;
 			case JOIN:
 				socket.emit('join', action.payload, (socketIds) => {
 					store.dispatch(roomJoin);
+					AsyncStorage.setItem(MEMBERS_KEY, JSON.stringify(socketIds));
 					store.dispatch(roomMembers(socketIds));
 				});
 				break;

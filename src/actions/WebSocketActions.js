@@ -39,6 +39,18 @@ export function roomMembers(socketIds: string) {
     }
 }
 
+export function roomMember(socketId: string) {
+    /*AsyncStorage.getItem(MEMBERS_KEY, (err, data) => {
+        console.log(data);
+        const socketIds = JSON.parse(data);
+        socketIds.push(socketId);
+    })*/
+    return {
+        type: SOCKETIDS,
+        payload: socketId
+    }
+}
+
 export function incommingMessage(from: string, message: string) {
     return {
         type: MESSAGE,

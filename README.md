@@ -25,6 +25,10 @@ socket = io.connect('https://127.0.0.1:4443', {transports: ['websocket']});
 ```
 
 ## TODO
-- [ ] Add audion support
+- [ ] Add audio support
 - [ ] Add video support
 - [ ] Add multiparty support
+
+## Notes
+
+This project aims to provide a peer to peer interface for full WebRTC chat with a self hosted signalling server.
