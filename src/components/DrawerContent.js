@@ -1,13 +1,9 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import LinearGradient from 'react-native-linear-gradient';
-import { StyleSheet, Text, View, ViewPropTypes, Dimensions, Switch, FlatList } from 'react-native';
-import Button from 'react-native-button';
-import { Actions } from 'react-native-router-flux';
-import { GreenBtn, GradientInput, ConnectBtn, MessageInput, SendBtn, MessageText } from './common';
+import { StyleSheet, Text, View, ViewPropTypes, Switch, FlatList } from 'react-native';
+import { GreenBtn, GradientInput } from './common';
 import { scale, verticalScale } from './scaling';
-
-const { width, height } = Dimensions.get('window');
 
 const styles = StyleSheet.create({
   container: {
@@ -69,7 +65,7 @@ class DrawerContent extends React.Component {
     const { flatlistData } = this.state;
     return (
       <View style={styles.container}>
-        <LinearGradient colors={['#3A19A5', '#33AAC1']} style={styles.linearGradient}>
+        <LinearGradient colors={['#350BAC', '#1CAEC5']} style={styles.linearGradient}>
           <View style={{backgroundColor: 'transparent', paddingTop: 60, flex: 1, justifyContent: 'flex-start'}}>
             <View style={{flex: 1, flexDirection: 'row'}}>
               <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', height: scale(30)}}>
