@@ -1,20 +1,33 @@
 import React from 'react';
-import { Scene, Router } from 'react-native-router-flux';
+import { Scene, Router, Drawer, Stack } from 'react-native-router-flux';
 import configureStore from './configureStore';
 import ChatRoom from './components/ChatRoomComponent';
+import {
+  Text,
+  View,
+  KeyboardAvoidingView
+} from 'react-native';
+import DrawerContent from './components/DrawerContent';
+import MenuIcon from './images/menu_burger.png';
 const store = configureStore();
 const RouterComponent = () => {
 	return (
 		<Router store={store}>
-			<Scene overlay>
-				<Scene key="lightbox" lightbox initial>
-					<Scene key="root" hideNavBar hideTabBar>
-						<Scene key="home" tabs={false} hideNavBar panHandlers={null}>
+			<Stack key="root">
+				<Drawer
+					hideNavBar
+					key="drawer"
+					contentComponent={DrawerContent}
+					drawerImage={MenuIcon}
+					drawerWidth={300}
+				>
+					<Scene hideNavBar>
+						<Stack key="home" tabs={false}>
 							<Scene key="home_map" component={ChatRoom} title="Home"></Scene>
-						</Scene>
+						</Stack>
 					</Scene>
-				</Scene>
-			</Scene>
+				</Drawer>
+			</Stack>
 		</Router>
 	);
 };
