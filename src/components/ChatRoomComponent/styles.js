@@ -7,7 +7,7 @@ export default StyleSheet.create({
     flex: 1,
     alignItems: 'center',
     backgroundColor: 'aliceblue',
-    paddingTop: verticalScale(65)
+    paddingTop: verticalScale(25)
   },
   inputStyle : {
       height: 40,
@@ -41,5 +41,10 @@ export default StyleSheet.create({
   },
   chatAvoidingViewStyle: {
       flex: 1,
+  },
+  headerStyle: {
+      height: 60,
+      paddingTop: 20,
+      paddingHorizontal: 15
   }
 });

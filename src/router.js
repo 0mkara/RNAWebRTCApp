@@ -8,7 +8,7 @@ import {
   KeyboardAvoidingView
 } from 'react-native';
 import DrawerContent from './components/DrawerContent';
-import MenuIcon from './images/menu_burger.png';
+import MenuIcon from './images/ic_menu.png';
 const store = configureStore();
 const RouterComponent = () => {
 	return (
@@ -17,6 +17,7 @@ const RouterComponent = () => {
 				<Drawer
 					hideNavBar
 					key="drawer"
+					drawerPosition="right"
 					contentComponent={DrawerContent}
 					drawerImage={MenuIcon}
 					drawerWidth={300}

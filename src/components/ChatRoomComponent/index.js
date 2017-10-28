@@ -3,16 +3,43 @@ import React, { Component } from 'react';
 import {
   Text,
   View,
-  KeyboardAvoidingView
+  KeyboardAvoidingView,
+  Image,
+  TouchableHighlight
 } from 'react-native';
 import { connect } from 'react-redux';
+import LinearGradient from 'react-native-linear-gradient';
 import { CONNECT, JOIN, CREATE_OFFER, SEND_MESSAGE, DISCONNECT } from '../../actions/types';
 import { WhiteBtn, GradientInput, ConnectBtn, MessageInput, SendBtn, MessageText } from '../common';
 import { verticalScale } from '../scaling';
 import styles from './styles';
 import {Actions} from 'react-native-router-flux';
+import MenuIcon from '../../images/ic_menu.png';
 
 class ChatRoom extends Component {
+    static navigationOptions = {
+      header: <LinearGradient
+      colors={['#19e8b3', '#abed57']}
+      start={{x: 0.0, y: 0.0}} end={{x: 1.0, y: 0.0}}
+      style={styles.headerStyle}>
+        <View style={{backgroundColor: 'transparent', flex: 1, flexDirection: 'row', justifyContent: 'center'}}>
+            <View style={{flex: 1, justifyContent: 'center'}}>
+                <Text>UserName</Text>
+                <Text>Ak-_ufNcO5L_v_ZHAAAF</Text>
+            </View>
+            <View style={{flex: 0.2, alignItems: 'flex-end', justifyContent: 'center'}}>
+            <TouchableHighlight
+            onPress={() => {
+                Actions.drawerOpen()
+            }}>
+                <Image
+                    source={require('../../images/ic_menu.png')}
+                />
+            </TouchableHighlight>
+            </View>
+        </View>
+      </LinearGradient>,
+    };
     constructor(props) {
         super(props);
         this.onPressExchange = this.onPressExchange.bind(this);
