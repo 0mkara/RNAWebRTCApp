@@ -70,7 +70,7 @@ class ChatRoom extends Component {
                   <View style={{flex: 0.1, justifyContent: 'center'}}>
                       <TouchableOpacity
                       onPress={() => {
-                          this.handleLeave
+                          this.handleLeave()
                       }}>
                         <View style={{backgroundColor: 'transparent'}}>
                           <Image
