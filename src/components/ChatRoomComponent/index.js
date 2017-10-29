@@ -5,7 +5,7 @@ import {
   View,
   KeyboardAvoidingView,
   Image,
-  TouchableHighlight
+  TouchableOpacity
 } from 'react-native';
 import { connect } from 'react-redux';
 import LinearGradient from 'react-native-linear-gradient';
@@ -68,28 +68,30 @@ class ChatRoom extends Component {
           style={styles.headerStyle}>
               <View style={{backgroundColor: 'transparent', flex: 1, flexDirection: 'row', justifyContent: 'center'}}>
                   <View style={{flex: 0.1, justifyContent: 'center'}}>
-                      <TouchableHighlight
+                      <TouchableOpacity
                       onPress={() => {
                       }}>
+                        <View style={{backgroundColor: 'transparent'}}>
                           <Image
-                              style={{height: 40}}
+                              style={{height: 40, backgroundColor: 'transparent'}}
                               source={require('../../images/back.png')}
                           />
-                      </TouchableHighlight>
+                        </View>
+                      </TouchableOpacity>
                   </View>
                   <View style={{flex: 1, justifyContent: 'center'}}>
                       <Text style={{color: '#fff', fontWeight: '600'}}>UserName</Text>
                       <Text style={{color: '#fff'}}>Ak-_ufNcO5L_v_ZHAAAF</Text>
                   </View>
                   <View style={{flex: 0.2, alignItems: 'flex-end', justifyContent: 'center'}}>
-                  <TouchableHighlight
+                  <TouchableOpacity
                   onPress={() => {
                       Actions.drawerOpen()
                   }}>
                       <Image
                           source={require('../../images/ic_menu.png')}
                       />
-                  </TouchableHighlight>
+                  </TouchableOpacity>
                   </View>
               </View>
           </LinearGradient>
