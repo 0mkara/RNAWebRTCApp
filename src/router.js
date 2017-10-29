@@ -1,5 +1,5 @@
 import React from 'react';
-import { Scene, Router, Drawer, Stack } from 'react-native-router-flux';
+import { Scene, Router, Drawer, Stack, Actions } from 'react-native-router-flux';
 import configureStore from './configureStore';
 import ChatRoom from './components/ChatRoomComponent';
 import {
@@ -7,17 +7,16 @@ import {
   View,
   KeyboardAvoidingView
 } from 'react-native';
-import DrawerContent from './components/DrawerContent';
+import DrawerContent from './components/common/DrawerContent';
 import MenuIcon from './images/ic_menu.png';
 const store = configureStore();
-const RouterComponent = () => {
+const RouterComponent = ({navigation}) => {
 	return (
 		<Router store={store}>
 			<Stack key="root">
 				<Drawer
 					hideNavBar
 					key="drawer"
-					drawerPosition="right"
 					contentComponent={DrawerContent}
 					drawerImage={MenuIcon}
 					drawerWidth={300}

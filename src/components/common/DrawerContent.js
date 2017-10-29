@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import LinearGradient from 'react-native-linear-gradient';
 import { StyleSheet, Text, View, ViewPropTypes, Switch, FlatList } from 'react-native';
-import { GreenBtn, GradientInput } from './common';
-import { scale, verticalScale } from './scaling';
+import { GreenBtn, GradientInput } from '../common';
+import { scale, verticalScale } from '../scaling';
 
 const styles = StyleSheet.create({
   container: {
@@ -39,7 +39,7 @@ class DrawerContent extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      flatlistData: [
+      listData: [
         {
           name: 'Audio',
           status: false
@@ -61,8 +61,29 @@ class DrawerContent extends React.Component {
     drawer: PropTypes.object,
   }
 
+  changeStatus(index){
+    const { listData } = this.state;
+    listData[index].status = listData[index].status ? false : true
+    this.setState({
+      listData
+    })
+  }
+
   render() {
-    const { flatlistData } = this.state;
+    const { listData } = this.state;
+    let thisVar = this;
+    let audioVideo = listData.map(function(item, index){
+      return <View key={item.name} style={{flexDirection: 'row'}}>
+        <View style={{flex: 1, paddingVertical: 10, alignItems: 'center', justifyContent: 'center'}}>
+          <Text style={{color: '#fff', backgroundColor: 'transparent'}}>{item.name}</Text>
+        </View>
+        <View style={{flex: 1, paddingVertical: 10,justifyContent: 'center'}}>
+          <Switch onValueChange={() => {
+            thisVar.changeStatus(index)
+          }} value={item.status} style={{backgroundColor: 'green', borderRadius: 20}} />
+        </View>
+      </View>
+    })
     return (
       <View style={styles.container}>
         <LinearGradient colors={['#350BAC', '#1CAEC5']} style={styles.linearGradient}>
@@ -82,21 +103,7 @@ class DrawerContent extends React.Component {
               </View>
             </View>
             <View style={{flex: 1}}>
-              <FlatList
-                data={flatlistData}
-                renderItem={({item}) => {
-                return (
-                  <View style={{flex: 1, flexDirection: 'row'}}>
-                    <View style={{flex: 1, paddingVertical: 10, alignItems: 'center', justifyContent: 'center'}}>
-                      <Text style={{color: '#fff', backgroundColor: 'transparent'}}>{item.name}</Text>
-                    </View>
-                    <View style={{flex: 1, paddingVertical: 10,justifyContent: 'center'}}>
-                      <Switch value={item.state} style={{backgroundColor: 'green', borderRadius: 20}} />
-                    </View>
-                  </View>
-                )
-              }}
-              />
+              {audioVideo}
             </View>
           </View>
         </LinearGradient>

@@ -43,8 +43,9 @@ export default StyleSheet.create({
       flex: 1,
   },
   headerStyle: {
-      height: 60,
-      paddingTop: 20,
-      paddingHorizontal: 15
+      height: 40,
+      paddingLeft: 0,
+      paddingRight: 15,
+      borderRadius: 5
   }
 });

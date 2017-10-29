@@ -17,29 +17,9 @@ import {Actions} from 'react-native-router-flux';
 import MenuIcon from '../../images/ic_menu.png';
 
 class ChatRoom extends Component {
-    static navigationOptions = {
-      header: <LinearGradient
-      colors={['#19e8b3', '#abed57']}
-      start={{x: 0.0, y: 0.0}} end={{x: 1.0, y: 0.0}}
-      style={styles.headerStyle}>
-        <View style={{backgroundColor: 'transparent', flex: 1, flexDirection: 'row', justifyContent: 'center'}}>
-            <View style={{flex: 1, justifyContent: 'center'}}>
-                <Text>UserName</Text>
-                <Text>Ak-_ufNcO5L_v_ZHAAAF</Text>
-            </View>
-            <View style={{flex: 0.2, alignItems: 'flex-end', justifyContent: 'center'}}>
-            <TouchableHighlight
-            onPress={() => {
-                Actions.drawerOpen()
-            }}>
-                <Image
-                    source={require('../../images/ic_menu.png')}
-                />
-            </TouchableHighlight>
-            </View>
-        </View>
-      </LinearGradient>,
-    };
+    static navigationOptions = ({ navigation }) => ({
+        header: navigation.state.params.header,
+      });
     constructor(props) {
         super(props);
         this.onPressExchange = this.onPressExchange.bind(this);
@@ -52,6 +32,10 @@ class ChatRoom extends Component {
             messages: []
         }
     }
+    componentWillMount(){
+        const {setParams} = this.props.navigation;
+        setParams({header: null})
+    }
     componentWillReceiveProps(nextProps) {
         if(nextProps.message.from !== undefined) {
             const messages = this.state.messages;
@@ -62,7 +46,42 @@ class ChatRoom extends Component {
         }
     }
     onPressExchange(socketId) {
+        const {setParams} = this.props.navigation;
         this.props.store.dispatch({ type: CREATE_OFFER, payload: socketId });
+        setParams({header: <View style={{paddingTop: 25, backgroundColor: 'aliceblue', paddingHorizontal: 10}}>
+        <LinearGradient
+          colors={['#19e8b3', '#abed57']}
+          start={{x: 0.0, y: 0.0}} end={{x: 1.0, y: 0.0}}
+          style={styles.headerStyle}>
+              <View style={{backgroundColor: 'transparent', flex: 1, flexDirection: 'row', justifyContent: 'center'}}>
+                  <View style={{flex: 0.1, justifyContent: 'center'}}>
+                      <TouchableHighlight
+                      onPress={() => {
+                          Actions.drawerOpen()
+                      }}>
+                          <Image
+                              style={{height: 40}}
+                              source={require('../../images/back.png')}
+                          />
+                      </TouchableHighlight>
+                  </View>
+                  <View style={{flex: 1, justifyContent: 'center'}}>
+                      <Text style={{color: '#fff', fontWeight: '600'}}>UserName</Text>
+                      <Text style={{color: '#fff'}}>Ak-_ufNcO5L_v_ZHAAAF</Text>
+                  </View>
+                  <View style={{flex: 0.2, alignItems: 'flex-end', justifyContent: 'center'}}>
+                  <TouchableHighlight
+                  onPress={() => {
+                      Actions.drawerOpen()
+                  }}>
+                      <Image
+                          source={require('../../images/ic_menu.png')}
+                      />
+                  </TouchableHighlight>
+                  </View>
+              </View>
+          </LinearGradient>
+      </View>})
     }
     handleSend() {
         const messages = this.state.messages;
