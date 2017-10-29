@@ -46,8 +46,21 @@ class ChatRoom extends Component {
         }
     }
     onPressExchange(socketId) {
-        const {setParams} = this.props.navigation;
         this.props.store.dispatch({ type: CREATE_OFFER, payload: socketId });
+    }
+    handleSend() {
+        const messages = this.state.messages;
+        messages.push({from: 'self', message: this.state.text});
+        this.props.store.dispatch({ type: SEND_MESSAGE, payload: this.state.text });
+        this.setState({
+            text: '',
+            messages
+        });
+    }
+    handleJoin() {
+        const {setParams} = this.props.navigation;
+        this.props.store.dispatch({ type: CONNECT });
+        this.props.store.dispatch({ type: JOIN, payload: this.state.room });
         setParams({header: <View style={{paddingTop: 25, backgroundColor: 'aliceblue', paddingHorizontal: 10}}>
         <LinearGradient
           colors={['#19e8b3', '#abed57']}
@@ -57,7 +70,6 @@ class ChatRoom extends Component {
                   <View style={{flex: 0.1, justifyContent: 'center'}}>
                       <TouchableHighlight
                       onPress={() => {
-                          Actions.drawerOpen()
                       }}>
                           <Image
                               style={{height: 40}}
@@ -82,19 +94,6 @@ class ChatRoom extends Component {
               </View>
           </LinearGradient>
       </View>})
-    }
-    handleSend() {
-        const messages = this.state.messages;
-        messages.push({from: 'self', message: this.state.text});
-        this.props.store.dispatch({ type: SEND_MESSAGE, payload: this.state.text });
-        this.setState({
-            text: '',
-            messages
-        });
-    }
-    handleJoin() {
-        this.props.store.dispatch({ type: CONNECT });
-        this.props.store.dispatch({ type: JOIN, payload: this.state.room });
     }
     handleLeave() {
         this.props.store.dispatch({ type: DISCONNECT });
