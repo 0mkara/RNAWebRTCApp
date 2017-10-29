@@ -70,6 +70,7 @@ class ChatRoom extends Component {
                   <View style={{flex: 0.1, justifyContent: 'center'}}>
                       <TouchableOpacity
                       onPress={() => {
+                          this.handleLeave
                       }}>
                         <View style={{backgroundColor: 'transparent'}}>
                           <Image
@@ -98,7 +99,9 @@ class ChatRoom extends Component {
       </View>})
     }
     handleLeave() {
+        const {setParams} = this.props.navigation;
         this.props.store.dispatch({ type: DISCONNECT });
+        setParams({header: null})
     }
     handleKeyboardHeight() {
         console.log(event);
