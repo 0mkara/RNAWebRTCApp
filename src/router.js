@@ -34,32 +34,19 @@ const RouterComponent = ({navigation}) => {
 
 import ChatRoom from './components/ChatRoomComponent';
 import DrawerContent from './components/common/DrawerContent';
-import { Navigation } from 'react-native-navigation';
+import { StackNavigator, DrawerNavigator } from 'react-navigation';
 
-Navigation.registerComponent('ChatRoom', () => ChatRoom);
-
-const RouterComponent = Navigation.startSingleScreenApp({
-	screen: {
-	  screen: 'ChatRoom',
-	  title: 'Home',
-	},
-	drawer: {
-	  left: {
-		screen: DrawerContent,
-		passProps: {},
-	  },
-	  style: {
-		drawerShadow: true,
-		contentOverlayColor: 'rgba(0,0,0,0.25)',
-		leftDrawerWidth: 50,
-		rightDrawerWidth: 50
-	  },
-	  type: 'MMDrawer',
-	  animationType: 'door',
-	  disableOpenGesture: false
-	},
-	passProps: {},
-	animationType: 'slide-down'
+const RootNavigator = StackNavigator({
+  Home: {
+    screen: ChatRoom,
+  }
 });
+
+const RouterComponent = DrawerNavigator({
+  DrawerHome: {
+		screen: RootNavigator,
+		header: null
+  }
+})
 
 export default RouterComponent;

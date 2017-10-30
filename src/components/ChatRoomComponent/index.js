@@ -17,9 +17,9 @@ import {Actions} from 'react-native-router-flux';
 import MenuIcon from '../../images/ic_menu.png';
 
 class ChatRoom extends Component {
-    static navigationOptions = ({ navigation }) => ({
+    /* static navigationOptions = ({ navigation }) => ({
         header: navigation.state.params.header,
-      });
+      }); */
     constructor(props) {
         super(props);
         this.onPressExchange = this.onPressExchange.bind(this);
@@ -31,6 +31,7 @@ class ChatRoom extends Component {
             room: "private_room",
             messages: []
         }
+        console.warn(this.props.navigation.state.params.header)
     }
     componentWillMount(){
         const {setParams} = this.props.navigation;
