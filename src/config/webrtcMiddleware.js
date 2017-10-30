@@ -1,6 +1,6 @@
 // @flow
-import { WEBTRC_EXCHANGE, CREATE_OFFER, EXCHANGE, SEND_MESSAGE } from './actions/types';
-import { incommingMessage, datachannelOpened } from './actions';
+import { WEBTRC_EXCHANGE, CREATE_OFFER, EXCHANGE, SEND_MESSAGE } from '../actions/types';
+import { incommingMessage, datachannelOpened } from '../actions';
 import { RTCPeerConnection, RTCSessionDescription, RTCIceCandidate } from 'react-native-webrtc';
 
 const webrtcMiddleware = (function() {
@@ -87,7 +87,7 @@ const webrtcMiddleware = (function() {
             const receiveChannel = event.channel;
             if(!peerconn.textDataChannel) {
                 peerconn.textDataChannel = receiveChannel;
-                store.dispatch(datachannelOpened());
+                store.dispatch(datachannelOpened);
             }
             receiveChannel.onmessage = function(event) {
                 store.dispatch(incommingMessage(socketId, event.data));
