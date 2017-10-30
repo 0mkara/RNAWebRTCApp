@@ -1,4 +1,4 @@
-import React from 'react';
+/* import React from 'react';
 import { Scene, Router, Drawer, Stack, Actions } from 'react-native-router-flux';
 import configureStore from './configureStore';
 import ChatRoom from './components/ChatRoomComponent';
@@ -30,6 +30,36 @@ const RouterComponent = ({navigation}) => {
 			</Stack>
 		</Router>
 	);
-};
+}; */
+
+import ChatRoom from './components/ChatRoomComponent';
+import DrawerContent from './components/common/DrawerContent';
+import { Navigation } from 'react-native-navigation';
+
+Navigation.registerComponent('ChatRoom', () => ChatRoom);
+
+const RouterComponent = Navigation.startSingleScreenApp({
+	screen: {
+	  screen: 'ChatRoom',
+	  title: 'Home',
+	},
+	drawer: {
+	  left: {
+		screen: DrawerContent,
+		passProps: {},
+	  },
+	  style: {
+		drawerShadow: true,
+		contentOverlayColor: 'rgba(0,0,0,0.25)',
+		leftDrawerWidth: 50,
+		rightDrawerWidth: 50
+	  },
+	  type: 'MMDrawer',
+	  animationType: 'door',
+	  disableOpenGesture: false
+	},
+	passProps: {},
+	animationType: 'slide-down'
+});
 
 export default RouterComponent;

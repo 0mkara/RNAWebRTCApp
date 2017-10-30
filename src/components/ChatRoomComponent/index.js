@@ -46,12 +46,12 @@ class ChatRoom extends Component {
         }
     }
     onPressExchange(socketId) {
-        this.props.store.dispatch({ type: CREATE_OFFER, payload: socketId });
+        //this.props.store.dispatch({ type: CREATE_OFFER, payload: socketId });
     }
     handleSend() {
         const messages = this.state.messages;
         messages.push({from: 'self', message: this.state.text});
-        this.props.store.dispatch({ type: SEND_MESSAGE, payload: this.state.text });
+        //this.props.store.dispatch({ type: SEND_MESSAGE, payload: this.state.text });
         this.setState({
             text: '',
             messages
@@ -59,8 +59,8 @@ class ChatRoom extends Component {
     }
     handleJoin() {
         const {setParams} = this.props.navigation;
-        this.props.store.dispatch({ type: CONNECT });
-        this.props.store.dispatch({ type: JOIN, payload: this.state.room });
+        //this.props.store.dispatch({ type: CONNECT });
+        //this.props.store.dispatch({ type: JOIN, payload: this.state.room });
         setParams({header: <View style={{paddingTop: 25, backgroundColor: 'aliceblue', paddingHorizontal: 10}}>
         <LinearGradient
           colors={['#19e8b3', '#abed57']}
@@ -100,7 +100,7 @@ class ChatRoom extends Component {
     }
     handleLeave() {
         const {setParams} = this.props.navigation;
-        this.props.store.dispatch({ type: DISCONNECT });
+        //this.props.store.dispatch({ type: DISCONNECT });
         setParams({header: null})
     }
     handleKeyboardHeight() {
