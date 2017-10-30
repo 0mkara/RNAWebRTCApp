@@ -12,6 +12,7 @@ export const MESSAGE = 'message';
 export const SOCKETIDS = 'socket_ids';
 export const CREATE_OFFER = 'create_offer';
 export const JOIN = 'join';
+export const TRANSPORT = 'exchange';
 export const EXCHANGE = 'exchange';
 export const WEBTRC_EXCHANGE = 'webrtc_exchange';
 export const DATACHAN_STAT = 'datachan_stat';
