@@ -15,6 +15,45 @@ import styles from './styles';
 import {Actions} from 'react-native-router-flux';
 
 class Chat extends Component {
+    constructor(props) {
+        super(props);
+        this.handleSend = this.handleSend.bind(this);
+        this.state = {
+            text: null,
+            messages: []
+        }
+    }
+    componentDidMount(){
+        const { navigate, state } = this.props.navigation;
+        this.props.dispatch({ type: CREATE_OFFER, payload: state.params.socketId });
+    }
+    handleSend() {
+        const messages = this.state.messages;
+        messages.push({from: 'self', message: this.state.text});
+        this.props.dispatch({ type: SEND_MESSAGE, payload: this.state.text });
+        this.setState({
+            text: '',
+            messages
+        });
+    }
+    componentWillReceiveProps(nextProps) {
+        if(nextProps.message.from !== undefined) {
+            const messages = this.state.messages;
+            messages.push(nextProps.message)
+            this.setState({
+                messages,
+            })
+        }
+    }
+    handleSend() {
+        const messages = this.state.messages;
+        messages.push({from: 'self', message: this.state.text});
+        this.props.dispatch({ type: SEND_MESSAGE, payload: this.state.text });
+        this.setState({
+            text: '',
+            messages
+        });
+    }
     render() {
         return (
             <View style={styles.container}>
@@ -51,6 +90,7 @@ class Chat extends Component {
 
 
 Chat.navigationOptions = ({ navigation }) => {
+    const { goBack } = navigation;
     return {
         header: <View style={{paddingTop: 25, backgroundColor: 'aliceblue', paddingHorizontal: 10}}>
         <LinearGradient
@@ -61,7 +101,7 @@ Chat.navigationOptions = ({ navigation }) => {
                   <View style={{flex: 0.1, justifyContent: 'center'}}>
                       <TouchableOpacity
                       onPress={() => {
-                          this.handleLeave()
+                          goBack()
                       }}>
                         <View style={{backgroundColor: 'transparent'}}>
                           <Image
@@ -78,7 +118,7 @@ Chat.navigationOptions = ({ navigation }) => {
                   <View style={{flex: 0.2, alignItems: 'flex-end', justifyContent: 'center'}}>
                   <TouchableOpacity
                   onPress={() => {
-                      Actions.drawerOpen()
+                      navigation.navigate('DrawerOpen')
                   }}>
                       <Image
                           source={require('../../images/ic_menu.png')}
@@ -95,4 +135,4 @@ const mapStateToProps = ({ connection, routes }) => {
     const { connected, socketids, message, datachan_stat, room_joined } = connection;
 	return { connected, socketids, message, datachan_stat, room_joined, routes };
 };
-export default connect(mapStateToProps, { })(Chat);
+export default connect(mapStateToProps)(Chat);

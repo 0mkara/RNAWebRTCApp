@@ -29,10 +29,6 @@ class ChatRoom extends Component {
             messages: []
         }
     }
-    componentWillMount(){
-        const {setParams} = this.props.navigation;
-        setParams({header: null});
-    }
     componentWillReceiveProps(nextProps) {
         if(nextProps.message.from !== undefined) {
             const messages = this.state.messages;
@@ -144,11 +140,9 @@ class ChatRoom extends Component {
         );
     }
 }
-ChatRoom.navigationOptions = ({ navigation }) => {
-    return {
-        title: 'Home',
-        header: null,
-    }
+ChatRoom.navigationOptions = {
+    title: 'Home',
+    header: null
 };
 
 const mapStateToProps = ({ connection, routes }) => {
@@ -156,4 +150,4 @@ const mapStateToProps = ({ connection, routes }) => {
 	return { connected, socketids, message, datachan_stat, room_joined, routes };
 };
 
-export default connect(mapStateToProps)(ChatRoom); 
+export default connect(mapStateToProps)(ChatRoom);

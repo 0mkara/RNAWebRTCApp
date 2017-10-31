@@ -1,6 +1,6 @@
 // @flow
-import { WEBTRC_EXCHANGE, CREATE_OFFER, EXCHANGE, SEND_MESSAGE } from './actions/types';
-import { incommingMessage, datachannelOpened } from './actions';
+import { WEBTRC_EXCHANGE, CREATE_OFFER, TRANSPORT, SEND_MESSAGE } from '../actions/types';
+import { incommingMessage, datachannelOpened } from '../actions';
 import { RTCPeerConnection, RTCSessionDescription, RTCIceCandidate } from 'react-native-webrtc';
 
 const webrtcMiddleware = (function() {
@@ -10,7 +10,7 @@ const webrtcMiddleware = (function() {
     const peerconn = new RTCPeerConnection(configuration, connection);
     const sdpConstraints = {'mandatory': { 'OfferToReceiveAudio': false, 'OfferToReceiveVideo': false }};
 
-    peerconn.onnegotiationneeded = function(event) {
+    peerconn.onnegotiationneeded = (event) => {
       console.log('onnegotiationneeded');
     };
     peerconn.oniceconnectionstatechange = function(event) {
@@ -34,7 +34,7 @@ const webrtcMiddleware = (function() {
         peerconn.createOffer((desc) => {
             console.log('createOffer', desc);
             peerconn.setLocalDescription(desc, () => {
-                store.dispatch({ type: EXCHANGE, payload: {'to': action.payload, 'sdp': peerconn.localDescription } })
+                store.dispatch({ type: TRANSPORT, payload: {'to': action.payload, 'sdp': peerconn.localDescription } })
             }, logError);
         }, logError, sdpConstraints);
 
@@ -66,7 +66,7 @@ const webrtcMiddleware = (function() {
                     console.log('createAnswer', desc);
                     peerconn.setLocalDescription(desc, () => {
                         console.log('setLocalDescription', peerconn.localDescription);
-                        store.dispatch({ type: EXCHANGE, payload: {'to': data.from, 'sdp': peerconn.localDescription } });
+                        store.dispatch({ type: TRANSPORT, payload: {'to': data.from, 'sdp': peerconn.localDescription } });
                     }, logError);
                 }, logError);
             }, logError);
@@ -79,7 +79,7 @@ const webrtcMiddleware = (function() {
         peerconn.onicecandidate = function(event) {
           console.log('onicecandidate');
           if(event.candidate && socketId !== null) {
-              store.dispatch({ type: EXCHANGE, payload: {'to': socketId, 'candidate': event.candidate } })
+              store.dispatch({ type: TRANSPORT, payload: {'to': socketId, 'candidate': event.candidate } })
           }
         };
         peerconn.ondatachannel = function(event) {
@@ -87,7 +87,7 @@ const webrtcMiddleware = (function() {
             const receiveChannel = event.channel;
             if(!peerconn.textDataChannel) {
                 peerconn.textDataChannel = receiveChannel;
-                store.dispatch(datachannelOpened());
+                store.dispatch(datachannelOpened);
             }
             receiveChannel.onmessage = function(event) {
                 store.dispatch(incommingMessage(socketId, event.data));
