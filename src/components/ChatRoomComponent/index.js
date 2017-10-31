@@ -17,9 +17,6 @@ import {Actions} from 'react-native-router-flux';
 import MenuIcon from '../../images/ic_menu.png';
 
 class ChatRoom extends Component {
-    /* static navigationOptions = ({ navigation }) => ({
-        header: navigation.state.params.header,
-      }); */
     constructor(props) {
         super(props);
         this.onPressExchange = this.onPressExchange.bind(this);
@@ -31,11 +28,10 @@ class ChatRoom extends Component {
             room: "private_room",
             messages: []
         }
-        console.warn(this.props.navigation.state.params.header)
     }
     componentWillMount(){
         const {setParams} = this.props.navigation;
-        setParams({header: null})
+        setParams({header: null});
     }
     componentWillReceiveProps(nextProps) {
         if(nextProps.message.from !== undefined) {
@@ -47,12 +43,12 @@ class ChatRoom extends Component {
         }
     }
     onPressExchange(socketId) {
-        //this.props.store.dispatch({ type: CREATE_OFFER, payload: socketId });
+        this.props.navigation.navigate('ChatScreen', {socketId: socketId});
     }
     handleSend() {
         const messages = this.state.messages;
         messages.push({from: 'self', message: this.state.text});
-        //this.props.store.dispatch({ type: SEND_MESSAGE, payload: this.state.text });
+        this.props.dispatch({ type: SEND_MESSAGE, payload: this.state.text });
         this.setState({
             text: '',
             messages
@@ -60,8 +56,8 @@ class ChatRoom extends Component {
     }
     handleJoin() {
         const {setParams} = this.props.navigation;
-        //this.props.store.dispatch({ type: CONNECT });
-        //this.props.store.dispatch({ type: JOIN, payload: this.state.room });
+        this.props.dispatch({ type: CONNECT });
+        this.props.dispatch({ type: JOIN, payload: this.state.room });
         setParams({header: <View style={{paddingTop: 25, backgroundColor: 'aliceblue', paddingHorizontal: 10}}>
         <LinearGradient
           colors={['#19e8b3', '#abed57']}
@@ -101,7 +97,7 @@ class ChatRoom extends Component {
     }
     handleLeave() {
         const {setParams} = this.props.navigation;
-        //this.props.store.dispatch({ type: DISCONNECT });
+        this.props.dispatch({ type: DISCONNECT });
         setParams({header: null})
     }
     handleKeyboardHeight() {
@@ -144,42 +140,20 @@ class ChatRoom extends Component {
                         </View>
                     ))
                 }
-                {
-                    this.props.datachan_stat === true &&
-                    <View style={styles.chatContainerStyle}>
-                        <KeyboardAvoidingView
-                            behavior="position"
-                            keyboardVerticalOffset={verticalScale(123)}
-                            contentContainerStyle={styles.chatAvoidingViewStyle}>
-                            <View style={styles.chatViewStyle}>
-                                {
-                                    this.state.messages.map((item, index) => (
-                                        <MessageText key={index}>
-                                            {item}
-                                        </MessageText>
-                                    ))
-                                }
-                            </View>
-                            <View style={styles.messageViewStyle}>
-                                <MessageInput
-                                    style={styles.inputStyle}
-                                    onChangeText={(text) => this.setState({text})}
-                                    value={this.state.text}/>
-                                <SendBtn
-                                    onPress={this.handleSend}>
-                                    Send
-                                </SendBtn>
-                            </View>
-                        </KeyboardAvoidingView>
-                    </View>
-                }
             </View>
         );
     }
 }
+ChatRoom.navigationOptions = ({ navigation }) => {
+    return {
+        title: 'Home',
+        header: null,
+    }
+};
 
 const mapStateToProps = ({ connection, routes }) => {
     const { connected, socketids, message, datachan_stat, room_joined } = connection;
 	return { connected, socketids, message, datachan_stat, room_joined, routes };
 };
-export default connect(mapStateToProps, { })(ChatRoom);
+
+export default connect(mapStateToProps)(ChatRoom); 
