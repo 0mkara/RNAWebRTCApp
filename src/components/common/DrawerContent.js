@@ -60,6 +60,10 @@ class DrawerContent extends React.Component {
     })
   }
 
+  changeHandler(){
+    console.warn('Change Handler')
+  }
+
   changeVideoStatus(){
     const { videoStatus } = this.state;
     this.setState({
@@ -83,7 +87,10 @@ class DrawerContent extends React.Component {
               </View>
               <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', height: scale(30)}}>
                 <GreenBtn
-                  color="#841584">
+                  color="#841584"
+                  onPress={() => {
+                    thisVar.changeHandler()
+                  }}>
                   Change
                 </GreenBtn>
               </View>
