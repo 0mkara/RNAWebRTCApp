@@ -107,6 +107,8 @@ class ChatRoom extends Component {
         console.log(event);
     }
     render() {
+        console.log(this.props.datachan_stat);
+        console.log(this.state.messages);
         return (
             <View style={styles.container}>
                 <View style={styles.joinRoomStyle}>
