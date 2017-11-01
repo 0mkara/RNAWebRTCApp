@@ -39,16 +39,8 @@ class DrawerContent extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      listData: [
-        {
-          name: 'Audio',
-          status: false
-        },
-        {
-          name: 'Video',
-          status: false
-        }
-      ]
+      audioStatus: false,
+      videoStatus: false
     }
   }
   static propTypes = {
@@ -61,29 +53,23 @@ class DrawerContent extends React.Component {
     drawer: PropTypes.object,
   }
 
-  changeStatus(index){
-    const { listData } = this.state;
-    listData[index].status = listData[index].status ? false : true
+  changeAudioStatus(){
+    const { audioStatus } = this.state;
     this.setState({
-      listData
+      audioStatus: audioStatus ? false : true
+    })
+  }
+
+  changeVideoStatus(){
+    const { videoStatus } = this.state;
+    this.setState({
+      videoStatus: videoStatus ? false : true
     })
   }
 
   render() {
-    const { listData } = this.state;
+    const { audioStatus, videoStatus } = this.state;
     let thisVar = this;
-    let audioVideo = listData.map(function(item, index){
-      return <View key={item.name} style={{flexDirection: 'row'}}>
-        <View style={{flex: 1, paddingVertical: 10, alignItems: 'center', justifyContent: 'center'}}>
-          <Text style={{color: '#fff', backgroundColor: 'transparent'}}>{item.name}</Text>
-        </View>
-        <View style={{flex: 1, paddingVertical: 10,justifyContent: 'center'}}>
-          <Switch onValueChange={() => {
-            thisVar.changeStatus(index)
-          }} value={item.status} style={{backgroundColor: 'green', borderRadius: 20}} />
-        </View>
-      </View>
-    })
     return (
       <View style={styles.container}>
         <LinearGradient colors={['#350BAC', '#1CAEC5']} style={styles.linearGradient}>
@@ -103,7 +89,30 @@ class DrawerContent extends React.Component {
               </View>
             </View>
             <View style={{flex: 1}}>
-              {audioVideo}
+              <View style={{flexDirection: 'row'}}>
+                <View style={{flex: 1, paddingVertical: 10, alignItems: 'center', justifyContent: 'center'}}>
+                  <Text style={{color: '#fff', backgroundColor: 'transparent'}}>Audio</Text>
+                </View>
+                <View style={{flex: 1, paddingVertical: 10,justifyContent: 'center'}}>
+                  <Switch
+                  onTintColor="#7ED321"
+                  onValueChange={() => {
+                    thisVar.changeAudioStatus()
+                  }} value={audioStatus} style={{backgroundColor: '#4A4A4A', borderRadius: 20}} />
+                </View>
+              </View>
+              <View style={{flexDirection: 'row'}}>
+                <View style={{flex: 1, paddingVertical: 10, alignItems: 'center', justifyContent: 'center'}}>
+                  <Text style={{color: '#fff', backgroundColor: 'transparent'}}>Video</Text>
+                </View>
+                <View style={{flex: 1, paddingVertical: 10,justifyContent: 'center'}}>
+                  <Switch
+                  onTintColor="#7ED321"
+                  onValueChange={() => {
+                    thisVar.changeVideoStatus()
+                  }} value={videoStatus} style={{backgroundColor: '#4A4A4A', borderRadius: 20}} />
+                </View>
+              </View>
             </View>
           </View>
         </LinearGradient>
