@@ -1,6 +1,6 @@
 import { StackNavigator, DrawerNavigator } from 'react-navigation';
 import ChatRoomComponent from '../components/ChatRoomComponent';
-import Chat from '../components/ChatRoomComponent/chat';
+import Chat from '../components/ChatComponent';
 import DrawerContent from '../components/common/DrawerContent';
 
 const RootNavigator = StackNavigator({
