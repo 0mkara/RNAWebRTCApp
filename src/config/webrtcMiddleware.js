@@ -87,7 +87,7 @@ const webrtcMiddleware = (function() {
             const receiveChannel = event.channel;
             if(!peerconn.textDataChannel) {
                 peerconn.textDataChannel = receiveChannel;
-                store.dispatch(datachannelOpened);
+                store.dispatch(datachannelOpened());
             }
             receiveChannel.onmessage = function(event) {
                 store.dispatch(incommingMessage(socketId, event.data));

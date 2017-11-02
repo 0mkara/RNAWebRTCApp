@@ -13,7 +13,6 @@
     "react-native-drawer": "^2.5.0",
     "react-native-linear-gradient": "^2.3.0",
     "react-native-navigation": "^1.1.255",
-    "react-native-router-flux": "^4.0.0-beta.21",
     "react-native-webrtc": "^1.58.2",
     "react-navigation": "^1.0.0-beta.15",
     "react-redux": "^5.0.6",

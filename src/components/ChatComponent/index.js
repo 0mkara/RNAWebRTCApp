@@ -6,13 +6,13 @@ import {
   Image,
   TouchableOpacity
 } from 'react-native';
+import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 import LinearGradient from 'react-native-linear-gradient';
-import { CONNECT, JOIN, CREATE_OFFER, SEND_MESSAGE, DISCONNECT } from '../../actions/types';
-import { WhiteBtn, GradientInput, ConnectBtn, MessageInput, SendBtn, MessageText } from '../common';
+import { CREATE_OFFER, SEND_MESSAGE } from '../../actions/types';
+import { MessageInput, SendBtn, MessageText } from '../common';
 import { verticalScale } from '../scaling';
 import styles from './styles';
-import {Actions} from 'react-native-router-flux';
 
 class Chat extends Component {
     constructor(props) {
@@ -23,8 +23,13 @@ class Chat extends Component {
             messages: []
         }
     }
-    componentDidMount(){
-        const { navigate, state } = this.props.navigation;
+    static propTypes = {
+      dispatch: PropTypes.func,
+      message: PropTypes.object,
+      navigation: PropTypes.object,
+    }
+    componentDidMount() {
+        const { state } = this.props.navigation;
         this.props.dispatch({ type: CREATE_OFFER, payload: state.params.socketId });
     }
     handleSend() {
@@ -44,15 +49,6 @@ class Chat extends Component {
                 messages,
             })
         }
-    }
-    handleSend() {
-        const messages = this.state.messages;
-        messages.push({from: 'self', message: this.state.text});
-        this.props.dispatch({ type: SEND_MESSAGE, payload: this.state.text });
-        this.setState({
-            text: '',
-            messages
-        });
     }
     render() {
         return (
@@ -117,12 +113,10 @@ Chat.navigationOptions = ({ navigation }) => {
                   </View>
                   <View style={{flex: 0.2, alignItems: 'flex-end', justifyContent: 'center'}}>
                   <TouchableOpacity
-                  onPress={() => {
-                      navigation.navigate('DrawerOpen')
-                  }}>
-                      <Image
-                          source={require('../../images/ic_menu.png')}
-                      />
+                      onPress={() => {
+                          navigation.navigate('DrawerOpen')
+                      }}>
+                      <Image source={require('../../images/ic_menu.png')}/>
                   </TouchableOpacity>
                   </View>
               </View>

@@ -1,11 +1,11 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import LinearGradient from 'react-native-linear-gradient';
-import { StyleSheet, Text, View, ViewPropTypes, Switch, FlatList } from 'react-native';
+import { Text, View, ViewPropTypes, Switch } from 'react-native';
 import { GreenBtn, GradientInput } from '../common';
 import { scale, verticalScale } from '../scaling';
 
-const styles = StyleSheet.create({
+const styles = {
   container: {
     flex: 1,
     justifyContent: 'center',
@@ -33,7 +33,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     borderRadius: scale(2.6),
   }
-});
+};
 
 class DrawerContent extends React.Component {
   constructor(props){
@@ -60,7 +60,7 @@ class DrawerContent extends React.Component {
     })
   }
 
-  changeHandler(){
+  changeHandler() {
     console.warn('Change Handler')
   }
 
