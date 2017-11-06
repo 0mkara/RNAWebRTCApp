@@ -658,7 +658,6 @@
 		A296D78E1FAA6AD90010AC06 /* OptimizationProfiles */ = {
 			isa = PBXGroup;
 			children = (
-				A296D78F1FAA6AD90010AC06 /* RNAWebRTCApp.profdata */,
 			);
 			path = OptimizationProfiles;
 			sourceTree = "<group>";
@@ -802,21 +801,21 @@
 				TargetAttributes = {
 					00E356ED1AD99517003FC87E = {
 						CreatedOnToolsVersion = 6.2;
-						DevelopmentTeam = 648GAJWKT5;
+						DevelopmentTeam = W943MTSZN7;
 						TestTargetID = 13B07F861A680F5B00A75B9A;
 					};
 					13B07F861A680F5B00A75B9A = {
-						DevelopmentTeam = 648GAJWKT5;
+						DevelopmentTeam = W943MTSZN7;
 						ProvisioningStyle = Automatic;
 					};
 					2D02E47A1E0B4A5D006451C7 = {
 						CreatedOnToolsVersion = 8.2.1;
-						DevelopmentTeam = 648GAJWKT5;
+						DevelopmentTeam = W943MTSZN7;
 						ProvisioningStyle = Automatic;
 					};
 					2D02E48F1E0B4A5D006451C7 = {
 						CreatedOnToolsVersion = 8.2.1;
-						DevelopmentTeam = 648GAJWKT5;
+						DevelopmentTeam = W943MTSZN7;
 						ProvisioningStyle = Automatic;
 						TestTargetID = 2D02E47A1E0B4A5D006451C7;
 					};
@@ -1361,7 +1360,7 @@
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEAD_CODE_STRIPPING = NO;
-				DEVELOPMENT_TEAM = 648GAJWKT5;
+				DEVELOPMENT_TEAM = W943MTSZN7;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../node_modules/react-native-webrtc/**";
 				HEADER_SEARCH_PATHS = (
@@ -1378,7 +1377,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.RNAWebRTCApp;
+				PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.RNAWebRTCApp.aditya;
 				PRODUCT_NAME = RNAWebRTCApp;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -1394,7 +1393,7 @@
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
-				DEVELOPMENT_TEAM = 648GAJWKT5;
+				DEVELOPMENT_TEAM = W943MTSZN7;
 				ENABLE_BITCODE = NO;
 				FRAMEWORK_SEARCH_PATHS = "$(SRCROOT)/../node_modules/react-native-webrtc/**";
 				HEADER_SEARCH_PATHS = (
@@ -1411,7 +1410,7 @@
 					"-ObjC",
 					"-lc++",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.RNAWebRTCApp;
+				PRODUCT_BUNDLE_IDENTIFIER = org.reactjs.native.RNAWebRTCApp.aditya;
 				PRODUCT_NAME = RNAWebRTCApp;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				TARGETED_DEVICE_FAMILY = 1;
@@ -1562,7 +1561,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = NO;
-				DEVELOPMENT_TEAM = 648GAJWKT5;
+				DEVELOPMENT_TEAM = W943MTSZN7;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;
 				GCC_DYNAMIC_NO_PIC = NO;
@@ -1604,7 +1603,7 @@
 				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				COPY_PHASE_STRIP = YES;
-				DEVELOPMENT_TEAM = 648GAJWKT5;
+				DEVELOPMENT_TEAM = W943MTSZN7;
 				ENABLE_NS_ASSERTIONS = NO;
 				ENABLE_STRICT_OBJC_MSGSEND = YES;
 				GCC_C_LANGUAGE_STANDARD = gnu99;

@@ -34,7 +34,7 @@ const labelDefaultStyle = {
     alignItems: 'flex-start',
     justifyContent: 'center'
 }
-const MessageInput = ({ label, value, onChangeText, placeholder, placeholderTextColor, secureTextEntry, inputContainerStyle, inputTextStyle, labelTextStyle, androidUnderlineColor }) => {
+const MessageInput = ({ label, value, onChangeText, placeholder, placeholderTextColor, secureTextEntry, inputContainerStyle, inputTextStyle, labelTextStyle, androidUnderlineColor, onFocus, onEndEditing }) => {
     let underlineColor = 'rgba(0,0,0,0)';
     if(inputContainerStyle) {
         styles.containerStyle = inputContainerStyle;
@@ -70,6 +70,8 @@ const MessageInput = ({ label, value, onChangeText, placeholder, placeholderText
                 onChangeText={onChangeText}
                 underlineColorAndroid={underlineColor}
                 multiline={false}
+                onFocus={onFocus}
+                onEndEditing={onEndEditing}
                 autoCapitalize="none"/>
         </LinearGradient>
     );

@@ -1,13 +1,15 @@
 import { StyleSheet, Dimensions } from 'react-native';
 import { verticalScale } from '../scaling';
 
-const { width } = Dimensions.get('screen');
+const { width, height } = Dimensions.get('screen');
 export default StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
+    height: height - 65,
+    alignItems: 'flex-end',
+    justifyContent: 'flex-end',
     backgroundColor: 'aliceblue',
-    paddingTop: verticalScale(25)
+    //paddingTop: verticalScale(25)
   },
   inputStyle : {
       height: 40,
@@ -37,7 +39,7 @@ export default StyleSheet.create({
   },
   messageViewStyle: {
       width,
-      flexDirection: 'row',
+      justifyContent: 'flex-end'
   },
   chatAvoidingViewStyle: {
       flex: 1,
@@ -47,5 +49,10 @@ export default StyleSheet.create({
       paddingLeft: 0,
       paddingRight: 15,
       borderRadius: 5
+  },
+  messageInputWrapper: {
+    flexDirection: 'row',
+    height: 40,
+    backgroundColor: '#efefef'
   }
 });

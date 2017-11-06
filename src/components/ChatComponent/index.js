@@ -20,7 +20,8 @@ class Chat extends Component {
         this.handleSend = this.handleSend.bind(this);
         this.state = {
             text: null,
-            messages: []
+            messages: [],
+            messageInputMarginBottom: 0
         }
     }
     static propTypes = {
@@ -53,32 +54,39 @@ class Chat extends Component {
     render() {
         return (
             <View style={styles.container}>
-                <View style={styles.chatContainerStyle}>
-                    <KeyboardAvoidingView
-                        behavior="position"
-                        keyboardVerticalOffset={verticalScale(123)}
-                        contentContainerStyle={styles.chatAvoidingViewStyle}>
-                        <View style={styles.chatViewStyle}>
-                            {
-                                this.state.messages.map((item, index) => (
-                                    <MessageText key={index}>
-                                        {item}
-                                    </MessageText>
-                                ))
-                            }
-                        </View>
-                        <View style={styles.messageViewStyle}>
+                <KeyboardAvoidingView style={styles.chatAvoidingViewStyle} behavior="position">
+                    <View style={styles.chatViewStyle}>
+                        {
+                            this.state.messages.map((item, index) => (
+                                <MessageText key={index}>
+                                    {item}
+                                </MessageText>
+                            ))
+                        }
+                    </View>
+                    <View style={[styles.messageViewStyle, {marginBottom: this.state.messageInputMarginBottom}]}>
+                        <View style={styles.messageInputWrapper}>
                             <MessageInput
                                 style={styles.inputStyle}
                                 onChangeText={(text) => this.setState({text})}
-                                value={this.state.text}/>
+                                value={this.state.text}
+                                onEndEditing={() => {
+                                    this.setState({
+                                        messageInputMarginBottom: 0
+                                    })
+                                }}
+                                onFocus={() => {
+                                    this.setState({
+                                        messageInputMarginBottom: 65
+                                    })
+                                }}/>
                             <SendBtn
                                 onPress={this.handleSend}>
                                 Send
                             </SendBtn>
                         </View>
-                    </KeyboardAvoidingView>
-                </View>
+                    </View>
+                </KeyboardAvoidingView>
             </View>
         )
     }
@@ -86,7 +94,7 @@ class Chat extends Component {
 
 
 Chat.navigationOptions = ({ navigation }) => {
-    const { goBack } = navigation;
+    const { state, goBack } = navigation;
     return {
         header: <View style={{paddingTop: 25, backgroundColor: 'aliceblue', paddingHorizontal: 10}}>
         <LinearGradient
@@ -109,7 +117,7 @@ Chat.navigationOptions = ({ navigation }) => {
                   </View>
                   <View style={{flex: 1, justifyContent: 'center'}}>
                       <Text style={{color: '#fff', fontWeight: '600'}}>UserName</Text>
-                      <Text style={{color: '#fff'}}>Ak-_ufNcO5L_v_ZHAAAF</Text>
+                      <Text style={{color: '#fff'}}>{state.params.socketId}</Text>
                   </View>
                   <View style={{flex: 0.2, alignItems: 'flex-end', justifyContent: 'center'}}>
                   <TouchableOpacity

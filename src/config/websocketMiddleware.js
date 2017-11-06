@@ -48,7 +48,7 @@ const webSocketMiddleware = (function(){
 				store.dispatch(connecting);
 
 				//Attempt to connect (we could send a 'failed' action on error)
-				socket = io.connect('https://192.168.0.7:4443', {transports: ['websocket']});
+				socket = io.connect('https://localhost:4443', {transports: ['websocket']});
 				socket.on('connect', onOpen(store));
 				socket.on('leave', onClose(store));
 				socket.on('exchange', onExchangeMessage(store));
