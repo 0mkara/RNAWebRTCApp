@@ -13,6 +13,8 @@ import { CREATE_OFFER, SEND_MESSAGE } from '../../actions/types';
 import { MessageInput, SendBtn, MessageText } from '../common';
 import { verticalScale } from '../scaling';
 import styles from './styles';
+import Realm from 'realm';
+import StateManager from '../../actions/StateManager';
 
 class Chat extends Component {
     constructor(props) {
@@ -30,25 +32,74 @@ class Chat extends Component {
       navigation: PropTypes.object,
     }
     componentDidMount() {
+        const { messages } = this.state;
         const { state } = this.props.navigation;
+        let storedMessages = [];
         this.props.dispatch({ type: CREATE_OFFER, payload: state.params.socketId });
+        const MessagesSchema = {
+            name: 'Message',
+            properties: {
+              from:  'string',
+              message: 'string',
+            }
+        };
+        Realm.open({schema: [MessagesSchema]})
+        .then(realm => {
+            console.log('realm database abcd', realm.objects('Message'));
+            console.log(realm.objects('Message').length);
+            let messages = realm.objects('Message');
+            for (let i = 0; i < messages.length; i++) {
+                storedMessages.push(messages[i]);
+            }
+            this.setState({
+                messages: storedMessages
+            })
+        });
     }
     handleSend() {
         const messages = this.state.messages;
-        messages.push({from: 'self', message: this.state.text});
+        let storedMessages = [];
         this.props.dispatch({ type: SEND_MESSAGE, payload: this.state.text });
-        this.setState({
-            text: '',
-            messages
+        const MessagesSchema = {
+            name: 'Message',
+            properties: {
+              from:  'string',
+              message: 'string',
+            }
+        };
+        Realm.open({schema: [MessagesSchema]})
+        .then(realm => {
+          realm.write(() => {
+            const newMessage = realm.create('Message', {from: 'self', message: this.state.text});
+            messages.push(newMessage)
+          })
+          this.setState({
+              text: '',
+              messages
+          })
         });
     }
     componentWillReceiveProps(nextProps) {
         if(nextProps.message.from !== undefined) {
             const messages = this.state.messages;
-            messages.push(nextProps.message)
-            this.setState({
-                messages,
-            })
+            const MessagesSchema = {
+                name: 'Message',
+                properties: {
+                  from:  'string',
+                  message: 'string',
+                }
+            };
+            Realm.open({schema: [MessagesSchema]})
+            .then(realm => {
+              realm.write(() => {
+                const newMessage = realm.create('Message', nextProps.message);
+                messages.push(newMessage)
+              })
+              this.setState({
+                  text: '',
+                  messages
+              })
+            });
         }
     }
     render() {
@@ -105,7 +156,25 @@ Chat.navigationOptions = ({ navigation }) => {
                   <View style={{flex: 0.1, justifyContent: 'center'}}>
                       <TouchableOpacity
                       onPress={() => {
-                          goBack()
+                        const MessagesSchema = {
+                            name: 'Message',
+                            properties: {
+                              from:  'string',
+                              message: 'string',
+                            }
+                        };
+                        Realm.open({schema: [MessagesSchema]})
+                        .then(realm => {
+                            realm.write(() => {
+                                let Messages = realm.objects('Message');
+                                realm.delete(Messages);
+
+                                StateManager.getInstance().receiveData({
+                                    disconnect: true
+                                })
+                                goBack()
+                            })
+                        });
                       }}>
                         <View style={{backgroundColor: 'transparent'}}>
                           <Image

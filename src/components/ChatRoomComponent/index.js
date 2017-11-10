@@ -9,6 +9,7 @@ import { connect } from 'react-redux';
 import { CONNECT, JOIN, SEND_MESSAGE, DISCONNECT } from '../../actions/types';
 import { WhiteBtn, GradientInput, ConnectBtn } from '../common';
 import styles from './styles';
+import StateManager from '../../actions/StateManager';
 
 class ChatRoom extends Component {
     constructor(props) {
@@ -19,10 +20,19 @@ class ChatRoom extends Component {
         this.handleLeave = this.handleLeave.bind(this);
         this.state = {
             text: null,
-            room: "private_room",
+            room: "abc",
             messages: []
         }
     }
+
+    componentWillMount(){
+        StateManager.getInstance().setReceiver(this);
+    }
+
+    receiveData(data){
+        //this.props.dispatch({ type: DISCONNECT });
+    }
+
     componentWillReceiveProps(nextProps) {
         if(nextProps.message.from !== undefined) {
             const messages = this.state.messages;
@@ -51,7 +61,6 @@ class ChatRoom extends Component {
     handleLeave() {
         const {setParams} = this.props.navigation;
         this.props.dispatch({ type: DISCONNECT });
-        setParams({header: null})
     }
     handleKeyboardHeight() {
         console.log(event);
