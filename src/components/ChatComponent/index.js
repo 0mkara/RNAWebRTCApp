@@ -23,7 +23,14 @@ class Chat extends Component {
         this.state = {
             text: null,
             messages: [],
-            messageInputMarginBottom: 0
+            messageInputMarginBottom: 0,
+            messagesSchema: {
+                name: 'Message',
+                properties: {
+                  from:  'string',
+                  message: 'string',
+                }
+            }
         }
     }
     static propTypes = {
@@ -32,18 +39,11 @@ class Chat extends Component {
       navigation: PropTypes.object,
     }
     componentDidMount() {
-        const { messages } = this.state;
+        const { messages, messagesSchema } = this.state;
         const { state } = this.props.navigation;
         let storedMessages = [];
         this.props.dispatch({ type: CREATE_OFFER, payload: state.params.socketId });
-        const MessagesSchema = {
-            name: 'Message',
-            properties: {
-              from:  'string',
-              message: 'string',
-            }
-        };
-        Realm.open({schema: [MessagesSchema]})
+        Realm.open({schema: [messagesSchema]})
         .then(realm => {
             console.log('realm database abcd', realm.objects('Message'));
             console.log(realm.objects('Message').length);
@@ -57,17 +57,10 @@ class Chat extends Component {
         });
     }
     handleSend() {
-        const messages = this.state.messages;
+        const { messages, messagesSchema } = this.state;
         let storedMessages = [];
         this.props.dispatch({ type: SEND_MESSAGE, payload: this.state.text });
-        const MessagesSchema = {
-            name: 'Message',
-            properties: {
-              from:  'string',
-              message: 'string',
-            }
-        };
-        Realm.open({schema: [MessagesSchema]})
+        Realm.open({schema: [messagesSchema]})
         .then(realm => {
           realm.write(() => {
             const newMessage = realm.create('Message', {from: 'self', message: this.state.text});
@@ -80,16 +73,9 @@ class Chat extends Component {
         });
     }
     componentWillReceiveProps(nextProps) {
+        const { messages, messagesSchema } = this.state;
         if(nextProps.message.from !== undefined) {
-            const messages = this.state.messages;
-            const MessagesSchema = {
-                name: 'Message',
-                properties: {
-                  from:  'string',
-                  message: 'string',
-                }
-            };
-            Realm.open({schema: [MessagesSchema]})
+            Realm.open({schema: [messagesSchema]})
             .then(realm => {
               realm.write(() => {
                 const newMessage = realm.create('Message', nextProps.message);
