@@ -1,0 +1,9 @@
+{
+    "extends": "react-native",
+    "parser": "babel-eslint",
+    "rules": {
+        "arrow-body-style": 0,
+        "class-methods-use-this": 0,
+        "jsx-no-bind": 0
+    }
+}
