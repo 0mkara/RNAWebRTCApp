@@ -1,9 +1,9 @@
 // @flow
 import { AsyncStorage } from 'react-native';
-import { WEBTRC_EXCHANGE, EXCHANGE, DISCONNECT, CONNECT, JOIN } from './actions/types';
-import { MEMBERS_KEY } from './actions/StorageKeys';
+import { WEBTRC_EXCHANGE, TRANSPORT, DISCONNECT, CONNECT, JOIN } from '../actions/types';
+import { MEMBERS_KEY } from '../actions/StorageKeys';
 import io from 'socket.io-client';
-import { connecting, connected, disconnected, roomMembers, roomMember, roomJoin } from './actions';
+import { connecting, connected, disconnected, roomMembers, roomMember, roomJoin } from '../actions';
 const webSocketMiddleware = (function(){
 	let socket = null;
 
@@ -24,7 +24,6 @@ const webSocketMiddleware = (function(){
 	}
 
 	const onMembers = (store) => socketId => {
-		console.log(socketId);
 		let socketIds = [];
 		AsyncStorage.getItem(MEMBERS_KEY, (err, data) => {
 			if(data !== null) {
@@ -49,7 +48,7 @@ const webSocketMiddleware = (function(){
 				store.dispatch(connecting);
 
 				//Attempt to connect (we could send a 'failed' action on error)
-				socket = io.connect('https://192.168.0.7:4443', {transports: ['websocket']});
+				socket = io.connect('https://127.0.0.1:4443', {transports: ['websocket']});
 				socket.on('connect', onOpen(store));
 				socket.on('leave', onClose(store));
 				socket.on('exchange', onExchangeMessage(store));
@@ -66,7 +65,7 @@ const webSocketMiddleware = (function(){
 				break;
 
 			//Send the 'SEND_MESSAGE' action down the websocket to the server
-			case EXCHANGE:
+			case TRANSPORT:
 				socket.emit('exchange', action.payload);
 				break;
 			case JOIN:

@@ -27,6 +27,13 @@ const styles = {
         flex: 1,
         alignSelf: 'stretch',
         justifyContent: 'center',
+        borderRadius: scale(2.6),
+        width: '100%'
+    },
+    buttonGradientStyle: {
+        flex: 1,
+        alignSelf: 'stretch',
+        justifyContent: 'center',
         marginLeft: 5,
         marginRight: 5,
         borderRadius: scale(2.6)
@@ -38,17 +45,19 @@ const GreenBtn = ({ onPress, children }) => {
 
   return (
       <LinearGradient
-          colors={['#979797', '#979797']}
-          start={{x: 0.0, y: 0.0}} end={{x: 1.0, y: 0.0}}
-          style={styles.buttonContainerStyle}>
+        colors={['#979797', '#979797']}
+        start={{x: 0.0, y: 0.0}} end={{x: 1.0, y: 0.0}}
+        style={styles.buttonContainerStyle}>
+          <TouchableOpacity onPress={onPress} style={[buttonStyle, {margin: 0}]}>
             <LinearGradient
                 colors={['#19e8b3', '#abed57']}
                 start={{x: 0.0, y: 0.0}} end={{x: 1.0, y: 0.0}}
-                style={styles.buttonStyle}>
+                style={styles.buttonGradientStyle}>
                     <Text style={textStyle}>
-                    {children}
+                        {children}
                     </Text>
             </LinearGradient>
+          </TouchableOpacity>
       </LinearGradient>
   );
 };

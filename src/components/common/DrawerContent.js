@@ -2,8 +2,8 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import LinearGradient from 'react-native-linear-gradient';
 import { StyleSheet, Text, View, ViewPropTypes, Switch, FlatList } from 'react-native';
-import { GreenBtn, GradientInput } from './common';
-import { scale, verticalScale } from './scaling';
+import { GreenBtn, GradientInput } from '../common';
+import { scale, verticalScale } from '../scaling';
 
 const styles = StyleSheet.create({
   container: {
@@ -39,16 +39,8 @@ class DrawerContent extends React.Component {
   constructor(props){
     super(props);
     this.state = {
-      flatlistData: [
-        {
-          name: 'Audio',
-          status: false
-        },
-        {
-          name: 'Video',
-          status: false
-        }
-      ]
+      audioStatus: false,
+      videoStatus: false
     }
   }
   static propTypes = {
@@ -61,8 +53,27 @@ class DrawerContent extends React.Component {
     drawer: PropTypes.object,
   }
 
+  changeAudioStatus(){
+    const { audioStatus } = this.state;
+    this.setState({
+      audioStatus: audioStatus ? false : true
+    })
+  }
+
+  changeHandler(){
+    console.warn('Change Handler')
+  }
+
+  changeVideoStatus(){
+    const { videoStatus } = this.state;
+    this.setState({
+      videoStatus: videoStatus ? false : true
+    })
+  }
+
   render() {
-    const { flatlistData } = this.state;
+    const { audioStatus, videoStatus } = this.state;
+    let thisVar = this;
     return (
       <View style={styles.container}>
         <LinearGradient colors={['#350BAC', '#1CAEC5']} style={styles.linearGradient}>
@@ -76,27 +87,39 @@ class DrawerContent extends React.Component {
               </View>
               <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', height: scale(30)}}>
                 <GreenBtn
-                  color="#841584">
+                  color="#841584"
+                  onPress={() => {
+                    thisVar.changeHandler()
+                  }}>
                   Change
                 </GreenBtn>
               </View>
             </View>
             <View style={{flex: 1}}>
-              <FlatList
-                data={flatlistData}
-                renderItem={({item}) => {
-                return (
-                  <View style={{flex: 1, flexDirection: 'row'}}>
-                    <View style={{flex: 1, paddingVertical: 10, alignItems: 'center', justifyContent: 'center'}}>
-                      <Text style={{color: '#fff', backgroundColor: 'transparent'}}>{item.name}</Text>
-                    </View>
-                    <View style={{flex: 1, paddingVertical: 10,justifyContent: 'center'}}>
-                      <Switch value={item.state} style={{backgroundColor: 'green', borderRadius: 20}} />
-                    </View>
-                  </View>
-                )
-              }}
-              />
+              <View style={{flexDirection: 'row'}}>
+                <View style={{flex: 1, paddingVertical: 10, alignItems: 'center', justifyContent: 'center'}}>
+                  <Text style={{color: '#fff', backgroundColor: 'transparent'}}>Audio</Text>
+                </View>
+                <View style={{flex: 1, paddingVertical: 10,justifyContent: 'center'}}>
+                  <Switch
+                  onTintColor="#7ED321"
+                  onValueChange={() => {
+                    thisVar.changeAudioStatus()
+                  }} value={audioStatus} style={{backgroundColor: '#4A4A4A', borderRadius: 20}} />
+                </View>
+              </View>
+              <View style={{flexDirection: 'row'}}>
+                <View style={{flex: 1, paddingVertical: 10, alignItems: 'center', justifyContent: 'center'}}>
+                  <Text style={{color: '#fff', backgroundColor: 'transparent'}}>Video</Text>
+                </View>
+                <View style={{flex: 1, paddingVertical: 10,justifyContent: 'center'}}>
+                  <Switch
+                  onTintColor="#7ED321"
+                  onValueChange={() => {
+                    thisVar.changeVideoStatus()
+                  }} value={videoStatus} style={{backgroundColor: '#4A4A4A', borderRadius: 20}} />
+                </View>
+              </View>
             </View>
           </View>
         </LinearGradient>
