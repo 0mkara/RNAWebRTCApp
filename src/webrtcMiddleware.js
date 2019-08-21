@@ -8,7 +8,8 @@ const webrtcMiddleware = (function() {
     const configuration = {"iceServers": [{"url": "stun:stun.l.google.com:19302"}]};
     const connection = {'optional': [{'DtlsSrtpKeyAgreement': true}, {'RtpDataChannels': true }]};
     const peerconn = new RTCPeerConnection(configuration, connection);
-    const sdpConstraints = {'mandatory': { 'OfferToReceiveAudio': false, 'OfferToReceiveVideo': false }};
+    // const sdpConstraints = {'mandatory': { 'OfferToReceiveAudio': false, 'OfferToReceiveVideo': false }};
+    const offerOpts = { offertoreceiveaudio: false, offertoreceivevideo: false }
 
     peerconn.onnegotiationneeded = function(event) {
       console.log('onnegotiationneeded');
@@ -31,12 +32,14 @@ const webrtcMiddleware = (function() {
     }
     function createOffer(store, socketId, action) {
         const dataChannel = peerconn.createDataChannel("text_chan", { reliable: false });
-        peerconn.createOffer((desc) => {
-            console.log('createOffer', desc);
-            peerconn.setLocalDescription(desc, () => {
-                store.dispatch({ type: EXCHANGE, payload: {'to': action.payload, 'sdp': peerconn.localDescription } })
-            }, logError);
-        }, logError, sdpConstraints);
+        peerconn.createOffer(offerOpts)
+            .then(desc => {
+                peerconn.setLocalDescription(desc)
+                    .then(() => {
+                        store.dispatch({ type: EXCHANGE, payload: {'to': action.payload, 'sdp': peerconn.localDescription } })
+                    })
+                    .catch(err => console.error("createOffer error : ", err))
+            })
 
         dataChannel.onopen = function() {
             console.log('dataChannel.onopen');
@@ -60,16 +63,19 @@ const webrtcMiddleware = (function() {
         }
         if (data.sdp) {
             console.log('exchange sdp', data);
-            peerconn.setRemoteDescription(new RTCSessionDescription(data.sdp), () => {
-            if (peerconn.remoteDescription.type === "offer")
-                peerconn.createAnswer((desc) => {
-                    console.log('createAnswer', desc);
-                    peerconn.setLocalDescription(desc, () => {
-                        console.log('setLocalDescription', peerconn.localDescription);
-                        store.dispatch({ type: EXCHANGE, payload: {'to': data.from, 'sdp': peerconn.localDescription } });
-                    }, logError);
-                }, logError);
-            }, logError);
+            peerconn.setRemoteDescription(new RTCSessionDescription(data.sdp))
+                .then(() => {
+                    if (peerconn.remoteDescription.type === "offer") {
+                        peerconn.createAnswer(offerOpts)
+                            .then(desc => {
+                                peerconn.setLocalDescription(desc)
+                                    .then(() => {
+                                        store.dispatch({ type: EXCHANGE, payload: {'to': data.from, 'sdp': peerconn.localDescription } });
+                                    })
+                                    .catch(err => console.error("exchange sdp error : ", err))
+                            })
+                    }
+                })
         } else {
             console.log('exchange candidate');
             peerconn.addIceCandidate(new RTCIceCandidate(data.candidate));
