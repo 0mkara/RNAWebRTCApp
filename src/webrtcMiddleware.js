@@ -49,7 +49,7 @@ const webrtcMiddleware = (function() {
             console.log("dataChannel.onclose");
         };
         dataChannel.onmessage = function (event) {
-            console.log("dataChannel.onmessage:", event.data);
+            console.log("dataChannel.onmessage [incomming message]:", event.data);
             store.dispatch(incommingMessage(socketId, event.data));
         };
         dataChannel.onerror = function (error) {
@@ -89,15 +89,11 @@ const webrtcMiddleware = (function() {
           }
         };
         peerconn.ondatachannel = function(event) {
-            console.log('ondatachannel');
             const receiveChannel = event.channel;
             if(!peerconn.textDataChannel) {
                 peerconn.textDataChannel = receiveChannel;
                 store.dispatch(datachannelOpened());
             }
-            receiveChannel.onmessage = function(event) {
-                store.dispatch(incommingMessage(socketId, event.data));
-            };
         }
 
         switch(action.type) {

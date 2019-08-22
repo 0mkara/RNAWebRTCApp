@@ -9,37 +9,37 @@ import {
   ROOM_JOIN
 } from './types';
 
-export const connecting = (dispatch: any) => {
+export const connecting = (dispatch) => {
     dispatch({
         type: CONNECTING
     });
 }
 
-export const connected = (dispatch: any) => {
+export const connected = (dispatch) => {
     dispatch({
         type: CONNECTED
     });
 }
 
-export const disconnected = (dispatch: any) => {
+export const disconnected = (dispatch) => {
     dispatch({
         type: DISCONNECTED
     });
 }
 
-export const roomJoin = (dispatch: any) => {
+export const roomJoin = (dispatch) => {
     dispatch({
         type: ROOM_JOIN
     });
 }
-export function roomMembers(socketIds: string) {
+export function roomMembers(socketIds) {
     return {
         type: SOCKETIDS,
         payload: socketIds
     }
 }
 
-export function roomMember(socketId: string) {
+export function roomMember(socketId) {
     /*AsyncStorage.getItem(MEMBERS_KEY, (err, data) => {
         console.log(data);
         const socketIds = JSON.parse(data);
@@ -51,7 +51,7 @@ export function roomMember(socketId: string) {
     }
 }
 
-export function incommingMessage(from: string, message: string) {
+export function incommingMessage(from, message) {
     return {
         type: MESSAGE,
         payload: {

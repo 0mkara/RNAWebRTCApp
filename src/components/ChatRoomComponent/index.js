@@ -10,7 +10,6 @@ import { CONNECT, JOIN, CREATE_OFFER, SEND_MESSAGE, DISCONNECT } from '../../act
 import { WhiteBtn, GradientInput, ConnectBtn, MessageInput, SendBtn, MessageText } from '../common';
 import { verticalScale } from '../scaling';
 import styles from './styles';
-import {Actions} from 'react-native-router-flux';
 
 class ChatRoom extends Component {
     constructor(props) {
@@ -25,12 +24,13 @@ class ChatRoom extends Component {
             messages: []
         }
     }
-    componentWillReceiveProps(nextProps) {
-        if(nextProps.message.from !== undefined) {
-            const messages = this.state.messages;
-            messages.push(nextProps.message)
+    componentDidUpdate(prevProps) {
+        const { message } = this.props;
+        const stmsg = this.state.messages;
+        if(this.props.message !== prevProps.message && message.from !== undefined) {
+            stmsg.push(message)
             this.setState({
-                messages,
+                messages: stmsg,
             })
         }
     }
@@ -57,6 +57,7 @@ class ChatRoom extends Component {
         console.log(event);
     }
     render() {
+        const { messages } = this.state;
         return (
             <View style={styles.container}>
                 <View style={styles.joinRoomStyle}>
@@ -102,7 +103,7 @@ class ChatRoom extends Component {
                             contentContainerStyle={styles.chatAvoidingViewStyle}>
                             <View style={styles.chatViewStyle}>
                                 {
-                                    this.state.messages.map((item, index) => (
+                                    messages.map((item, index) => (
                                         <MessageText key={index}>
                                             {item}
                                         </MessageText>

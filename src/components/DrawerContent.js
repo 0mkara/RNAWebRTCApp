@@ -41,10 +41,12 @@ class DrawerContent extends React.Component {
     this.state = {
       flatlistData: [
         {
+          key: 'a',
           name: 'Audio',
           status: false
         },
         {
+          key: 'v',
           name: 'Video',
           status: false
         }
