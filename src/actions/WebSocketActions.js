@@ -1,12 +1,12 @@
 // @flow
 import {
-  CONNECTING,
-  CONNECTED,
-  DISCONNECTED,
-  SOCKETIDS,
-  MESSAGE,
-  DATACHAN_STAT,
-  ROOM_JOIN
+    CONNECTING,
+    CONNECTED,
+    DISCONNECTED,
+    SOCKETIDS,
+    MESSAGE,
+    DATACHAN_STAT,
+    ROOM_JOIN
 } from './types';
 
 export const connecting = (dispatch) => {

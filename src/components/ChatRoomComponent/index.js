@@ -1,9 +1,10 @@
 // @flow
 import React, { Component } from 'react';
 import {
-  Text,
-  View,
-  KeyboardAvoidingView
+    Text,
+    View,
+    KeyboardAvoidingView,
+    Platform
 } from 'react-native';
 import { connect } from 'react-redux';
 import { CONNECT, JOIN, CREATE_OFFER, SEND_MESSAGE, DISCONNECT } from '../../actions/types';
@@ -27,7 +28,7 @@ class ChatRoom extends Component {
     componentDidUpdate(prevProps) {
         const { message } = this.props;
         const stmsg = this.state.messages;
-        if(this.props.message !== prevProps.message && message.from !== undefined) {
+        if (this.props.message !== prevProps.message && message.from !== undefined) {
             stmsg.push(message)
             this.setState({
                 messages: stmsg,
@@ -39,7 +40,7 @@ class ChatRoom extends Component {
     }
     handleSend() {
         const messages = this.state.messages;
-        messages.push({from: 'self', message: this.state.text});
+        messages.push({ from: 'self', message: this.state.text });
         this.props.store.dispatch({ type: SEND_MESSAGE, payload: this.state.text });
         this.setState({
             text: '',
@@ -49,6 +50,7 @@ class ChatRoom extends Component {
     handleJoin() {
         this.props.store.dispatch({ type: CONNECT });
         this.props.store.dispatch({ type: JOIN, payload: this.state.room });
+        console.log(this.state.room);
     }
     handleLeave() {
         this.props.store.dispatch({ type: DISCONNECT });
@@ -58,29 +60,30 @@ class ChatRoom extends Component {
     }
     render() {
         const { messages } = this.state;
+
         return (
             <View style={styles.container}>
                 <View style={styles.joinRoomStyle}>
                     <GradientInput
                         style={styles.inputStyle}
-                        onChangeText={(room) => this.setState({room})}
-                        value={this.state.room}/>
-                        {
-                            this.props.room_joined === false &&
-                            <WhiteBtn
-                                onPress={this.handleJoin}
-                                color="#841584">
-                                Join
+                        onChangeText={(room) => this.setState({ room })}
+                        value={this.state.room} />
+                    {
+                        this.props.room_joined === false &&
+                        <WhiteBtn
+                            onPress={this.handleJoin}
+                            color="#841584">
+                            Join
+                                 </WhiteBtn>
+                    }
+                    {
+                        this.props.room_joined === true &&
+                        <WhiteBtn
+                            onPress={this.handleLeave}
+                            color="#841584">
+                            Leave
                             </WhiteBtn>
-                        }
-                        {
-                            this.props.room_joined === true &&
-                            <WhiteBtn
-                                onPress={this.handleLeave}
-                                color="#841584">
-                                Leave
-                            </WhiteBtn>
-                        }
+                    }
                 </View>
                 {
                     // this should be replaced with ListView
@@ -113,8 +116,8 @@ class ChatRoom extends Component {
                             <View style={styles.messageViewStyle}>
                                 <MessageInput
                                     style={styles.inputStyle}
-                                    onChangeText={(text) => this.setState({text})}
-                                    value={this.state.text}/>
+                                    onChangeText={(text) => this.setState({ text })}
+                                    value={this.state.text} />
                                 <SendBtn
                                     onPress={this.handleSend}>
                                     Send
@@ -125,11 +128,12 @@ class ChatRoom extends Component {
                 }
             </View>
         );
+
     }
 }
 
 const mapStateToProps = ({ connection, routes }) => {
     const { connected, socketids, message, datachan_stat, room_joined } = connection;
-	return { connected, socketids, message, datachan_stat, room_joined, routes };
+    return { connected, socketids, message, datachan_stat, room_joined, routes };
 };
-export default connect(mapStateToProps, { })(ChatRoom);
+export default connect(mapStateToProps, {})(ChatRoom);

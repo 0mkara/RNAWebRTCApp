@@ -2,17 +2,17 @@
 import { AsyncStorage } from 'react-native';
 import { WEBTRC_EXCHANGE, EXCHANGE, DISCONNECT, CONNECT, JOIN } from './actions/types';
 import { MEMBERS_KEY } from './actions/StorageKeys';
-import io from 'socket.io-client';
+import socketIO from 'socket.io-client';
 import { connecting, connected, disconnected, roomMembers, roomMember, roomJoin } from './actions';
-const webSocketMiddleware = (function(){
+const webSocketMiddleware = (function () {
 	let socket = null;
 
 	const onOpen = (store) => evt => {
 		//Send a handshake, or authenticate with remote end
 		//Tell the store we're connected
+		console.log(evt);
 		store.dispatch(connected);
 	}
-
 	const onClose = (store) => evt => {
 		//Tell the store we've disconnected
 		store.dispatch(disconnected);
@@ -27,7 +27,7 @@ const webSocketMiddleware = (function(){
 		console.log(socketId);
 		let socketIds = [];
 		AsyncStorage.getItem(MEMBERS_KEY, (err, data) => {
-			if(data !== null) {
+			if (data !== null) {
 				socketIds = JSON.parse(data);
 			}
 			socketIds.push(socketId);
@@ -35,21 +35,31 @@ const webSocketMiddleware = (function(){
 			store.dispatch(roomMembers(socketIds));
 		})
 	}
+	const falied = () => {
+		console.log('Failed');
+	}
+	const error = () => {
+		console.log();
+	}
 	return store => next => action => {
 		//console.log(action);
-		switch(action.type) {
+		switch (action.type) {
 			//The user wants us to connect
 			case CONNECT:
 				//console.log("Connecting websocket");
 				//Start a new connection to the server
-				if(socket !== null) {
+				if (socket !== null) {
 					socket.close();
 				}
 				//Send an action that shows a "connecting..." status for now
 				store.dispatch(connecting);
 
 				//Attempt to connect (we could send a 'failed' action on error)
-				socket = io.connect('https://192.168.0.14:4443', {transports: ['websocket']});
+				socket = socketIO.connect('https://quick-task.herokuapp.com', { transports: ['websocket'] });
+				// socket = io.connect('http://localhost:3000', { transports: ['websocket'] });
+				console.log(socket);
+				socket.on('connect_failed', falied());
+				socket.on('error', error());
 				socket.on('connect', onOpen(store));
 				socket.on('leave', onClose(store));
 				socket.on('exchange', onExchangeMessage(store));
@@ -58,7 +68,7 @@ const webSocketMiddleware = (function(){
 
 			//The user wants us to disconnect
 			case DISCONNECT:
-				if(socket !== null) {
+				if (socket !== null) {
 					socket.close();
 				}
 				socket = null;

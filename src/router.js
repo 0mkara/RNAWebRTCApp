@@ -3,14 +3,15 @@ import { Scene, Router, Drawer, Stack } from 'react-native-router-flux';
 import configureStore from './configureStore';
 import ChatRoom from './components/ChatRoomComponent';
 import {
-  Text,
-  View,
-  KeyboardAvoidingView
+	Text,
+	View,
+	KeyboardAvoidingView,
+	Platform
 } from 'react-native';
 import DrawerContent from './components/DrawerContent';
 import MenuIcon from './images/menu_burger.png';
-const store = configureStore();
 const RouterComponent = () => {
+	const store = configureStore();
 	return (
 		<Router store={store}>
 			<Stack key="root">
