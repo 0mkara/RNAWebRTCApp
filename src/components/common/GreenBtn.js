@@ -34,22 +34,24 @@ const styles = {
 };
 
 const GreenBtn = ({ onPress, children }) => {
-  const { buttonStyle, textStyle } = styles;
+    const { buttonStyle, textStyle } = styles;
 
-  return (
-      <LinearGradient
-          colors={['#979797', '#979797']}
-          start={{x: 0.0, y: 0.0}} end={{x: 1.0, y: 0.0}}
-          style={styles.buttonContainerStyle}>
+    return (
+        <LinearGradient
+            colors={['#979797', '#979797']}
+            start={{ x: 0.0, y: 0.0 }} end={{ x: 1.0, y: 0.0 }}
+            style={styles.buttonContainerStyle}>
             <LinearGradient
                 colors={['#19e8b3', '#abed57']}
-                start={{x: 0.0, y: 0.0}} end={{x: 1.0, y: 0.0}}
+                start={{ x: 0.0, y: 0.0 }} end={{ x: 1.0, y: 0.0 }}
                 style={styles.buttonStyle}>
+                <TouchableOpacity onPress={onPress} style={buttonStyle}>
                     <Text style={textStyle}>
-                    {children}
+                        {children}
                     </Text>
+                </TouchableOpacity>
             </LinearGradient>
-      </LinearGradient>
-  );
+        </LinearGradient>
+    );
 };
 export { GreenBtn };

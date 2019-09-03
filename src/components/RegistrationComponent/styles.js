@@ -6,26 +6,22 @@ export default StyleSheet.create({
     container: {
         flex: 1,
         alignItems: 'center',
-        backgroundColor: 'aliceblue',
+        backgroundColor: '#fff',
         paddingTop: verticalScale(65)
     },
     inputStyle: {
-        height: 340,
-        width: 60,
-        borderColor: 'gray',
-        borderWidth: 1
+        height: 40,
+        shadowOpacity: 0.75,
+        shadowRadius: 5,
+        shadowColor: 'red',
+        shadowOffset: { height: 0, width: 0 }
     },
-    joinRoomStyle: {
-        width: (width - 20),
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center',
+    loginBtn: {
+        borderWidth: 0,
+        borderRadius: 100
     },
-    connectLstStyle: {
-        width: (width - 20),
-        flexDirection: 'row',
-        justifyContent: 'space-between',
-        alignItems: 'center'
+    bottomText: {
+        marginTop: 25
     },
     chatContainerStyle: {
         flex: 1,

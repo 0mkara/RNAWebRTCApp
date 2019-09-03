@@ -4,6 +4,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import { StyleSheet, Text, View, ViewPropTypes, Switch, FlatList } from 'react-native';
 import { GreenBtn, GradientInput } from './common';
 import { scale, verticalScale } from './scaling';
+import { Actions } from 'react-native-router-flux'
 
 const styles = StyleSheet.create({
   container: {
@@ -36,7 +37,7 @@ const styles = StyleSheet.create({
 });
 
 class DrawerContent extends React.Component {
-  constructor(props){
+  constructor(props) {
     super(props);
     this.state = {
       flatlistData: [
@@ -68,37 +69,53 @@ class DrawerContent extends React.Component {
     return (
       <View style={styles.container}>
         <LinearGradient colors={['#350BAC', '#1CAEC5']} style={styles.linearGradient}>
-          <View style={{backgroundColor: 'transparent', paddingTop: 60, flex: 1, justifyContent: 'flex-start'}}>
-            <View style={{flex: 1, flexDirection: 'row'}}>
-              <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', height: scale(30)}}>
+          <View style={{ backgroundColor: 'transparent', paddingTop: 60, flex: 1, justifyContent: 'flex-start' }}>
+            <View style={{ flex: 1, flexDirection: 'row' }}>
+              <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', height: scale(30) }}>
                 <GradientInput
-                inputTextStyle={styles.inputStyle}
-                inputContainerStyle={styles.inputContainerStyle}
-                value="UserName"/>
+                  inputTextStyle={styles.inputStyle}
+                  inputContainerStyle={styles.inputContainerStyle}
+                  value="UserName" />
               </View>
-              <View style={{flex: 1, alignItems: 'center', justifyContent: 'center', height: scale(30)}}>
+              <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', height: scale(30) }}>
                 <GreenBtn
                   color="#841584">
                   Change
                 </GreenBtn>
               </View>
             </View>
-            <View style={{flex: 1}}>
-              <FlatList
+            <View style={{ flex: 1, flexDirection: 'row' }}>
+              <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+                <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+                  <GreenBtn
+                    color="#841584" onPress={() => Actions.home_map()}>
+                    Home
+                </GreenBtn>
+                </View>
+                <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+                  <GreenBtn
+                    color="#841584" onPress={() => Actions.login()}>
+                    Login
+                </GreenBtn>
+                </View>
+              </View>
+            </View>
+            <View style={{ flex: 1 }}>
+              {/* <FlatList
                 data={flatlistData}
-                renderItem={({item}) => {
-                return (
-                  <View style={{flex: 1, flexDirection: 'row'}}>
-                    <View style={{flex: 1, paddingVertical: 10, alignItems: 'center', justifyContent: 'center'}}>
-                      <Text style={{color: '#fff', backgroundColor: 'transparent'}}>{item.name}</Text>
+                renderItem={({ item }) => {
+                  return (
+                    <View style={{ flex: 1, flexDirection: 'row' }}>
+                      <View style={{ flex: 1, paddingVertical: 10, alignItems: 'center', justifyContent: 'center' }}>
+                        <Text style={{ color: '#fff', backgroundColor: 'transparent' }}>{item.name}</Text>
+                      </View>
+                      <View style={{ flex: 1, paddingVertical: 10, justifyContent: 'center' }}>
+                        <Switch value={item.state} style={{ backgroundColor: 'green', borderRadius: 20 }} />
+                      </View>
                     </View>
-                    <View style={{flex: 1, paddingVertical: 10,justifyContent: 'center'}}>
-                      <Switch value={item.state} style={{backgroundColor: 'green', borderRadius: 20}} />
-                    </View>
-                  </View>
-                )
-              }}
-              />
+                  )
+                }}
+              /> */}
             </View>
           </View>
         </LinearGradient>

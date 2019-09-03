@@ -4,7 +4,9 @@ import {
     Text,
     View,
     KeyboardAvoidingView,
-    Platform
+    TextInput,
+    Platform,
+    SafeAreaView
 } from 'react-native';
 import { connect } from 'react-redux';
 import { CONNECT, JOIN, CREATE_OFFER, SEND_MESSAGE, DISCONNECT } from '../../actions/types';
@@ -60,7 +62,7 @@ class ChatRoom extends Component {
     }
     render() {
         const { messages } = this.state;
-
+        const { socketids } = this.props;
         return (
             <View style={styles.container}>
                 <View style={styles.joinRoomStyle}>
@@ -87,7 +89,7 @@ class ChatRoom extends Component {
                 </View>
                 {
                     // this should be replaced with ListView
-                    this.props.socketids.map((item, index) => (
+                    socketids.map((item, index) => (
                         <View key={index} style={styles.connectLstStyle}>
                             <Text>{item}</Text>
                             <ConnectBtn
@@ -97,35 +99,37 @@ class ChatRoom extends Component {
                         </View>
                     ))
                 }
-                {
-                    this.props.datachan_stat === true &&
-                    <View style={styles.chatContainerStyle}>
-                        <KeyboardAvoidingView
-                            behavior="position"
-                            keyboardVerticalOffset={verticalScale(123)}
-                            contentContainerStyle={styles.chatAvoidingViewStyle}>
-                            <View style={styles.chatViewStyle}>
-                                {
-                                    messages.map((item, index) => (
-                                        <MessageText key={index}>
-                                            {item}
-                                        </MessageText>
-                                    ))
-                                }
-                            </View>
-                            <View style={styles.messageViewStyle}>
-                                <MessageInput
-                                    style={styles.inputStyle}
-                                    onChangeText={(text) => this.setState({ text })}
-                                    value={this.state.text} />
-                                <SendBtn
-                                    onPress={this.handleSend}>
-                                    Send
+                {/* {
+                    this.props.datachan_stat === true && */}
+                <View style={styles.chatContainerStyle}>
+                    <KeyboardAvoidingView
+                        behavior="position"
+                        // keyboardVerticalOffset={verticalScale(123)}
+                        contentContainerStyle={styles.chatAvoidingViewStyle}>
+                        <View style={styles.chatViewStyle}>
+                            {
+                                messages.map((item, index) => (
+                                    <MessageText key={index}>
+                                        {item}
+                                    </MessageText>
+                                ))
+                            }
+                        </View>
+                        <View style={styles.messageViewStyle}>
+                            <MessageInput
+                                style={styles.inputStyle}
+                                onChangeText={(text) => this.setState({ text })}
+                                value={this.state.text} />
+                            <SendBtn
+                                onPress={this.handleSend}>
+                                Send
                                 </SendBtn>
-                            </View>
-                        </KeyboardAvoidingView>
-                    </View>
-                }
+                        </View>
+                        <View>
+                        </View>
+                    </KeyboardAvoidingView>
+                </View>
+                {/* } */}
             </View>
         );
 

@@ -2,7 +2,9 @@
 import { AsyncStorage } from 'react-native';
 import { WEBTRC_EXCHANGE, EXCHANGE, DISCONNECT, CONNECT, JOIN } from './actions/types';
 import { MEMBERS_KEY } from './actions/StorageKeys';
-import socketIO from 'socket.io-client';
+// import io from 'socket.io-client';
+import io from 'socket.io-client/dist/socket.io';
+
 import { connecting, connected, disconnected, roomMembers, roomMember, roomJoin } from './actions';
 const webSocketMiddleware = (function () {
 	let socket = null;
@@ -10,9 +12,9 @@ const webSocketMiddleware = (function () {
 	const onOpen = (store) => evt => {
 		//Send a handshake, or authenticate with remote end
 		//Tell the store we're connected
-		console.log(evt);
 		store.dispatch(connected);
 	}
+
 	const onClose = (store) => evt => {
 		//Tell the store we've disconnected
 		store.dispatch(disconnected);
@@ -24,7 +26,6 @@ const webSocketMiddleware = (function () {
 	}
 
 	const onMembers = (store) => socketId => {
-		console.log(socketId);
 		let socketIds = [];
 		AsyncStorage.getItem(MEMBERS_KEY, (err, data) => {
 			if (data !== null) {
@@ -35,11 +36,10 @@ const webSocketMiddleware = (function () {
 			store.dispatch(roomMembers(socketIds));
 		})
 	}
-	const falied = () => {
-		console.log('Failed');
-	}
-	const error = () => {
-		console.log();
+
+	const failed = () => {
+		//Tell the store we've disconnected
+		console.log('Connection is lost')
 	}
 	return store => next => action => {
 		//console.log(action);
@@ -55,11 +55,17 @@ const webSocketMiddleware = (function () {
 				store.dispatch(connecting);
 
 				//Attempt to connect (we could send a 'failed' action on error)
-				socket = socketIO.connect('https://quick-task.herokuapp.com', { transports: ['websocket'] });
-				// socket = io.connect('http://localhost:3000', { transports: ['websocket'] });
-				console.log(socket);
-				socket.on('connect_failed', falied());
-				socket.on('error', error());
+				// socket = io.connect('https://100.26.248.243', { transports: ['websocket'], secure: true, reconnect: true, rejectUnauthorized: false });
+
+				socket = io('http://192.168.0.7:4443', {
+					transports: ['websocket'], secure: true, reconnect: true, rejectUnauthorized: false,
+				});
+
+
+				socket.on('connect_failed', failed());
+				socket.on('connect_error', (err) => {
+					console.log(JSON.stringify(err));
+				})
 				socket.on('connect', onOpen(store));
 				socket.on('leave', onClose(store));
 				socket.on('exchange', onExchangeMessage(store));

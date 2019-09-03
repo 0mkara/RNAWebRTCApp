@@ -8,7 +8,7 @@ const { width } = Dimensions.get('screen');
 const styles = {};
 const containerDefaultStyle = {
     style: {
-        height: verticalScale(41),
+        // height: verticalScale(41),        
         width: width - scale(52),
         flexDirection: 'row',
         alignItems: 'center',
@@ -16,10 +16,11 @@ const containerDefaultStyle = {
     }
 }
 const inputDefaultStyle = {
-    style : {
+    style: {
         color: 'rgb(126, 129, 168)',
-        height: verticalScale(41-4),
-        width: width - scale(52+4),
+        // height: verticalScale(41 - 4),
+        // height: 340,
+        width: width - scale(52 + 4),
         backgroundColor: 'aliceblue',
         margin: scale(2),
         textAlign: 'left',
@@ -36,7 +37,7 @@ const labelDefaultStyle = {
 }
 const MessageInput = ({ label, value, onChangeText, placeholder, placeholderTextColor, secureTextEntry, inputContainerStyle, inputTextStyle, labelTextStyle, androidUnderlineColor }) => {
     let underlineColor = 'rgba(0,0,0,0)';
-    if(inputContainerStyle) {
+    if (inputContainerStyle) {
         styles.containerStyle = inputContainerStyle;
     } else if (!inputContainerStyle) {
         styles.containerStyle = containerDefaultStyle.style;
@@ -51,14 +52,16 @@ const MessageInput = ({ label, value, onChangeText, placeholder, placeholderText
     } else if (!labelTextStyle) {
         styles.labelStyle = labelDefaultStyle.style;
     }
-    if(androidUnderlineColor) {
+    if (androidUnderlineColor) {
         underlineColor = androidUnderlineColor;
     }
     const { inputStyle, labelStyle, containerStyle } = styles;
+
+    let heightOfInput = 0;
     return (
         <LinearGradient
             colors={['#ED5050', '#8948EE']}
-            start={{x: 0.0, y: 0.0}} end={{x: 1.0, y: 0.0}}
+            start={{ x: 0.0, y: 0.0 }} end={{ x: 1.0, y: 0.0 }}
             style={containerStyle}>
             <Text style={labelStyle}>{label}</Text>
             <TextInput
@@ -66,11 +69,18 @@ const MessageInput = ({ label, value, onChangeText, placeholder, placeholderText
                 placeholderTextColor={placeholderTextColor}
                 autoCorrect={false}
                 style={inputStyle}
+                // style={[inputStyle, { height: Math.max(35, heightOfInput) }]}
                 value={value}
                 onChangeText={onChangeText}
                 underlineColorAndroid={underlineColor}
-                multiline={false}
-                autoCapitalize="none"/>
+                multiline={true}
+                autoCapitalize="none"
+                numberOfLines={heightOfInput}
+                onContentSizeChange={(event) => {
+                    heightOfInput = event.nativeEvent.contentSize.height;
+                    console.log(heightOfInput)
+                }}
+            />
         </LinearGradient>
     );
 };
