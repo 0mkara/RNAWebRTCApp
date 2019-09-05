@@ -4,6 +4,8 @@ import configureStore from './configureStore';
 import ChatRoom from './components/ChatRoomComponent';
 import Login from './components/LoginComponent';
 import Registration from './components/RegistrationComponent';
+import ForgotPassword from './components/ForgottPassword';
+import SplashScreen from './components/SplashScreen'
 import {
 	Text,
 	View,
@@ -17,21 +19,23 @@ const RouterComponent = () => {
 	return (
 		<Router store={store}>
 			<Stack key="root">
-				<Drawer
-					hideNavBar
-					key="drawer"
-					contentComponent={DrawerContent}
-					drawerImage={MenuIcon}
-					drawerWidth={300}
-				>
-					<Scene hideNavBar>
-						<Stack key="home" tabs={false}>
+				<Scene key="splash" component={SplashScreen} title="spalsh"></Scene>
+				<Scene key="login" component={Login} title="Login"></Scene>
+				<Scene key="signup" component={Registration} title="Login"></Scene>
+				<Scene key="forgottpassword" component={ForgotPassword} title="forgotpassword"></Scene>
+				<Scene hideNavBar>
+					<Stack key="home" tabs={false}>
+						<Drawer
+							hideNavBar
+							key="drawer"
+							contentComponent={DrawerContent}
+							drawerImage={MenuIcon}
+							drawerWidth={300}
+						>
 							<Scene key="home_map" component={ChatRoom} title="Home"></Scene>
-							<Scene key="login" component={Login} title="Login"></Scene>
-							<Scene key="signup" component={Registration} title="Login"></Scene>
-						</Stack>
-					</Scene>
-				</Drawer>
+						</Drawer>
+					</Stack>
+				</Scene>
 			</Stack>
 		</Router>
 	);

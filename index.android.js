@@ -13,6 +13,10 @@ import {
 } from 'react-native';
 import Router from './src/router';
 export default class RNAWebRTCApp extends Component {
+  constructor() {
+    super();
+    console.disableYellowBox = true;
+  }
   render() {
     return (
       <Router />

@@ -5,6 +5,7 @@ import { MEMBERS_KEY } from './actions/StorageKeys';
 // import io from 'socket.io-client';
 import io from 'socket.io-client/dist/socket.io';
 
+
 import { connecting, connected, disconnected, roomMembers, roomMember, roomJoin } from './actions';
 const webSocketMiddleware = (function () {
 	let socket = null;
@@ -12,6 +13,7 @@ const webSocketMiddleware = (function () {
 	const onOpen = (store) => evt => {
 		//Send a handshake, or authenticate with remote end
 		//Tell the store we're connected
+		console.log('Connection is established');
 		store.dispatch(connected);
 	}
 
@@ -41,6 +43,21 @@ const webSocketMiddleware = (function () {
 		//Tell the store we've disconnected
 		console.log('Connection is lost')
 	}
+	const _retrieveAccessToken = async () => {
+		try {
+			const value = await AsyncStorage.getItem('access_token');
+			if (value !== null) {
+				// We have data!!
+				console.log(value);
+				return value;
+			}
+		} catch (error) {
+			// Error retrieving data
+			console.error(error);
+		}
+	};
+
+
 	return store => next => action => {
 		//console.log(action);
 		switch (action.type) {
@@ -56,9 +73,12 @@ const webSocketMiddleware = (function () {
 
 				//Attempt to connect (we could send a 'failed' action on error)
 				// socket = io.connect('https://100.26.248.243', { transports: ['websocket'], secure: true, reconnect: true, rejectUnauthorized: false });
-
-				socket = io('http://192.168.0.7:4443', {
+				const access_token = _retrieveAccessToken();
+				socket = io('http://192.168.0.8:8080', {
 					transports: ['websocket'], secure: true, reconnect: true, rejectUnauthorized: false,
+					extraHeaders: {
+						Authorization: access_token
+					}
 				});
 
 

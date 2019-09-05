@@ -23,42 +23,22 @@ export default StyleSheet.create({
         elevation: 4,
         backgroundColor: '#fff',
         borderRadius: 100,
-        marginBottom: 10,
-        paddingLeft: 20
-    },
-    buttonStyle: {
-        height: 50,
-        width: 300,
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.23,
-        shadowRadius: 2.62,
-        elevation: 4,
-        backgroundColor: '#fff',
-        borderRadius: 100,
         marginBottom: 5,
         padding: 14,
         color: '#2778ff',
         fontWeight: 'bold',
         alignItems: 'center',
-
     },
     buttonText: {
         color: '#2778ff',
         fontWeight: 'bold',
-
     },
-    loginBtn: {
-        borderWidth: 0,
-        borderRadius: 100
+    logoStyle: {
+        marginBottom: 250
     },
-    bottomText: {
-        marginTop: 25,
-        color: '#fff',
-        fontWeight: 'bold'
+    bottomButton: {
+        position: 'absolute',
+        bottom: 10
     },
     chatContainerStyle: {
         flex: 1,

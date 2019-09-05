@@ -4,11 +4,20 @@ import {
     Text,
     View,
     TextInput,
-    Button
+    Button,
+    AsyncStorage,
+    Modal,
+    Alert,
+    TouchableOpacity,
+    TouchableHighlight
 } from 'react-native';
 import { connect } from 'react-redux';
 import styles from './styles';
 import { Actions } from 'react-native-router-flux'
+import axios from 'axios';
+import env from 'react-native-config'
+import { login } from '../../actions/LoginAction';
+
 
 // import styles from './styles';
 
@@ -17,18 +26,56 @@ class Login extends Component {
         super(props);
         this.state = {
             username: '',
-            password: ''
+            password: '',
+            modalVisible: false
         }
-        this.login = this.login.bind(this);
+        this.handleLogin = this.handleLogin.bind(this);
+        this._storeAccessToken = this._storeAccessToken.bind(this);
+        this.gotoHomePage = this.gotoHomePage.bind(this);
     }
 
-    async login() {
-        console.log('Hi')
+    _storeAccessToken = async (token) => {
+        try {
+            await AsyncStorage.setItem('access_token', 'BUOT8LRKML2537A7VFX');
+        } catch (error) {
+            // Error saving data
+            console.error(error);
+        }
+    };
+
+    handleLogin = () => {
+        console.log(env.API_HOST + `:` + env.API_PORT + `/api/v1/login?grant_type=password&client_id=client@letsgo&client_secret=Va4a8bFFhTJZdybnzyhjHjj6P9UVh7UL&scope=read&username=DemoUserName2&password=ss5852s5s85`)
+        this.setState({ modalVisible: true });
+        // axios.get(env.API_HOST + `:` + env.API_PORT + `/api/v1/login?grant_type=password&client_id=client@letsgo&client_secret=Va4a8bFFhTJZdybnzyhjHjj6P9UVh7UL&scope=read&username=DemoUserName2&password=ss5852s5s85`)
+        //     .then((res) => {
+        //         console.log(res)
+        //         if (res.hasOwnProperty('data') && res['data'].hasOwnProperty('access_token')) {
+        //             this._storeAccessToken(res['data']['access_token']);
+        //             this.setState({ modalVisible: true });
+        //             this.props.store.dispatch(login(true));
+        //         }
+        //     })
     }
+
+    gotoHomePage() {
+        console.log('OK is pressed');
+        Actions.home_map();
+    }
+
+
 
     render() {
+        const { isLogin } = this.props;
+        console.log(this.props);
         return (
             <View style={styles.container}>
+                {this.state.modalVisible && Alert.alert(
+                    'Login status',
+                    'Login is successfull',
+                    [
+                        { text: 'OK', onPress: () => this.gotoHomePage() },
+                    ]
+                )}
                 <Text>Logo</Text>
                 <TextInput
                     style={styles.inputStyle}
@@ -42,17 +89,24 @@ class Login extends Component {
                     onChangeText={(text) => this.setState({ password: text })}
                     value={this.state.password}
                 />
-                <Button
-                    style={styles.loginBtn}
-                    onPress={this.login}
-                    title="Login"
-                    color="#841584"
-                    accessibilityLabel="Login"
-                />
+                <TouchableOpacity
+                    style={styles.buttonStyle}
+                    title="Signup"
+                    onPress={() => this.handleLogin()}
+                >
+
+                    <Text style={styles.buttonText}>Login</Text>
+
+                </TouchableOpacity>
                 <Text style={styles.bottomText}
                     onPress={() => Actions.signup()}
                 >
                     Don't has Account, go to registration?
+                </Text>
+                <Text style={styles.bottomText}
+                    onPress={() => Actions.forgottpassword()}
+                >
+                    Forgot your password?
                 </Text>
             </View>
         );
@@ -60,8 +114,8 @@ class Login extends Component {
     }
 }
 
-const mapStateToProps = ({ connection, routes }) => {
-    const { connected, socketids, message, datachan_stat, room_joined } = connection;
-    return { connected, socketids, message, datachan_stat, room_joined, routes };
+const mapStateToProps = ({ login, routes }) => {
+    const { isLogin } = login;
+    return { isLogin, routes };
 };
 export default connect(mapStateToProps, {})(Login);

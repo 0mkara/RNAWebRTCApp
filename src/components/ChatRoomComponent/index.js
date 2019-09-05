@@ -99,37 +99,37 @@ class ChatRoom extends Component {
                         </View>
                     ))
                 }
-                {/* {
-                    this.props.datachan_stat === true && */}
-                <View style={styles.chatContainerStyle}>
-                    <KeyboardAvoidingView
-                        behavior="position"
-                        // keyboardVerticalOffset={verticalScale(123)}
-                        contentContainerStyle={styles.chatAvoidingViewStyle}>
-                        <View style={styles.chatViewStyle}>
-                            {
-                                messages.map((item, index) => (
-                                    <MessageText key={index}>
-                                        {item}
-                                    </MessageText>
-                                ))
-                            }
-                        </View>
-                        <View style={styles.messageViewStyle}>
-                            <MessageInput
-                                style={styles.inputStyle}
-                                onChangeText={(text) => this.setState({ text })}
-                                value={this.state.text} />
-                            <SendBtn
-                                onPress={this.handleSend}>
-                                Send
+                {
+                    this.props.datachan_stat === true &&
+                    <View style={styles.chatContainerStyle}>
+                        <KeyboardAvoidingView
+                            behavior="position"
+                            // keyboardVerticalOffset={verticalScale(123)}
+                            contentContainerStyle={styles.chatAvoidingViewStyle}>
+                            <View style={styles.chatViewStyle}>
+                                {
+                                    messages.map((item, index) => (
+                                        <MessageText key={index}>
+                                            {item}
+                                        </MessageText>
+                                    ))
+                                }
+                            </View>
+                            <View style={styles.messageViewStyle}>
+                                <MessageInput
+                                    style={styles.inputStyle}
+                                    onChangeText={(text) => this.setState({ text })}
+                                    value={this.state.text} />
+                                <SendBtn
+                                    onPress={this.handleSend}>
+                                    Send
                                 </SendBtn>
-                        </View>
-                        <View>
-                        </View>
-                    </KeyboardAvoidingView>
-                </View>
-                {/* } */}
+                            </View>
+                            <View>
+                            </View>
+                        </KeyboardAvoidingView>
+                    </View>
+                }
             </View>
         );
 

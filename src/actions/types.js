@@ -16,3 +16,6 @@ export const EXCHANGE = 'exchange';
 export const WEBTRC_EXCHANGE = 'webrtc_exchange';
 export const DATACHAN_STAT = 'datachan_stat';
 export const ROOM_JOIN = 'room_join';
+
+// Login action
+export const LOGIN = 'login';

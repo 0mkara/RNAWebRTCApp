@@ -5,7 +5,10 @@ import { StyleSheet, Text, View, ViewPropTypes, Switch, FlatList } from 'react-n
 import { GreenBtn, GradientInput } from './common';
 import { scale, verticalScale } from './scaling';
 import { Actions } from 'react-native-router-flux'
-
+import { connect } from 'react-redux';
+import { login } from '../actions/LoginAction';
+import { TouchableOpacity } from 'react-native';
+import { AsyncStorage } from 'react-native';
 const styles = StyleSheet.create({
   container: {
     flex: 1,
@@ -15,7 +18,8 @@ const styles = StyleSheet.create({
   },
   linearGradient: {
     flex: 1,
-    width: '100%'
+    width: '100%',
+    backgroundColor: "#fff"
   },
   inputStyle: {
     color: 'aliceblue',
@@ -53,6 +57,7 @@ class DrawerContent extends React.Component {
         }
       ]
     }
+    this.logout = this.logout.bind(this);
   }
   static propTypes = {
     name: PropTypes.string,
@@ -64,40 +69,45 @@ class DrawerContent extends React.Component {
     drawer: PropTypes.object,
   }
 
+  logout = () => {
+    // AsyncStorage.clear();
+    Actions.splash();
+  }
+
   render() {
     const { flatlistData } = this.state;
+    const { isLogin } = this.props;
+    console.log(this.props)
     return (
       <View style={styles.container}>
-        <LinearGradient colors={['#350BAC', '#1CAEC5']} style={styles.linearGradient}>
+        <LinearGradient colors={['#2778ff', '#2778ff']} style={styles.linearGradient}>
           <View style={{ backgroundColor: 'transparent', paddingTop: 60, flex: 1, justifyContent: 'flex-start' }}>
-            <View style={{ flex: 1, flexDirection: 'row' }}>
-              <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', height: scale(30) }}>
+            <View style={{ flexDirection: 'row' }}>
+              <View style={{ alignItems: 'center', justifyContent: 'center', height: scale(30) }}>
                 <GradientInput
                   inputTextStyle={styles.inputStyle}
                   inputContainerStyle={styles.inputContainerStyle}
                   value="UserName" />
               </View>
-              <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center', height: scale(30) }}>
-                <GreenBtn
+              <View style={{ alignItems: 'center', justifyContent: 'center', height: scale(30) }}>
+                <TouchableOpacity
                   color="#841584">
-                  Change
-                </GreenBtn>
+                  <Text>Change</Text>
+                </TouchableOpacity>
               </View>
             </View>
-            <View style={{ flex: 1, flexDirection: 'row' }}>
-              <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-                <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-                  <GreenBtn
-                    color="#841584" onPress={() => Actions.home_map()}>
-                    Home
-                </GreenBtn>
-                </View>
-                <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-                  <GreenBtn
-                    color="#841584" onPress={() => Actions.login()}>
-                    Login
-                </GreenBtn>
-                </View>
+            <View style={{ flexDirection: 'column' }}>
+              <View style={{ padding: 20, alignItems: 'center', justifyContent: 'center' }}>
+                <TouchableOpacity
+                  color="#841584" onPress={() => Actions.home_map()}>
+                  <Text style={{ color: '#fff', fontWeight: "bold" }}>Home</Text>
+                </TouchableOpacity>
+              </View>
+              <View style={{ padding: 20, flex: 1, alignItems: 'center', justifyContent: 'center' }}>
+                <TouchableOpacity
+                  color="#841584" onPress={() => this.logout()}>
+                  <Text style={{ color: '#fff', fontWeight: "bold" }}> Logout</Text>
+                </TouchableOpacity>
               </View>
             </View>
             <View style={{ flex: 1 }}>
@@ -124,4 +134,9 @@ class DrawerContent extends React.Component {
   }
 }
 
+// const mapStateToProps = ({ login, routes }) => {
+//   const { isLogin } = login;
+//   return { isLogin, routes };
+// };
+// export default connect(mapStateToProps, {})(DrawerContent);
 export default DrawerContent;
