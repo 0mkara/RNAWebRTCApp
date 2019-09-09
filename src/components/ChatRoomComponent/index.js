@@ -71,7 +71,7 @@ class ChatRoom extends Component {
         console.log(this.state.room);
     }
     handleGet() {
-        this.props.store.dispatch({ type: 'get' })
+        this.props.store.dispatch({ type: 'get', payload: this.state.room })
     }
     handleLeave() {
         this.props.store.dispatch({ type: DISCONNECT });

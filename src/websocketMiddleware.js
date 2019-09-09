@@ -90,6 +90,9 @@ const webSocketMiddleware = (function () {
 						socket.on('leave', onClose(store));
 						socket.on('exchange', onExchangeMessage(store));
 						socket.on('new_member', onMembers(store));
+						socket.on('socket_ids', (data) => {
+							console.log(data);
+						});
 
 						socket.on('reply', (data) => {
 							console.log(data);
@@ -125,7 +128,7 @@ const webSocketMiddleware = (function () {
 				break;
 			case 'get':
 				console.log('GET CLICKED')
-				socket.emit('get', '', () => {
+				socket.emit('get', action.payload, () => {
 					console.log("get called")
 				});
 				break;
