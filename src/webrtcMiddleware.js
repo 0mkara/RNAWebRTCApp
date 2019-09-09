@@ -31,12 +31,13 @@ const webrtcMiddleware = (function () {
         console.log("logError", error);
     }
     function createOffer(store, socketId, action) {
+        console.log(action.payload);
         const dataChannel = peerconn.createDataChannel("text_chan", { reliable: false });
         peerconn.createOffer(offerOpts)
             .then(desc => {
                 peerconn.setLocalDescription(desc)
                     .then(() => {
-                        store.dispatch({ type: EXCHANGE, payload: { 'to': action.payload, 'sdp': peerconn.localDescription } })
+                        store.dispatch({ type: EXCHANGE, payload: { 'to': action.payload, 'sdp': peerconn.localDescription, from: '1' } })
                     })
                     .catch(err => console.error("createOffer error : ", err))
             })

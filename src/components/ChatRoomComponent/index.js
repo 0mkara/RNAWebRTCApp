@@ -17,6 +17,8 @@ import { WhiteBtn, GradientInput, ConnectBtn, MessageInput, SendBtn, MessageText
 import { verticalScale } from '../scaling';
 import styles from './styles';
 import io from 'socket.io-client/dist/socket.io';
+import { MEMBERS_KEY } from '../../actions/StorageKeys';
+
 
 class ChatRoom extends Component {
     constructor(props) {
@@ -62,9 +64,6 @@ class ChatRoom extends Component {
                 messages: stmsg,
             })
         }
-        if (this.props.connected !== prevProps.connected) {
-            this.handleJoin();
-        }
     }
     onPressExchange(socketId) {
         this.props.store.dispatch({ type: CREATE_OFFER, payload: socketId });
@@ -82,10 +81,11 @@ class ChatRoom extends Component {
         this.props.store.dispatch({ type: CONNECT });
     }
     handleJoin = async () => {
+        AsyncStorage.setItem(MEMBERS_KEY, '');
         if (this.props.connected) {
             console.log('Connected')
             this.props.store.dispatch({ type: JOIN, payload: this.state.room });
-            this.props.store.dispatch({ type: 'get' })
+            this.props.store.dispatch({ type: 'get', payload: this.state.room })
         }
         console.log(this.state.room);
     }
