@@ -31,7 +31,7 @@ const webrtcMiddleware = (function () {
         console.log("logError", error);
     }
     function createOffer(store, socketId, action) {
-        console.log(action.payload);
+        console.log(typeof (action.payload));
         const dataChannel = peerconn.createDataChannel("text_chan", { reliable: false });
         peerconn.createOffer(offerOpts)
             .then(desc => {

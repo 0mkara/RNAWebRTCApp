@@ -100,7 +100,8 @@ class ChatRoom extends Component {
     }
     render() {
         const { messages } = this.state;
-        const { socketids } = this.props;
+        const { socketids, my_socket_id } = this.props;
+        console.log(my_socket_id);
         return (
             <View style={styles.container}>
                 <View style={styles.joinRoomStyle}>
@@ -129,12 +130,21 @@ class ChatRoom extends Component {
                 {
                     // this should be replaced with ListView
                     socketids.map((item, index) => (
-                        <View key={index} style={styles.connectLstStyle}>
-                            <Text>{item}</Text>
-                            <ConnectBtn
-                                onPress={() => this.onPressExchange(item)}>
-                                Connect
+
+                        <View >
+                            {
+                                (item !== my_socket_id) ?
+                                    <View key={index} style={styles.connectLstStyle}>
+                                        <Text>{item}</Text>
+                                        <ConnectBtn
+                                            onPress={() => this.onPressExchange(item)}>
+                                            Connect
                             </ConnectBtn>
+                                    </View>
+                                    : null
+                            }
+
+
                         </View>
                     ))
                 }
@@ -176,7 +186,7 @@ class ChatRoom extends Component {
 }
 
 const mapStateToProps = ({ connection, routes }) => {
-    const { connected, socketids, message, datachan_stat, room_joined } = connection;
-    return { connected, socketids, message, datachan_stat, room_joined, routes };
+    const { connected, socketids, message, datachan_stat, room_joined, my_socket_id } = connection;
+    return { connected, socketids, message, datachan_stat, room_joined, my_socket_id, routes };
 };
 export default connect(mapStateToProps, {})(ChatRoom);

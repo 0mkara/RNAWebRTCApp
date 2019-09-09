@@ -6,7 +6,8 @@ import {
     SOCKETIDS,
     MESSAGE,
     DATACHAN_STAT,
-    ROOM_JOIN
+    ROOM_JOIN,
+    SET_MY_ID
 } from './types';
 
 export const connecting = (dispatch) => {
@@ -67,3 +68,12 @@ export function datachannelOpened() {
         payload: true
     }
 }
+
+export function setMySocketID(id) {
+    return {
+        type: SET_MY_ID,
+        payload: id
+    }
+}
+
+

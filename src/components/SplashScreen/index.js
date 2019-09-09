@@ -22,10 +22,20 @@ class SplashScreen extends Component {
         this.state = {
             username: '',
             password: '',
-            modalVisible: false
+            modalVisible: false,
+            access_token: ''
         }
         this.goLogin = this.goLogin.bind(this);
         this.goSignup = this.goSignup.bind(this);
+        AsyncStorage.getItem('access_token').then((token) => {
+            // this.setState({ access_token: token });
+            console.log(token)
+            if (token.length > 0) {
+                Actions.home_map();
+            }
+        })
+
+
     }
 
     goLogin() {

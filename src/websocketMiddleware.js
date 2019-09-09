@@ -6,7 +6,7 @@ import { MEMBERS_KEY } from './actions/StorageKeys';
 import io from 'socket.io-client/dist/socket.io';
 
 
-import { connecting, connected, disconnected, roomMembers, roomMember, roomJoin } from './actions';
+import { connecting, connected, disconnected, roomMembers, roomMember, roomJoin, setMySocketID } from './actions';
 const webSocketMiddleware = (function () {
 	let socket = null;
 
@@ -63,6 +63,12 @@ const webSocketMiddleware = (function () {
 		}
 	};
 
+	const mySocketId = (store) => mySocketId => {
+		console.log('My ID');
+		console.log(mySocketId);
+		store.dispatch(setMySocketID(mySocketId));
+	}
+
 
 	return store => next => action => {
 		//console.log(action);
@@ -92,12 +98,8 @@ const webSocketMiddleware = (function () {
 						socket.on('connect', onOpen(store));
 						socket.on('leave', onClose(store));
 						socket.on('exchange', onExchangeMessage(store));
-						socket.on('new_member', onMembers(store));
+						socket.on('my_socket_id', mySocketId(store));
 						socket.on('socket_ids', onMembers(store));
-
-						socket.on('reply', (data) => {
-							console.log(data);
-						})
 					}
 				})
 
