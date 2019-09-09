@@ -7,7 +7,9 @@ import {
     TextInput,
     Platform,
     SafeAreaView,
-    AsyncStorage
+    AsyncStorage,
+    BackHandler,
+    Alert
 } from 'react-native';
 import { connect } from 'react-redux';
 import { CONNECT, JOIN, CREATE_OFFER, SEND_MESSAGE, DISCONNECT } from '../../actions/types';
@@ -24,6 +26,7 @@ class ChatRoom extends Component {
         this.handleJoin = this.handleJoin.bind(this);
         this.handleGet = this.handleGet.bind(this);
         this.handleLeave = this.handleLeave.bind(this);
+        this.handleBackPress = this.handleBackPress.bind(this);
         this.state = {
             text: null,
             room: "private_room",
@@ -34,7 +37,22 @@ class ChatRoom extends Component {
     componentDidMount() {
         this.handleConnect();
         AsyncStorage.clear();
+
+        this.backHandler = BackHandler.addEventListener('hardwareBackPress', this.handleBackPress);
     }
+
+    componentWillUnmount() {
+        this.backHandler.remove();
+    }
+
+    handleBackPress() {
+        Alert.alert("Exit app", "Do you want to exit ?", [
+            { text: "No", onPress: () => ("no") },
+            { text: "Yes", onPress: () => BackHandler.exitApp() }
+        ]);
+        return true;
+    }
+
     componentDidUpdate(prevProps) {
         const { message } = this.props;
         const stmsg = this.state.messages;
@@ -67,6 +85,7 @@ class ChatRoom extends Component {
         if (this.props.connected) {
             console.log('Connected')
             this.props.store.dispatch({ type: JOIN, payload: this.state.room });
+            this.props.store.dispatch({ type: 'get' })
         }
         console.log(this.state.room);
     }
@@ -106,11 +125,6 @@ class ChatRoom extends Component {
                             Leave
                             </WhiteBtn>
                     }
-                    <WhiteBtn
-                        onPress={this.handleGet}
-                        color="#841584">
-                        GET
-                                      </WhiteBtn>
                 </View>
                 {
                     // this should be replaced with ListView

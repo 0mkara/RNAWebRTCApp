@@ -19,3 +19,4 @@ export const ROOM_JOIN = 'room_join';
 
 // Login action
 export const LOGIN = 'login';
+export const SET_ACCESS_TOKEN = 'set_access_token';

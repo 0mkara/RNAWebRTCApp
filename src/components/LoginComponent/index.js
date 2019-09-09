@@ -16,7 +16,7 @@ import styles from './styles';
 import { Actions } from 'react-native-router-flux'
 import axios from 'axios';
 import env from 'react-native-config'
-import { login } from '../../actions/LoginAction';
+import { login, set_access_token } from '../../actions/LoginAction';
 
 
 // import styles from './styles';
@@ -29,9 +29,7 @@ class Login extends Component {
             password: '',
             modalVisible: false,
             userNameError: false,
-            passwordError: false,
-            validate: false,
-            doLogin: false
+            passwordError: false
         }
         this.handleLogin = this.handleLogin.bind(this);
         this.validate = this.validate.bind(this);
@@ -39,29 +37,21 @@ class Login extends Component {
         this.onValueChange = this.onValueChange.bind(this);
     }
 
-    componentDidUpdate(_, prevState) {
-        if (this.state.validate && this.state.doLogin) {
-            this.handleLogin()
-        }
-    }
+
+
 
     validate = () => {
-        if (this.state.username.length > 0) {
-            this.setState({ userNameError: false })
-            this.setState({ validate: true });
-        } else {
-            this.setState({ userNameError: true })
-            this.setState({ validate: false })
+        if (this.state.username.length <= 0) {
+            this.setState({ userNameError: true });
+            this.userInput.focus();
         }
-
-        if (this.state.password.length > 0) {
-            this.setState({ passwordError: false })
-            this.setState({ validate: true })
-        } else {
+        else if (this.state.password.length <= 0) {
             this.setState({ passwordError: true })
-            this.setState({ validate: false })
+            this.passwordInput.focus();
         }
-        this.setState({ doLogin: true })
+        else {
+            this.handleLogin()
+        }
     }
 
     onValueChange = (text, key, keyError) => {
@@ -69,7 +59,6 @@ class Login extends Component {
         if (this.state[keyError]) {
             this.setState({ [keyError]: false })
         }
-        this.setState({ doLogin: false })
     }
 
     handleLogin = () => {
@@ -85,6 +74,7 @@ class Login extends Component {
                     ToastAndroid.show("Success", ToastAndroid.LONG)
                     this.gotoHomePage()
                     this.props.store.dispatch(login(true));
+                    this.props.store.dispatch(set_access_token(res['data']['access_token']));
 
                 }
             })
@@ -113,20 +103,27 @@ class Login extends Component {
                 <TextInput
                     style={styles.inputStyle}
                     placeholder="Enter username"
+                    returnKeyType={"next"}
+                    ref={(input) => { this.userInput = input }}
+                    autoFocus={true}
+                    onSubmitEditing={() => { this.passwordInput.focus() }}
                     onChangeText={(text) => this.onValueChange(text, 'username', 'userNameError')}
                     value={this.state.username}
                 />
                 {this.state.userNameError && <Text style={styles.errorText}>User name is required</Text>}
                 <TextInput
                     style={styles.inputStyle}
+                    ref={(input) => { this.passwordInput = input }}
                     placeholder="Enter password"
+                    returnKeyType={"done"}
+                    onSubmitEditing={() => { this.validate() }}
                     onChangeText={(text) => this.onValueChange(text, 'password', 'passwordError')}
                     value={this.state.password}
                 />
                 {this.state.passwordError && <Text style={styles.errorText}>Password is required</Text>}
                 <TouchableOpacity
                     style={styles.buttonStyle}
-                    title="Signup"
+                    title="Login"
                     onPress={() => this.validate()}
                 >
 
@@ -150,7 +147,7 @@ class Login extends Component {
 }
 
 const mapStateToProps = ({ login, routes }) => {
-    const { isLogin } = login;
-    return { isLogin, routes };
+    const { isLogin, access_token } = login;
+    return { isLogin, access_token, routes };
 };
 export default connect(mapStateToProps, {})(Login);

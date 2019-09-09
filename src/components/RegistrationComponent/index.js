@@ -35,8 +35,6 @@ class Registration extends Component {
             phoneNumberError: false,
             phoneLengthError: false,
             confirmpasswordError: false,
-            validateForm: false,
-            signup: false
         }
         this.signup = this.signup.bind(this);
         this.validate = this.validate.bind(this);
@@ -50,60 +48,33 @@ class Registration extends Component {
     }
 
     validate = () => {
-        if (this.state.name.length > 0) {
-            this.setState({ nameError: false })
-            this.setState({ validateForm: true })
-        } else {
-            this.setState({ nameError: true })
-            this.setState({ validateForm: false })
-        }
-        if (this.state.username.length > 0) {
-            this.setState({ usernameError: false })
-            this.setState({ validateForm: true })
-        } else {
-            this.setState({ usernameError: true })
-            this.setState({ validateForm: false })
-        }
-        if (this.state.email.length > 0) {
-            this.setState({ emailError: false })
-            this.setState({ validateForm: true })
-        } else {
-            this.setState({ emailError: true })
-            this.setState({ validateForm: false })
-        }
 
         let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-        if (reg.test(this.state.email) === false) {
+        if (this.state.name.length <= 0) {
+            this.setState({ nameError: true })
+        }
+        else if (this.state.username.length <= 0) {
+            this.setState({ usernameError: true })
+        }
+        else if (this.state.email.length <= 0) {
+            this.setState({ emailError: true })
+        }
+        else if (reg.test(this.state.email) === false) {
             this.setState({ emailPatternError: true })
-            this.setState({ validateForm: false })
-        } else {
-            this.setState({ emailPatternError: false })
-            this.setState({ validateForm: true })
         }
-
-        if (this.state.password.length > 0) {
-            this.setState({ passwordError: false })
-            this.setState({ validateForm: true })
-        } else {
+        else if (this.state.password.length <= 0) {
             this.setState({ passwordError: true })
-            this.setState({ validateForm: false })
         }
-        if (this.state.phone.length > 0) {
-            this.setState({ phoneError: false })
-            this.setState({ validateForm: true })
-        } else {
+        else if (this.state.phone.length <= 0) {
             this.setState({ phoneError: true })
-            this.setState({ validateForm: false })
         }
-        if (this.state.confirmpassword.length > 0) {
-            this.setState({ confirmpasswordError: false })
-            this.setState({ validateForm: true })
-        } else {
+        else if (this.state.confirmpassword.length <= 0) {
             this.setState({ confirmpasswordError: true })
-            this.setState({ validateForm: false })
+        }
+        else {
+            this.signup();
         }
 
-        this.setState({ signup: true })
     }
 
     onValueChange = (text, key, keyError) => {
@@ -120,7 +91,6 @@ class Registration extends Component {
                 this.setState({ emailPatternError: true })
             }
         }
-        this.setState({ signup: false })
     }
 
     async signup() {
@@ -150,6 +120,9 @@ class Registration extends Component {
                         returnKeyType="go"
                         style={styles.inputStyle}
                         placeholder="Enter name"
+                        returnKeyType={"next"}
+                        autoFocus={true}
+                        onSubmitEditing={() => { this.usernameInput.focus() }}
                         onChangeText={(text) => this.onValueChange(text, 'name', 'nameError')}
                         value={this.state.name}
                     />
@@ -158,6 +131,8 @@ class Registration extends Component {
                         returnKeyType="go"
                         style={styles.inputStyle}
                         placeholder="Enter username"
+                        ref={(input) => { this.usernameInput = input }}
+                        onSubmitEditing={() => { this.emailInput.focus() }}
                         onChangeText={(text) => this.onValueChange(text, 'username', 'usernameError')}
                         value={this.state.username}
                     />
@@ -167,6 +142,8 @@ class Registration extends Component {
                         style={styles.inputStyle}
                         placeholder="Enter Email"
                         required
+                        onSubmitEditing={() => { this.phoneInput.focus() }}
+                        ref={(input) => { this.emailInput = input }}
                         onChangeText={(text) => this.onValueChange(text, 'email', 'emailError')}
                         value={this.state.email}
                     />
@@ -176,6 +153,8 @@ class Registration extends Component {
                         returnKeyType="go"
                         style={styles.inputStyle}
                         placeholder="Enter phone"
+                        onSubmitEditing={() => { this.passwordInput.focus() }}
+                        ref={(input) => { this.phoneInput = input }}
                         onChangeText={(text) => this.onValueChange(text, 'phone', 'phoneError')}
                         value={this.state.phone}
                     />
@@ -184,6 +163,8 @@ class Registration extends Component {
                         returnKeyType="go"
                         style={styles.inputStyle}
                         placeholder="Enter password"
+                        onSubmitEditing={() => { this.confirmInput.focus() }}
+                        ref={(input) => { this.passwordInput = input }}
                         secureTextEntry={true}
                         onChangeText={(text) => this.onValueChange(text, 'password', 'passwordError')}
                         value={this.state.password}
@@ -193,6 +174,8 @@ class Registration extends Component {
                         returnKeyType="go"
                         style={styles.inputStyle}
                         placeholder="Confirm password"
+                        onSubmitEditing={() => { this.validate() }}
+                        ref={(input) => { this.confirmInput = input }}
                         secureTextEntry={true}
                         onChangeText={(text) => this.onValueChange(text, 'confirmpassword', 'confirmpasswordError')}
                         value={this.state.confirmpassword}

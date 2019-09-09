@@ -36,7 +36,10 @@ const webSocketMiddleware = (function () {
 			if (data !== null) {
 				socketIds = JSON.parse(data);
 			}
-			socketIds.push(socketId);
+			for (let x = 0; x < socketId.length; x++) {
+				socketIds.push(socketId[x]);
+			}
+			// socketIds.push(socketId);
 			AsyncStorage.setItem(MEMBERS_KEY, JSON.stringify(socketIds));
 			store.dispatch(roomMembers(socketIds));
 		})
@@ -90,9 +93,7 @@ const webSocketMiddleware = (function () {
 						socket.on('leave', onClose(store));
 						socket.on('exchange', onExchangeMessage(store));
 						socket.on('new_member', onMembers(store));
-						socket.on('socket_ids', (data) => {
-							console.log(data);
-						});
+						socket.on('socket_ids', onMembers(store));
 
 						socket.on('reply', (data) => {
 							console.log(data);
