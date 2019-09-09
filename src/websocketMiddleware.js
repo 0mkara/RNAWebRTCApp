@@ -13,6 +13,7 @@ const webSocketMiddleware = (function () {
 	const onOpen = (store) => evt => {
 		//Send a handshake, or authenticate with remote end
 		//Tell the store we're connected
+		// console.log(evt);
 		console.log('Connection is established');
 		store.dispatch(connected);
 	}
@@ -28,6 +29,8 @@ const webSocketMiddleware = (function () {
 	}
 
 	const onMembers = (store) => socketId => {
+		console.log('MEMBER');
+		console.log(socketId)
 		let socketIds = [];
 		AsyncStorage.getItem(MEMBERS_KEY, (err, data) => {
 			if (data !== null) {
@@ -72,24 +75,31 @@ const webSocketMiddleware = (function () {
 				store.dispatch(connecting);
 
 				//Attempt to connect (we could send a 'failed' action on error)
-				// socket = io.connect('https://100.26.248.243', { transports: ['websocket'], secure: true, reconnect: true, rejectUnauthorized: false });
-				const access_token = _retrieveAccessToken();
-				socket = io('http://192.168.0.8:8080', {
-					transports: ['websocket'], secure: true, reconnect: true, rejectUnauthorized: false,
-					extraHeaders: {
-						Authorization: access_token
+				// socket = io.connect('https://100.26.248.243', { transports: ['websocket'], secure: true, reconnect: true, rejectUnauthorized: false });				
+				AsyncStorage.getItem("access_token").then(token => {
+					if (token) {
+						console.log(token);
+						socket = io('http://192.168.0.8:8085?access_token=' + token + '', {
+							transports: ['websocket']
+						});
+						socket.on('connect_failed', failed());
+						socket.on('connect_error', (err) => {
+							console.log(JSON.stringify(err));
+						})
+						socket.on('connect', onOpen(store));
+						socket.on('leave', onClose(store));
+						socket.on('exchange', onExchangeMessage(store));
+						socket.on('new_member', onMembers(store));
+
+						socket.on('reply', (data) => {
+							console.log(data);
+						})
 					}
-				});
-
-
-				socket.on('connect_failed', failed());
-				socket.on('connect_error', (err) => {
-					console.log(JSON.stringify(err));
 				})
-				socket.on('connect', onOpen(store));
-				socket.on('leave', onClose(store));
-				socket.on('exchange', onExchangeMessage(store));
-				socket.on('new_member', onMembers(store));
+
+
+
+
 				break;
 
 			//The user wants us to disconnect
@@ -107,9 +117,16 @@ const webSocketMiddleware = (function () {
 				break;
 			case JOIN:
 				socket.emit('join', action.payload, (socketIds) => {
+					console.log(socketIds);
 					store.dispatch(roomJoin);
 					AsyncStorage.setItem(MEMBERS_KEY, JSON.stringify(socketIds));
 					store.dispatch(roomMembers(socketIds));
+				});
+				break;
+			case 'get':
+				console.log('GET CLICKED')
+				socket.emit('get', '', () => {
+					console.log("get called")
 				});
 				break;
 			//This action is irrelevant to us, pass it on to the next middleware

@@ -6,13 +6,15 @@ import {
     KeyboardAvoidingView,
     TextInput,
     Platform,
-    SafeAreaView
+    SafeAreaView,
+    AsyncStorage
 } from 'react-native';
 import { connect } from 'react-redux';
 import { CONNECT, JOIN, CREATE_OFFER, SEND_MESSAGE, DISCONNECT } from '../../actions/types';
 import { WhiteBtn, GradientInput, ConnectBtn, MessageInput, SendBtn, MessageText } from '../common';
 import { verticalScale } from '../scaling';
 import styles from './styles';
+import io from 'socket.io-client/dist/socket.io';
 
 class ChatRoom extends Component {
     constructor(props) {
@@ -20,12 +22,18 @@ class ChatRoom extends Component {
         this.onPressExchange = this.onPressExchange.bind(this);
         this.handleSend = this.handleSend.bind(this);
         this.handleJoin = this.handleJoin.bind(this);
+        this.handleGet = this.handleGet.bind(this);
         this.handleLeave = this.handleLeave.bind(this);
         this.state = {
             text: null,
             room: "private_room",
             messages: []
         }
+    }
+
+    componentDidMount() {
+        this.handleConnect();
+        AsyncStorage.clear();
     }
     componentDidUpdate(prevProps) {
         const { message } = this.props;
@@ -35,6 +43,9 @@ class ChatRoom extends Component {
             this.setState({
                 messages: stmsg,
             })
+        }
+        if (this.props.connected !== prevProps.connected) {
+            this.handleJoin();
         }
     }
     onPressExchange(socketId) {
@@ -49,10 +60,18 @@ class ChatRoom extends Component {
             messages
         });
     }
-    handleJoin() {
+    handleConnect = async () => {
         this.props.store.dispatch({ type: CONNECT });
-        this.props.store.dispatch({ type: JOIN, payload: this.state.room });
+    }
+    handleJoin = async () => {
+        if (this.props.connected) {
+            console.log('Connected')
+            this.props.store.dispatch({ type: JOIN, payload: this.state.room });
+        }
         console.log(this.state.room);
+    }
+    handleGet() {
+        this.props.store.dispatch({ type: 'get' })
     }
     handleLeave() {
         this.props.store.dispatch({ type: DISCONNECT });
@@ -77,6 +96,7 @@ class ChatRoom extends Component {
                             color="#841584">
                             Join
                                  </WhiteBtn>
+
                     }
                     {
                         this.props.room_joined === true &&
@@ -86,6 +106,11 @@ class ChatRoom extends Component {
                             Leave
                             </WhiteBtn>
                     }
+                    <WhiteBtn
+                        onPress={this.handleGet}
+                        color="#841584">
+                        GET
+                                      </WhiteBtn>
                 </View>
                 {
                     // this should be replaced with ListView

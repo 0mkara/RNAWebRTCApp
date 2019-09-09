@@ -9,7 +9,7 @@ import {
     Modal,
     Alert,
     TouchableOpacity,
-    TouchableHighlight
+    ToastAndroid
 } from 'react-native';
 import { connect } from 'react-redux';
 import styles from './styles';
@@ -27,34 +27,67 @@ class Login extends Component {
         this.state = {
             username: '',
             password: '',
-            modalVisible: false
+            modalVisible: false,
+            userNameError: false,
+            passwordError: false,
+            validate: false,
+            doLogin: false
         }
         this.handleLogin = this.handleLogin.bind(this);
-        this._storeAccessToken = this._storeAccessToken.bind(this);
+        this.validate = this.validate.bind(this);
         this.gotoHomePage = this.gotoHomePage.bind(this);
+        this.onValueChange = this.onValueChange.bind(this);
     }
 
-    _storeAccessToken = async (token) => {
-        try {
-            await AsyncStorage.setItem('access_token', 'BUOT8LRKML2537A7VFX');
-        } catch (error) {
-            // Error saving data
-            console.error(error);
+    componentDidUpdate(_, prevState) {
+        if (this.state.validate && this.state.doLogin) {
+            this.handleLogin()
         }
-    };
+    }
+
+    validate = () => {
+        if (this.state.username.length > 0) {
+            this.setState({ userNameError: false })
+            this.setState({ validate: true });
+        } else {
+            this.setState({ userNameError: true })
+            this.setState({ validate: false })
+        }
+
+        if (this.state.password.length > 0) {
+            this.setState({ passwordError: false })
+            this.setState({ validate: true })
+        } else {
+            this.setState({ passwordError: true })
+            this.setState({ validate: false })
+        }
+        this.setState({ doLogin: true })
+    }
+
+    onValueChange = (text, key, keyError) => {
+        this.setState({ [key]: text })
+        if (this.state[keyError]) {
+            this.setState({ [keyError]: false })
+        }
+        this.setState({ doLogin: false })
+    }
 
     handleLogin = () => {
         console.log(env.API_HOST + `:` + env.API_PORT + `/api/v1/login?grant_type=password&client_id=client@letsgo&client_secret=Va4a8bFFhTJZdybnzyhjHjj6P9UVh7UL&scope=read&username=DemoUserName2&password=ss5852s5s85`)
-        this.setState({ modalVisible: true });
-        // axios.get(env.API_HOST + `:` + env.API_PORT + `/api/v1/login?grant_type=password&client_id=client@letsgo&client_secret=Va4a8bFFhTJZdybnzyhjHjj6P9UVh7UL&scope=read&username=DemoUserName2&password=ss5852s5s85`)
-        //     .then((res) => {
-        //         console.log(res)
-        //         if (res.hasOwnProperty('data') && res['data'].hasOwnProperty('access_token')) {
-        //             this._storeAccessToken(res['data']['access_token']);
-        //             this.setState({ modalVisible: true });
-        //             this.props.store.dispatch(login(true));
-        //         }
-        //     })
+        let name = this.state.username;
+        let password = this.state.password;
+        axios.get(env.API_HOST + `:` + env.API_PORT + `/api/v1/login?grant_type=password&client_id=client@letsgo&client_secret=Va4a8bFFhTJZdybnzyhjHjj6P9UVh7UL&scope=read&username=` + name + `&password=` + password + ``)
+            .then((res) => {
+                console.log(res)
+                if (res.hasOwnProperty('data') && res['data'].hasOwnProperty('access_token')) {
+                    console.log(res['data']['access_token']);
+                    AsyncStorage.setItem('access_token', res['data']['access_token']);
+                    ToastAndroid.show("Success", ToastAndroid.LONG)
+                    this.gotoHomePage()
+                    this.props.store.dispatch(login(true));
+
+                }
+            })
     }
 
     gotoHomePage() {
@@ -80,19 +113,21 @@ class Login extends Component {
                 <TextInput
                     style={styles.inputStyle}
                     placeholder="Enter username"
-                    onChangeText={(text) => this.setState({ username: text })}
+                    onChangeText={(text) => this.onValueChange(text, 'username', 'userNameError')}
                     value={this.state.username}
                 />
+                {this.state.userNameError && <Text style={styles.errorText}>User name is required</Text>}
                 <TextInput
                     style={styles.inputStyle}
                     placeholder="Enter password"
-                    onChangeText={(text) => this.setState({ password: text })}
+                    onChangeText={(text) => this.onValueChange(text, 'password', 'passwordError')}
                     value={this.state.password}
                 />
+                {this.state.passwordError && <Text style={styles.errorText}>Password is required</Text>}
                 <TouchableOpacity
                     style={styles.buttonStyle}
                     title="Signup"
-                    onPress={() => this.handleLogin()}
+                    onPress={() => this.validate()}
                 >
 
                     <Text style={styles.buttonText}>Login</Text>

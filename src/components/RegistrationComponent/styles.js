@@ -49,6 +49,9 @@ export default StyleSheet.create({
         color: '#2778ff',
         fontWeight: 'bold',
     },
+    errorText: {
+        marginBottom: 10
+    },
     loginBtn: {
         borderWidth: 0,
         borderRadius: 100

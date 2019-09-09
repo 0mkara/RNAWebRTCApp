@@ -46,6 +46,9 @@ export default StyleSheet.create({
         alignItems: 'center',
 
     },
+    errorText: {
+        marginBottom: 10
+    },
     buttonText: {
         color: '#2778ff',
         fontWeight: 'bold',

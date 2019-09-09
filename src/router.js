@@ -19,7 +19,7 @@ const RouterComponent = () => {
 	return (
 		<Router store={store}>
 			<Stack key="root">
-				<Scene key="splash" component={SplashScreen} title="spalsh"></Scene>
+				<Scene key="splash" hideNavBar component={SplashScreen} title="spalsh"></Scene>
 				<Scene key="login" component={Login} title="Login"></Scene>
 				<Scene key="signup" component={Registration} title="Login"></Scene>
 				<Scene key="forgottpassword" component={ForgotPassword} title="forgotpassword"></Scene>
