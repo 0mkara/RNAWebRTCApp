@@ -1,44 +1,18 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import LinearGradient from 'react-native-linear-gradient';
-import { StyleSheet, Text, View, ViewPropTypes, Switch, FlatList } from 'react-native';
+import { StyleSheet, View, ViewPropTypes, FlatList } from 'react-native';
 import { GreenBtn, GradientInput } from './common';
 import { scale, verticalScale } from './scaling';
 import { Actions } from 'react-native-router-flux'
 import { connect } from 'react-redux';
 import { login } from '../actions/LoginAction';
-import { TouchableOpacity } from 'react-native';
+import { TouchableOpacity, TouchableHighlight } from 'react-native';
 import { AsyncStorage } from 'react-native';
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#fff',
-  },
-  linearGradient: {
-    flex: 1,
-    width: '100%',
-    backgroundColor: "#fff"
-  },
-  inputStyle: {
-    color: 'aliceblue',
-    height: verticalScale(26),
-    width: scale(116),
-    margin: scale(2),
-    textAlign: 'center',
-    backgroundColor: '#3A19A5',
-    fontSize: 12,
-  },
-  inputContainerStyle: {
-    height: verticalScale(30),
-    width: scale(120),
-    flexDirection: 'row',
-    alignItems: 'center',
-    justifyContent: 'center',
-    borderRadius: scale(2.6),
-  }
-});
+
+import { Container, Text, Header, Content, Icon, Button, ListItem, Left, Body, Right, Switch } from 'native-base';
+import commonStyle from '../commonStyle/commonStyle';
+import styles from './SplashScreen/styles';
 
 class DrawerContent extends React.Component {
   constructor(props) {
@@ -79,64 +53,37 @@ class DrawerContent extends React.Component {
     const { isLogin } = this.props;
     console.log(this.props)
     return (
-      <View style={styles.container}>
-        <LinearGradient colors={['#2778ff', '#2778ff']} style={styles.linearGradient}>
-          <View style={{ backgroundColor: 'transparent', paddingTop: 60, flex: 1, justifyContent: 'flex-start' }}>
-            <View style={{ flexDirection: 'row' }}>
-              <View style={{ alignItems: 'center', justifyContent: 'center', height: scale(30) }}>
-                <GradientInput
-                  inputTextStyle={styles.inputStyle}
-                  inputContainerStyle={styles.inputContainerStyle}
-                  value="UserName" />
-              </View>
-              <View style={{ alignItems: 'center', justifyContent: 'center', height: scale(30) }}>
-                <TouchableOpacity
-                  color="#841584">
-                  <Text>Change</Text>
-                </TouchableOpacity>
-              </View>
+      <Container style={styles.container}>
+        <LinearGradient colors={['#7BFFB8', '#11361C']} style={commonStyle.linearGradient}>
+          <Content style={{ flex: 1 }}>
+            <View style={{ alignItems: 'center', margin: 10, padding: 10 }}>
+              <Icon name='person' style={commonStyle.navBarImage} />
             </View>
-            <View style={{ flexDirection: 'column' }}>
-              <View style={{ padding: 20, alignItems: 'center', justifyContent: 'center' }}>
-                <TouchableOpacity
-                  color="#841584" onPress={() => Actions.home_map()}>
-                  <Text style={{ color: '#fff', fontWeight: "bold" }}>Home</Text>
+            <ListItem style={commonStyle.sideBarList}>
+              <Body>
+                <TouchableOpacity>
+                  <Text style={commonStyle.sideBarListText}>Chat</Text>
                 </TouchableOpacity>
-              </View>
-              <View style={{ padding: 20, flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-                <TouchableOpacity
-                  color="#841584" onPress={() => this.logout()}>
-                  <Text style={{ color: '#fff', fontWeight: "bold" }}> Logout</Text>
+              </Body>
+            </ListItem>
+            <ListItem style={commonStyle.sideBarList}>
+              <Body>
+                <TouchableOpacity>
+                  <Text style={commonStyle.sideBarListText}>Profile</Text>
                 </TouchableOpacity>
-              </View>
-            </View>
-            <View style={{ flex: 1 }}>
-              {/* <FlatList
-                data={flatlistData}
-                renderItem={({ item }) => {
-                  return (
-                    <View style={{ flex: 1, flexDirection: 'row' }}>
-                      <View style={{ flex: 1, paddingVertical: 10, alignItems: 'center', justifyContent: 'center' }}>
-                        <Text style={{ color: '#fff', backgroundColor: 'transparent' }}>{item.name}</Text>
-                      </View>
-                      <View style={{ flex: 1, paddingVertical: 10, justifyContent: 'center' }}>
-                        <Switch value={item.state} style={{ backgroundColor: 'green', borderRadius: 20 }} />
-                      </View>
-                    </View>
-                  )
-                }}
-              /> */}
-            </View>
-          </View>
+              </Body>
+            </ListItem>
+            <ListItem style={commonStyle.sideBarList}>
+              <Body>
+                <TouchableOpacity>
+                  <Text style={commonStyle.sideBarListText}>Logout</Text>
+                </TouchableOpacity>
+              </Body>
+            </ListItem>
+          </Content>
         </LinearGradient>
-      </View>
+      </Container >
     );
   }
 }
-
-// const mapStateToProps = ({ login, routes }) => {
-//   const { isLogin } = login;
-//   return { isLogin, routes };
-// };
-// export default connect(mapStateToProps, {})(DrawerContent);
 export default DrawerContent;

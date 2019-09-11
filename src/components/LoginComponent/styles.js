@@ -6,13 +6,12 @@ export default StyleSheet.create({
     container: {
         flex: 1,
         alignItems: 'center',
-        // backgroundColor: '#fad00d',
-        backgroundColor: '#2778ff',
-        paddingTop: verticalScale(65)
+        // backgroundColor: '#fff',
+        // backgroundColor: '#2778ff',
+        // paddingTop: verticalScale(65)
     },
     inputStyle: {
         height: 50,
-        width: 300,
         shadowColor: "#000",
         shadowOffset: {
             width: 0,
@@ -44,22 +43,36 @@ export default StyleSheet.create({
         color: '#2778ff',
         fontWeight: 'bold',
         alignItems: 'center',
+        marginTop: 30
 
     },
     errorText: {
-        marginBottom: 10
+        marginBottom: 5,
+        color: '#fff',
+        padding: 14,
+        paddingBottom: 0,
+        fontSize: 14
+    },
+    linearGradient: {
+        flex: 1,
+        width: '100%',
+        backgroundColor: "#fff",
+        paddingTop: verticalScale(65)
     },
     buttonText: {
-        color: '#2778ff',
+        color: '#5C4DD0',
         fontWeight: 'bold',
 
+    },
+    labelText: {
+        color: '#fff'
     },
     loginBtn: {
         borderWidth: 0,
         borderRadius: 100
     },
     bottomText: {
-        marginTop: 25,
+        marginTop: 12,
         color: '#fff',
         fontWeight: 'bold'
     },
@@ -77,5 +90,12 @@ export default StyleSheet.create({
     },
     chatAvoidingViewStyle: {
         flex: 1,
+    },
+    formStyle: {
+        alignItems: 'center'
+    }, logoStyle: {
+        marginBottom: 50,
+        fontSize: 100,
+        color: '#fff'
     }
 });

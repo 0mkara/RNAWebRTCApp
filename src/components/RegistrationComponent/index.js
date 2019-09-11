@@ -1,7 +1,6 @@
 // @flow
 import React, { Component } from 'react';
 import {
-    Text,
     View,
     TextInput,
     TouchableOpacity,
@@ -10,30 +9,25 @@ import {
 } from 'react-native';
 import { connect } from 'react-redux';
 import styles from './styles';
+import commonStyle from '../../commonStyle/commonStyle';
 import { Actions } from 'react-native-router-flux'
 import axios from 'axios';
 import env from 'react-native-config'
-
+import LinearGradient from 'react-native-linear-gradient';
+import { Container, Text, Header, Content, Form, Item, Input, Label, Icon, Button } from 'native-base';
+import GoogleSignInButton from '../GoogleSigninButton/GoogleSignInButon';
 // import styles from './styles';
 
 class Registration extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            name: '',
-            username: '',
             email: '',
             password: '',
-            phone: '',
             confirmpassword: '',
-            nameError: false,
-            usernameError: false,
             emailError: false,
             emailPatternError: false,
             passwordError: false,
-            phoneError: false,
-            phoneNumberError: false,
-            phoneLengthError: false,
             confirmpasswordError: false,
         }
         this.signup = this.signup.bind(this);
@@ -50,13 +44,7 @@ class Registration extends Component {
     validate = () => {
 
         let reg = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
-        if (this.state.name.length <= 0) {
-            this.setState({ nameError: true })
-        }
-        else if (this.state.username.length <= 0) {
-            this.setState({ usernameError: true })
-        }
-        else if (this.state.email.length <= 0) {
+        if (this.state.email.length <= 0) {
             this.setState({ emailError: true })
         }
         else if (reg.test(this.state.email) === false) {
@@ -64,9 +52,6 @@ class Registration extends Component {
         }
         else if (this.state.password.length <= 0) {
             this.setState({ passwordError: true })
-        }
-        else if (this.state.phone.length <= 0) {
-            this.setState({ phoneError: true })
         }
         else if (this.state.confirmpassword.length <= 0) {
             this.setState({ confirmpasswordError: true })
@@ -113,88 +98,66 @@ class Registration extends Component {
 
     render() {
         return (
-            <KeyboardAvoidingView behavior="position" style={styles.container}>
-                <ScrollView >
-                    <Text>Logo</Text>
-                    <TextInput
-                        returnKeyType="go"
-                        style={styles.inputStyle}
-                        placeholder="Enter name"
-                        returnKeyType={"next"}
-                        autoFocus={true}
-                        onSubmitEditing={() => { this.usernameInput.focus() }}
-                        onChangeText={(text) => this.onValueChange(text, 'name', 'nameError')}
-                        value={this.state.name}
-                    />
-                    {this.state.nameError && <Text style={styles.errorText}>Name is required</Text>}
-                    <TextInput
-                        returnKeyType="go"
-                        style={styles.inputStyle}
-                        placeholder="Enter username"
-                        ref={(input) => { this.usernameInput = input }}
-                        onSubmitEditing={() => { this.emailInput.focus() }}
-                        onChangeText={(text) => this.onValueChange(text, 'username', 'usernameError')}
-                        value={this.state.username}
-                    />
-                    {this.state.usernameError && <Text style={styles.errorText}>Username is required</Text>}
-                    <TextInput
-                        returnKeyType="go"
-                        style={styles.inputStyle}
-                        placeholder="Enter Email"
-                        required
-                        onSubmitEditing={() => { this.phoneInput.focus() }}
-                        ref={(input) => { this.emailInput = input }}
-                        onChangeText={(text) => this.onValueChange(text, 'email', 'emailError')}
-                        value={this.state.email}
-                    />
-                    {this.state.emailError && <Text style={styles.errorText}>Email is required</Text>}
-                    {this.state.emailPatternError && <Text style={styles.errorText}>Enter proper email pattern</Text>}
-                    <TextInput
-                        returnKeyType="go"
-                        style={styles.inputStyle}
-                        placeholder="Enter phone"
-                        onSubmitEditing={() => { this.passwordInput.focus() }}
-                        ref={(input) => { this.phoneInput = input }}
-                        onChangeText={(text) => this.onValueChange(text, 'phone', 'phoneError')}
-                        value={this.state.phone}
-                    />
-                    {this.state.phoneError && <Text style={styles.errorText}>Phone is required</Text>}
-                    <TextInput
-                        returnKeyType="go"
-                        style={styles.inputStyle}
-                        placeholder="Enter password"
-                        onSubmitEditing={() => { this.confirmInput.focus() }}
-                        ref={(input) => { this.passwordInput = input }}
-                        secureTextEntry={true}
-                        onChangeText={(text) => this.onValueChange(text, 'password', 'passwordError')}
-                        value={this.state.password}
-                    />
-                    {this.state.passwordError && <Text style={styles.errorText}>Password is required</Text>}
-                    <TextInput
-                        returnKeyType="go"
-                        style={styles.inputStyle}
-                        placeholder="Confirm password"
-                        onSubmitEditing={() => { this.validate() }}
-                        ref={(input) => { this.confirmInput = input }}
-                        secureTextEntry={true}
-                        onChangeText={(text) => this.onValueChange(text, 'confirmpassword', 'confirmpasswordError')}
-                        value={this.state.confirmpassword}
-                    />
-                    {this.state.confirmpasswordError && <Text style={styles.errorText}>Confirm your password</Text>}
-                    <TouchableOpacity
-                        style={styles.buttonStyle}
-                        title="Signup"
-                        onPress={() => this.validate()}
-                    >
-                        <Text style={styles.buttonText}>Signup</Text>
-                    </TouchableOpacity>
-                    <Text style={styles.bottomText}
-                        onPress={() => Actions.login()}
-                    >
-                        Already has an account, go to login?
+            // <KeyboardAvoidingView behavior="position">
+            //     <ScrollView >
+            <Container style={styles.container}>
+                <LinearGradient colors={['#5C4DD0', '#491E5A']} style={styles.linearGradient}>
+                    <Content style={{ padding: 10 }}>
+                        <View style={{ alignItems: 'center' }}>
+                            <Icon name='chatbubbles' style={commonStyle.logoStyle} />
+                            <Form>
+                                <Item floatingLabel>
+                                    <Label style={styles.labelText}>Enter email</Label>
+                                    <Input returnKeyType={"next"}
+                                        getRef={ref => {
+                                            this.emailInput = ref.wrappedInstance
+                                        }}
+                                        returnKeyType="go"
+                                        autoFocus={true}
+                                        onSubmitEditing={() => this.passwordInput.focus()}
+                                        onChangeText={(text) => this.onValueChange(text, 'email', 'emailError')}
+                                        value={this.state.email} />
+                                </Item>
+                                {this.state.emailError && <Text style={commonStyle.errorText}>Email is required</Text>}
+                                {this.state.emailPatternError && <Text style={commonStyle.errorText}>Enter proper email pattern</Text>}
+                                <Item floatingLabel>
+                                    <Label style={styles.labelText}>Enter password</Label>
+                                    <Input returnKeyType={"next"}
+                                        getRef={ref => {
+                                            this.passwordInput = ref.wrappedInstance
+                                        }}
+                                        returnKeyType="go"
+                                        onSubmitEditing={() => this.confirmInput.focus()}
+                                        onChangeText={(text) => this.onValueChange(text, 'password', 'passwordError')}
+                                        value={this.state.password} />
+                                </Item>
+                                {this.state.passwordError && <Text style={commonStyle.errorText}>Password is required</Text>}
+                                <Item floatingLabel style={commonStyle.inputStyle}>
+                                    <Label style={styles.labelText}>Confirm password</Label>
+                                    <Input returnKeyType={"next"}
+                                        getRef={ref => {
+                                            this.confirmInput = ref.wrappedInstance
+                                        }}
+                                        returnKeyType="done"
+                                        onSubmitEditing={() => this.validate()}
+                                        onChangeText={(text) => this.onValueChange(text, 'confirmpassword', 'confirmpasswordError')}
+                                        value={this.state.confirmpassword} />
+                                </Item>
+                                {this.state.confirmpasswordError && <Text style={commonStyle.errorText}>Confirm your password</Text>}
+                            </Form>
+                            <Button style={commonStyle.buttonStyle} onPress={() => this.validate()} light><Text style={commonStyle.buttonTextStyle}> Sign up </Text></Button>
+                            <Text style={styles.bottomText}
+                                onPress={() => Actions.login()}
+                            >
+                                Already has an account, go to login?
                 </Text>
-                </ScrollView>
-            </KeyboardAvoidingView >
+                            <GoogleSignInButton></GoogleSignInButton>
+                        </View>
+                    </Content>
+                </LinearGradient>
+            </Container>
+            //     </ScrollView >
+            // </KeyboardAvoidingView >
         );
 
     }

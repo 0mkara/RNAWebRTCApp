@@ -6,44 +6,8 @@ export default StyleSheet.create({
     container: {
         flex: 1,
         alignItems: 'center',
-        backgroundColor: '#2778ff',
-        paddingTop: verticalScale(65)
-    },
-    inputStyle: {
-        height: 50,
-        width: 300,
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.23,
-        shadowRadius: 2.62,
-        elevation: 4,
-        backgroundColor: '#fff',
-        borderRadius: 100,
-        marginBottom: 10,
-        paddingLeft: 20
-    },
-    buttonStyle: {
-        height: 50,
-        width: 300,
-        shadowColor: "#000",
-        shadowOffset: {
-            width: 0,
-            height: 2,
-        },
-        shadowOpacity: 0.23,
-        shadowRadius: 2.62,
-        elevation: 4,
-        backgroundColor: '#fff',
-        borderRadius: 100,
-        marginBottom: 5,
-        padding: 14,
-        color: '#2778ff',
-        fontWeight: 'bold',
-        alignItems: 'center',
-
+        // backgroundColor: '#2778ff',
+        // paddingTop: verticalScale(65)
     },
     buttonText: {
         color: '#2778ff',
@@ -75,5 +39,18 @@ export default StyleSheet.create({
     },
     chatAvoidingViewStyle: {
         flex: 1,
-    }
+    },
+    linearGradient: {
+        flex: 1,
+        width: '100%',
+        backgroundColor: "#fff",
+        paddingTop: verticalScale(65)
+    },
+    logoStyle: {
+        fontSize: 100,
+        color: '#fff'
+    },
+    labelText: {
+        color: '#fff'
+    },
 });

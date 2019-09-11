@@ -6,8 +6,8 @@ export default StyleSheet.create({
     container: {
         flex: 1,
         alignItems: 'center',
-        backgroundColor: '#2778ff',
-        paddingTop: verticalScale(65)
+        // backgroundColor: '#2778ff',
+        // paddingTop: verticalScale(65)
     },
     inputStyle: {
         height: 50,
@@ -72,5 +72,10 @@ export default StyleSheet.create({
     },
     chatAvoidingViewStyle: {
         flex: 1,
-    }
+    },
+    logoStyle: {
+        marginBottom: 50,
+        fontSize: 100,
+        color: '#fff'
+    },
 });

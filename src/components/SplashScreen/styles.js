@@ -7,8 +7,8 @@ export default StyleSheet.create({
         flex: 1,
         alignItems: 'center',
         // backgroundColor: '#fad00d',
-        backgroundColor: '#2778ff',
-        paddingTop: verticalScale(65)
+        // backgroundColor: '#2778ff',
+        // paddingTop: verticalScale(65)
     },
     inputStyle: {
         height: 50,
@@ -30,15 +30,18 @@ export default StyleSheet.create({
         alignItems: 'center',
     },
     buttonText: {
-        color: '#2778ff',
+        color: '#491E5A',
         fontWeight: 'bold',
     },
     logoStyle: {
-        marginBottom: 250
+        marginBottom: 20,
+        fontSize: 100,
+        color: '#fff'
     },
     bottomButton: {
         position: 'absolute',
-        bottom: 10
+        bottom: 10,
+        alignItems: 'center'
     },
     chatContainerStyle: {
         flex: 1,
@@ -54,5 +57,11 @@ export default StyleSheet.create({
     },
     chatAvoidingViewStyle: {
         flex: 1,
+    },
+    linearGradient: {
+        flex: 1,
+        width: '100%',
+        backgroundColor: "#fff",
+        paddingTop: verticalScale(65)
     }
 });

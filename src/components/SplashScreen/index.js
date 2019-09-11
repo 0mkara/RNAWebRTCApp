@@ -4,7 +4,6 @@ import {
     Text,
     View,
     TextInput,
-    Button,
     AsyncStorage,
     Modal,
     Alert,
@@ -13,6 +12,9 @@ import {
 import { connect } from 'react-redux';
 import styles from './styles';
 import { Actions } from 'react-native-router-flux'
+import { Container, Content, Icon, Button } from 'native-base';
+import LinearGradient from 'react-native-linear-gradient';
+import commonStyle from '../../commonStyle/commonStyle';
 
 // import styles from './styles';
 
@@ -50,26 +52,31 @@ class SplashScreen extends Component {
 
     render() {
         return (
-            <View style={styles.container}>
-                <Text style={styles.logoStyle}>Logo</Text>
-                <View style={styles.bottomButton}>
-                    <TouchableOpacity
-                        style={styles.inputStyle}
-                        title="Login"
-                        onPress={() => this.goLogin()}
-                    >
-                        <Text style={styles.buttonText}>Login</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                        style={styles.inputStyle}
-                        title="Signup"
-                        onPress={() => this.goSignup()}
-                    >
-                        <Text style={styles.buttonText}>Signup</Text>
-                    </TouchableOpacity>
-                </View>
-
-            </View >
+            <Container style={styles.container}>
+                <LinearGradient colors={['#5C4DD0', '#491E5A']} style={styles.linearGradient}>
+                    <Content contentContainerStyle={{ flex: 1 }} style={{ padding: 10 }}>
+                        <View style={{ alignItems: 'center', flex: 1 }}>
+                            <Icon name='chatbubbles' style={styles.logoStyle} />
+                            <View style={{ flexDirection: 'row', position: 'absolute', bottom: 0 }}>
+                                <Button
+                                    style={commonStyle.buttonStyle}
+                                    title="Login"
+                                    onPress={() => this.goLogin()}
+                                >
+                                    <Text style={commonStyle.buttonTextStyle}>Login</Text>
+                                </Button>
+                                <Button
+                                    style={commonStyle.buttonStyle}
+                                    title="Signup"
+                                    onPress={() => this.goSignup()}
+                                >
+                                    <Text style={commonStyle.buttonTextStyle}>Signup</Text>
+                                </Button>
+                            </View>
+                        </View>
+                    </Content>
+                </LinearGradient>
+            </Container >
         );
 
     }
