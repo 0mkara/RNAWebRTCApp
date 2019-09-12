@@ -55,33 +55,27 @@ const MessageInput = ({ label, value, onChangeText, placeholder, placeholderText
     if (androidUnderlineColor) {
         underlineColor = androidUnderlineColor;
     }
-    const { inputStyle, labelStyle, containerStyle } = styles;
+    const { inputStyle } = styles;
 
     let heightOfInput = 0;
     return (
-        <LinearGradient
-            colors={['#ED5050', '#8948EE']}
-            start={{ x: 0.0, y: 0.0 }} end={{ x: 1.0, y: 0.0 }}
-            style={containerStyle}>
-            <Text style={labelStyle}>{label}</Text>
-            <TextInput
-                placeholder={placeholder}
-                placeholderTextColor={placeholderTextColor}
-                autoCorrect={false}
-                style={inputStyle}
-                // style={[inputStyle, { height: Math.max(35, heightOfInput) }]}
-                value={value}
-                onChangeText={onChangeText}
-                underlineColorAndroid={underlineColor}
-                multiline={true}
-                autoCapitalize="none"
-                numberOfLines={heightOfInput}
-                onContentSizeChange={(event) => {
-                    heightOfInput = event.nativeEvent.contentSize.height;
-                    console.log(heightOfInput)
-                }}
-            />
-        </LinearGradient>
+        <TextInput
+            placeholder={placeholder}
+            placeholderTextColor={placeholderTextColor}
+            autoCorrect={false}
+            style={inputStyle}
+            // style={[inputStyle, { height: Math.max(35, heightOfInput) }]}
+            value={value}
+            onChangeText={onChangeText}
+            underlineColorAndroid={underlineColor}
+            multiline={true}
+            autoCapitalize="none"
+            numberOfLines={heightOfInput}
+            onContentSizeChange={(event) => {
+                heightOfInput = event.nativeEvent.contentSize.height;
+                console.log(heightOfInput)
+            }}
+        />
     );
 };
 export { MessageInput };

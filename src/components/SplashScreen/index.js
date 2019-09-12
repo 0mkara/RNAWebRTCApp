@@ -35,9 +35,8 @@ class SplashScreen extends Component {
             if (token.length > 0) {
                 Actions.home_map();
             }
+
         })
-
-
     }
 
     goLogin() {

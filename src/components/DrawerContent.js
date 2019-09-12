@@ -61,15 +61,15 @@ class DrawerContent extends React.Component {
             </View>
             <ListItem style={commonStyle.sideBarList}>
               <Body>
-                <TouchableOpacity>
-                  <Text style={commonStyle.sideBarListText}>Chat</Text>
+                <TouchableOpacity onPress={() => { Actions.user_listing() }}>
+                  <Text style={commonStyle.sideBarListText}>User</Text>
                 </TouchableOpacity>
               </Body>
             </ListItem>
             <ListItem style={commonStyle.sideBarList}>
               <Body>
                 <TouchableOpacity>
-                  <Text style={commonStyle.sideBarListText}>Profile</Text>
+                  <Text style={commonStyle.sideBarListText} onPress={() => { Actions.profile() }}>Profile</Text>
                 </TouchableOpacity>
               </Body>
             </ListItem>

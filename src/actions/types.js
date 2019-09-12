@@ -20,4 +20,7 @@ export const ROOM_JOIN = 'room_join';
 // Login action
 export const LOGIN = 'login';
 export const SET_ACCESS_TOKEN = 'set_access_token';
-export const SET_MY_ID = 'set_my_id'; 
+export const SET_MY_ID = 'set_my_id';
+
+// Chat action
+export const USER_CHANGED = 'user_changed';

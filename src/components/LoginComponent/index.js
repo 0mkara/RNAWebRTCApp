@@ -38,6 +38,8 @@ class Login extends Component {
         this.validate = this.validate.bind(this);
         this.gotoHomePage = this.gotoHomePage.bind(this);
         this.onValueChange = this.onValueChange.bind(this);
+
+        this.gotoHomePage()
     }
 
 
@@ -87,7 +89,7 @@ class Login extends Component {
 
     gotoHomePage() {
         console.log('OK is pressed');
-        Actions.home_map();
+        Actions.profile();
     }
 
 

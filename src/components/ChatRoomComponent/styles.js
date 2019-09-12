@@ -1,3 +1,5 @@
+/* eslint-disable react-native/no-color-literals */
+/* eslint-disable no-dupe-keys */
 import { StyleSheet, Dimensions } from 'react-native';
 import { verticalScale } from '../scaling';
 
@@ -10,10 +12,14 @@ export default StyleSheet.create({
         paddingTop: verticalScale(65)
     },
     inputStyle: {
-        height: 340,
-        width: 60,
-        borderColor: 'gray',
-        borderWidth: 1
+        // height: 40,
+        borderColor: '#7BFFB8',
+        borderWidth: 1,
+        backgroundColor: 'transparent',
+        width: '70%',
+        borderRadius: 5,
+        paddingLeft: 20,
+        color: '#fff'
     },
     joinRoomStyle: {
         width: (width - 20),
@@ -29,6 +35,9 @@ export default StyleSheet.create({
     },
     chatContainerStyle: {
         flex: 1,
+        position: 'absolute',
+        bottom: 0,
+        padding: 27
     },
     chatViewStyle: {
         flex: 1,
@@ -36,8 +45,12 @@ export default StyleSheet.create({
         alignItems: 'flex-end'
     },
     messageViewStyle: {
-        width,
+        width: (width - 20),
         flexDirection: 'row',
+        justifyContent: 'center',
+        alignItems: 'center',
+        backgroundColor: 'transparent',
+        paddingRight: 20
     },
     chatAvoidingViewStyle: {
         flex: 1,

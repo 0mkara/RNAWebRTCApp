@@ -1,3 +1,7 @@
+/* eslint-disable react/jsx-boolean-value */
+/* eslint-disable react/jsx-no-bind */
+/* eslint-disable react-native/no-color-literals */
+/* eslint-disable react-native/no-inline-styles */
 // @flow
 import React, { Component } from 'react';
 import {
@@ -9,7 +13,8 @@ import {
     AsyncStorage,
     BackHandler,
     TouchableOpacity,
-    Alert
+    Alert,
+    ScrollView
 } from 'react-native';
 import { connect } from 'react-redux';
 import { CONNECT, JOIN, CREATE_OFFER, SEND_MESSAGE, DISCONNECT } from '../../actions/types';
@@ -23,6 +28,7 @@ import { Container, Text, Header, Content, Icon, Button, List, ListItem, Left, B
 import commonStyle from '../../commonStyle/commonStyle';
 import LinearGradient from 'react-native-linear-gradient';
 import profileImage from '../../images/profile.png';
+import { Actions } from 'react-native-router-flux';
 
 
 class ChatRoom extends Component {
@@ -34,12 +40,14 @@ class ChatRoom extends Component {
         this.handleGet = this.handleGet.bind(this);
         this.handleLeave = this.handleLeave.bind(this);
         this.handleBackPress = this.handleBackPress.bind(this);
+        this.demoMessageSend = this.demoMessageSend.bind(this);
         this.state = {
             text: null,
             room: "private_room",
-            messages: []
+            messages: [],
+            chatMessage: [{ selfMessage: true, message: 'demo message' }]
         }
-        this.userList = [1, 2, 3, 4, 5, 6]
+
     }
 
     componentDidMount() {
@@ -104,109 +112,104 @@ class ChatRoom extends Component {
     handleKeyboardHeight() {
         console.log(event);
     }
+
+    demoMessageSend(msg) {
+        if (this.state.text.length > 0) {
+            const message = this.state.chatMessage;
+            message.push({ selfMessage: false, message: msg })
+            this.setState({ chatMessage: message });
+            this.setState({ text: '' })
+        }
+    }
     render() {
         const { messages } = this.state;
         const { socketids, my_socket_id } = this.props;
         console.log(this.userList);
+        let heightOfInput = 0;
         return (
-            <Container style={commonStyle.container}>
+            <Container>
                 <LinearGradient colors={['#5C4DD0', '#491E5A']} style={commonStyle.linearGradient}>
-                    <Content>
-                        <View>
-                            <List>
-                                {
-                                    this.userList.map((e, i) => (
-                                        <ListItem avatar key={i} style={{ paddingBottom: 15 }}>
-                                            <TouchableOpacity style={{ width: '100%', margin: 0, padding: 0 }}>
-                                                <Left tyle={{ width: '100%', margin: 0, padding: 0 }}>
-                                                    <Thumbnail source={require('../../images/profile.png')} />
-                                                    <Text style={{ marginLeft: 20, color: '#fff' }}>Kumar Pratik</Text>
-                                                </Left>
-                                            </TouchableOpacity>
-                                        </ListItem>
-                                    )
-                                    )
-                                }
-                            </List>
-                            {/* <View style={styles.joinRoomStyle}>
-                                <GradientInput
-                                    style={styles.inputStyle}
-                                    onChangeText={(room) => this.setState({ room })}
-                                    value={this.state.room} />
-                                {
-                                    this.props.room_joined === false &&
-                                    <WhiteBtn
-                                        onPress={this.handleJoin}
-                                        color="#841584">
-                                        Join
-                                 </WhiteBtn>
-
-                                }
-                                {
-                                    this.props.room_joined === true &&
-                                    <WhiteBtn
-                                        onPress={this.handleLeave}
-                                        color="#841584">
-                                        Leave
-                            </WhiteBtn>
-                                }
-                            </View> */}
+                    <ScrollView>
+                        <Content style={{ flex: 1, height: '100%' }}>
+                            <Text style={{ color: '#fff', textAlignVertical: "center", textAlign: "center", fontSize: 12 }}>Today 4.35 PM</Text>
                             {
-                                // this should be replaced with ListView
-                                socketids.map((item, index) => (
-
-                                    <View >
-                                        {
-                                            (item !== my_socket_id) ?
-                                                <View key={index} style={styles.connectLstStyle}>
-                                                    <Text>{item}</Text>
-                                                    <ConnectBtn
-                                                        onPress={() => this.onPressExchange(item)}>
-                                                        Connect
-                            </ConnectBtn>
-                                                </View>
-                                                : null
-                                        }
-
-
-                                    </View>
+                                this.state.chatMessage.map((i, e) => (
+                                    i.selfMessage ?
+                                        <View>
+                                            <List>
+                                                <ListItem avatar>
+                                                    <Left>
+                                                        <Thumbnail style={commonStyle.chatingProfileImageStyle} source={require('../../images/profile.png')} />
+                                                    </Left>
+                                                    <Body style={{ borderBottomWidth: 0 }}>
+                                                        <Text note style={commonStyle.chatTextStyle}>{i.message}</Text>
+                                                        <Text note style={commonStyle.timeTextStyle}>3 minute ago</Text>
+                                                    </Body>
+                                                </ListItem>
+                                            </List>
+                                        </View>
+                                        : < View >
+                                            <List>
+                                                <ListItem avatar>
+                                                    <Body style={{ borderBottomWidth: 0 }}>
+                                                        <Right style={{ position: 'absolute', right: 15 }}>
+                                                            <Text note style={commonStyle.chatTextStyle}>{i.message}</Text>
+                                                            <Text note style={commonStyle.timeTextStyle}>3 minute ago</Text>
+                                                        </Right>
+                                                    </Body>
+                                                    <Right style={{ borderBottomWidth: 0 }}>
+                                                        <Thumbnail style={commonStyle.chatingProfileImageStyle} source={require('../../images/profile.png')} />
+                                                    </Right>
+                                                </ListItem>
+                                            </List>
+                                        </View>
                                 ))
                             }
-                            {
-                                this.props.datachan_stat === true &&
-                                <View style={styles.chatContainerStyle}>
-                                    <KeyboardAvoidingView
-                                        behavior="position"
-                                        // keyboardVerticalOffset={verticalScale(123)}
-                                        contentContainerStyle={styles.chatAvoidingViewStyle}>
-                                        <View style={styles.chatViewStyle}>
-                                            {
-                                                messages.map((item, index) => (
-                                                    <MessageText key={index}>
-                                                        {item}
-                                                    </MessageText>
-                                                ))
-                                            }
-                                        </View>
-                                        <View style={styles.messageViewStyle}>
-                                            <MessageInput
-                                                style={styles.inputStyle}
-                                                onChangeText={(text) => this.setState({ text })}
-                                                value={this.state.text} />
-                                            <SendBtn
-                                                onPress={this.handleSend}>
-                                                Send
-                                </SendBtn>
-                                        </View>
-                                        <View>
-                                        </View>
-                                    </KeyboardAvoidingView>
-                                </View>
-                            }
-                        </View>
-                    </Content>
+                        </Content>
+                    </ScrollView>
+                    <View style={styles.chatContainerStyle}>
+                        <KeyboardAvoidingView
+                            behavior="padding"
+                            // keyboardVerticalOffset={verticalScale(123)}
+                            contentContainerStyle={styles.chatAvoidingViewStyle}>
+                            <View style={styles.chatViewStyle}>
+                                {
+                                    messages.map((item, index) => (
+                                        <MessageText key={index}>
+                                            {item}
+                                        </MessageText>
+                                    ))
+                                }
+                            </View>
+                            <View style={styles.messageViewStyle}>
+                                <TextInput
+                                    placeholder="Enter your Message"
+                                    placeholderTextColor='#fff'
+                                    autoCorrect={false}
+                                    style={styles.inputStyle}
+                                    onChangeText={(text) => this.setState({ text })}
+                                    value={this.state.text}
+                                    multiline={true}
+                                    autoCapitalize="none"
+                                    numberOfLines={heightOfInput}
+                                    onContentSizeChange={(event) => {
+                                        heightOfInput = event.nativeEvent.contentSize.height;
+                                    }}
+                                />
+                                <TouchableOpacity style={commonStyle.buttonStyle}
+                                    onPress={() => { this.demoMessageSend(this.state.text) }}>
+                                    <Text style={commonStyle.buttonTextStyle}>
+                                        Send
+                                    </Text>
+                                </TouchableOpacity>
+                            </View>
+
+                            <View>
+                            </View>
+                        </KeyboardAvoidingView>
+                    </View>
                 </LinearGradient>
-            </Container>
+            </Container >
 
         );
 
