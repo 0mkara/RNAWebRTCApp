@@ -52,8 +52,6 @@ fastlane/report.xml
 fastlane/Preview.html
 fastlane/screenshots
 
-.env
-
 # Locks
 yarn.lock
 package-lock.json
