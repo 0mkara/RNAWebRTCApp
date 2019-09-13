@@ -19,7 +19,7 @@ import env from 'react-native-config'
 import { login, set_access_token } from '../../actions/LoginAction';
 import LinearGradient from 'react-native-linear-gradient';
 import commonStyle from '../../commonStyle/commonStyle';
-
+import { set_user_info } from '../../actions/ProfileAction';
 
 
 // import styles from './styles';
@@ -39,7 +39,7 @@ class Login extends Component {
         this.gotoHomePage = this.gotoHomePage.bind(this);
         this.onValueChange = this.onValueChange.bind(this);
 
-        this.gotoHomePage()
+        // this.gotoHomePage()
     }
 
 
@@ -67,24 +67,32 @@ class Login extends Component {
     }
 
     handleLogin = () => {
-        console.log(env.API_HOST + `:` + env.API_PORT + `/api/v1/login?grant_type=password&client_id=client@letsgo&client_secret=Va4a8bFFhTJZdybnzyhjHjj6P9UVh7UL&scope=read&username=DemoUserName2&password=ss5852s5s85`)
         let name = this.state.username;
         let password = this.state.password;
-        this.gotoHomePage()
-        this.props.store.dispatch(login(true));
-        // axios.get(env.API_HOST + `:` + env.API_PORT + `/api/v1/login?grant_type=password&client_id=client@letsgo&client_secret=Va4a8bFFhTJZdybnzyhjHjj6P9UVh7UL&scope=read&username=` + name + `&password=` + password + ``)
-        //     .then((res) => {
-        //         console.log(res)
-        //         if (res.hasOwnProperty('data') && res['data'].hasOwnProperty('access_token')) {
-        //             console.log(res['data']['access_token']);
-        //             AsyncStorage.setItem('access_token', res['data']['access_token']);
-        //             ToastAndroid.show("Success", ToastAndroid.LONG)
-        //             this.gotoHomePage()
-        //             this.props.store.dispatch(login(true));
-        //             this.props.store.dispatch(set_access_token(res['data']['access_token']));
+        console.log(env.API_HOST + `:` + env.API_PORT + `/api/v1/login?grant_type=password&client_id=client@letsgo&client_secret=Va4a8bFFhTJZdybnzyhjHjj6P9UVh7UL&scope=read&username=${name}&password=${password}`)
+        console.log(name, password)
+        // this.gotoHomePage()
+        // this.props.store.dispatch(login(true));
+        axios.get(env.API_HOST + `:` + env.API_PORT + `/api/v1/login?grant_type=password&client_id=client@letsgo&client_secret=Va4a8bFFhTJZdybnzyhjHjj6P9UVh7UL&scope=read&username=${name}&password=${password}`)
+            .then((res) => {
+                console.log(res)
+                if (res.hasOwnProperty('data') && res['data'].hasOwnProperty('access_token')) {
+                    console.log(res['data']['access_token']);
+                    const token = res['data']['access_token'];
+                    axios.get(env.API_HOST + `:` + env.API_PORT + `/api/v1/auth/me?access_token=${token}`)
+                        .then((info) => {
+                            console.log(info);
+                            this.props.store.dispatch(set_user_info(info.data));
+                            AsyncStorage.setItem('access_token', res['data']['access_token']);
+                            ToastAndroid.show("Success", ToastAndroid.LONG)
+                            this.gotoHomePage()
+                            this.props.store.dispatch(login(true));
+                            this.props.store.dispatch(set_access_token(res['data']['access_token']));
+                        })
 
-        //         }
-        //     })
+
+                }
+            })
     }
 
     gotoHomePage() {
@@ -106,7 +114,7 @@ class Login extends Component {
                             <Icon name='chatbubbles' style={commonStyle.logoStyle} />
                             <Form>
                                 <Item floatingLabel style={commonStyle.inputStyle}>
-                                    <Label style={styles.labelText}>Username</Label>
+                                    <Label style={styles.labelText}>Email</Label>
                                     <Input returnKeyType={"next"}
                                         style={commonStyle.inputStyle}
                                         getRef={ref => {
@@ -117,7 +125,7 @@ class Login extends Component {
                                         onChangeText={text => this.onValueChange(text, 'username', 'userNameError')}
                                         value={this.state.username} />
                                 </Item>
-                                {this.state.userNameError && <Text style={styles.errorText}>User name is required</Text>}
+                                {this.state.userNameError && <Text style={styles.errorText}>Email is required</Text>}
                                 <Item floatingLabel>
                                     <Label style={styles.labelText}>Password</Label>
                                     <Input returnKeyType={"done"}
@@ -151,7 +159,7 @@ class Login extends Component {
     }
 }
 
-const mapStateToProps = ({ login, routes }) => {
+const mapStateToProps = ({ login, routes, profile }) => {
     const { isLogin, access_token } = login;
     return { isLogin, access_token, routes };
 };

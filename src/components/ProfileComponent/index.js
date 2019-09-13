@@ -16,7 +16,7 @@ import {
     TouchableOpacity,
     ToastAndroid
 } from 'react-native';
-import { Container, Text, Header, Content, Form, Item, Input, Label, Icon, ActionSheet, Thumbnail } from 'native-base';
+import { Container, Text, Header, Content, Form, Item, Input, Label, Icon, ActionSheet, Thumbnail, Button } from 'native-base';
 
 import { connect } from 'react-redux';
 import styles from './styles';
@@ -26,7 +26,8 @@ import env from 'react-native-config'
 import { login, set_access_token } from '../../actions/LoginAction';
 import LinearGradient from 'react-native-linear-gradient';
 import commonStyle from '../../commonStyle/commonStyle';
-
+import { set_editability } from '../../actions/ProfileAction';
+import querystring from 'querystring';
 
 
 // import styles from './styles';
@@ -35,28 +36,73 @@ class Profile extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            name: 'Demo name',
-            email: 'Demo email',
-            phone: 'Demo phone',
+            name: this.props.userInfo.name,
+            email: this.props.userInfo.email,
+            phone: this.props.userInfo.phone,
+            username: this.props.userInfo.username,
             about: 'About',
-            nameDisabled: true,
-            emailDisabled: true,
-            phoneDisabled: true,
-            aboutDisabled: true
+            oldName: this.props.userInfo.name,
+            oldEmail: this.props.userInfo.email,
+            oldPhone: this.props.userInfo.phone,
+            oldUsername: this.props.userInfo.username,
+            oldAbout: 'About'
         }
+        this.saveInfo = this.saveInfo.bind(this);
+        this.enadleEdit = this.enadleEdit.bind(this);
+        this.cancelEdit = this.cancelEdit.bind(this);
     }
 
-    enadleEdit(inputField, focusField) {
-        const currentState = this.state[inputField + 'Disabled'];
-        this.setState({ [inputField + 'Disabled']: !currentState })
-        console.log([inputField + 'Input'])
-        // this[focusField].focus()
+    componentDidUpdate(prevProps) {
+        console.log('PREVIOUS PROPS')
+        console.log(prevProps)
+    }
+
+
+    enadleEdit() {
+        const currentState = this.props.formEnabled;
+        this.props.store.dispatch(set_editability(!currentState));
+    }
+
+    saveInfo() {
+        console.log('info is saved');
+        this.props.store.dispatch(set_editability(false));
+        this.setState({ oldName: this.state.name })
+        this.setState({ oldEmail: this.state.email })
+        this.setState({ oldPhone: this.state.phone })
+        this.setState({ oldAbout: this.state.about })
+        AsyncStorage.getItem('access_token')
+            .then(token => {
+                //console.log(token)
+                console.log(env.API_HOST + `:` + env.API_PORT + `/api/v1/auth/me?access_token=${token}&name=${this.state.name}&email=${this.state.email}&phone=${this.state.phone}&id=${this.props.userInfo.id}`)
+                const userInfo = {
+                    avatar: "",
+                    email: this.state.email,
+                    id: this.props.userInfo.id,
+                    name: this.state.name,
+                    phone: this.state.phone,
+                    username: this.state.username,
+                }
+                console.log(userInfo)
+                axios.post(env.API_HOST + `:` + env.API_PORT + `/api/v1/auth/me?access_token=${token}`, userInfo)
+                    .then(res => {
+                        console.log(res);
+                    })
+            })
+
+    }
+    cancelEdit() {
+        this.setState({ name: this.state.oldName })
+        this.setState({ email: this.state.oldEmail })
+        this.setState({ phone: this.state.oldPhone })
+        this.setState({ about: this.state.oldAbout })
+        this.props.store.dispatch(set_editability(false));
     }
 
 
 
     render() {
-        const { isLogin } = this.props;
+        const { isLogin, formEnabled, userInfo } = this.props;
+        console.log('property')
         console.log(this.props);
         return (
             <Container style={styles.container} >
@@ -64,70 +110,78 @@ class Profile extends Component {
                     {/* <Header /> */}
                     <Content contentContainerStyle={{ flex: 1 }} style={{ padding: 27 }}>
                         <View style={{ justifyContent: 'center', alignItems: 'center', }}>
-
                             <Thumbnail style={styles.profileImageStyle} large source={require('../../images/profile.jpeg')}></Thumbnail>
                             <TouchableOpacity style={{ position: 'absolute', bottom: 10, right: '28%' }}>
                                 <Icon style={styles.imageUploadIcon} name='camera' ></Icon>
                             </TouchableOpacity>
                         </View>
                         <Label style={commonStyle.labelText}>Name</Label>
-                        <Item style={{ marginTop: 5, marginBottom: 5 }}>
+                        <Item style={{ marginBottom: 5, borderBottomWidth: formEnabled ? 1 : 0, padding: 0, margin: 0 }}>
                             <Icon style={{ color: '#fff' }} active name='person' />
                             <Input
-                                ref={x => this.nameInput = x}
+                                aufocus={true}
                                 style={commonStyle.inputStyle}
-                                disabled={this.state.nameDisabled}
+                                editable={formEnabled}
                                 value={this.state.name}
                                 onChangeText={text => this.setState({ name: text })} />
-                            <TouchableOpacity onPress={() => { this.enadleEdit('name', 'nameInput') }} >
-                                <Icon style={{ color: '#fff' }} active type="FontAwesome" name="edit" />
-                            </TouchableOpacity>
+                        </Item>
+                        <Label style={commonStyle.labelText}>Username</Label>
+                        <Item style={{ marginBottom: 5, borderBottomWidth: formEnabled ? 1 : 0, padding: 0, margin: 0 }}>
+                            <Icon style={{ color: '#fff' }} active name='person' />
+                            <Input
+                                style={commonStyle.inputStyle}
+                                editable={formEnabled}
+                                value={this.state.username}
+                                onChangeText={text => this.setState({ username: text })} />
                         </Item>
                         <Label style={commonStyle.labelText}>Email</Label>
-                        <Item style={{ marginTop: 5, marginBottom: 5 }}>
+                        <Item style={{ marginBottom: 5, borderBottomWidth: formEnabled ? 1 : 0 }}>
                             <Icon style={{ color: '#fff' }} active type="FontAwesome" name="envelope" />
                             <Input
                                 getRef={ref => {
                                     this.emailInput = ref.wrappedInstance
                                 }}
                                 style={commonStyle.inputStyle}
-                                disabled={this.state.emailDisabled}
+                                editable={formEnabled}
                                 value={this.state.email}
                                 onChangeText={text => this.setState({ email: text })} />
-                            <TouchableOpacity onPress={() => { this.enadleEdit('email') }} >
-                                <Icon style={{ color: '#fff' }} active type="FontAwesome" name="edit" />
-                            </TouchableOpacity>
                         </Item>
                         <Label style={commonStyle.labelText}>Phone</Label>
-                        <Item style={{ marginTop: 5, marginBottom: 5 }}>
+                        <Item style={{ marginBottom: 5, borderBottomWidth: formEnabled ? 1 : 0 }}>
                             <Icon style={{ color: '#fff' }} active type="FontAwesome" name="phone" />
                             <Input
                                 getRef={ref => {
                                     this.phoneInput = ref.wrappedInstance
                                 }}
                                 style={commonStyle.inputStyle}
-                                disabled={this.state.phoneDisabled}
+                                editable={formEnabled}
                                 value={this.state.phone}
                                 onChangeText={text => this.setState({ phone: text })} />
-                            <TouchableOpacity onPress={() => { this.enadleEdit('phone') }} >
-                                <Icon style={{ color: '#fff' }} active type="FontAwesome" name="edit" />
-                            </TouchableOpacity>
                         </Item>
                         <Label style={commonStyle.labelText}>About</Label>
-                        <Item style={{ marginTop: 5, marginBottom: 5 }}>
-                            <Icon style={{ color: '#fff' }} active type="FontAwesome" name="user" />
+                        <Item style={{ marginBottom: 5, borderBottomWidth: formEnabled ? 1 : 0 }}>
+                            <Icon style={{ color: '#fff' }} active name="person" />
                             <Input
                                 getRef={ref => {
                                     this.aboutInput = ref.wrappedInstance
                                 }}
                                 style={commonStyle.inputStyle}
-                                disabled={this.state.aboutDisabled}
+                                editable={formEnabled}
                                 value={this.state.about}
                                 onChangeText={text => this.setState({ about: text })} />
-                            <TouchableOpacity onPress={() => { this.enadleEdit('about') }} >
-                                <Icon style={{ color: '#fff' }} active type="FontAwesome" name="edit" />
-                            </TouchableOpacity>
                         </Item>
+                        <View style={{ alignItems: 'center' }}>
+                            <View style={{ alignItems: 'center', flexDirection: 'row' }}>
+                                <Button onPress={() => { formEnabled ? this.saveInfo() : this.enadleEdit() }} style={commonStyle.buttonStyle} >
+                                    <Text style={commonStyle.buttonTextStyle}>{formEnabled ? 'Save' : 'Edit'}</Text>
+                                </Button>
+                                {formEnabled ? <Button onPress={() => { this.cancelEdit() }} style={commonStyle.buttonStyle} >
+
+                                    <Text style={commonStyle.buttonTextStyle}>Cancel</Text>
+                                </Button> : null}
+                            </View>
+                        </View>
+
                     </Content>
                 </LinearGradient >
             </Container >
@@ -136,8 +190,9 @@ class Profile extends Component {
     }
 }
 
-const mapStateToProps = ({ login, routes }) => {
+const mapStateToProps = ({ login, routes, profile }) => {
     const { isLogin, access_token } = login;
-    return { isLogin, access_token, routes };
+    const { formEnabled, userInfo } = profile;
+    return { isLogin, access_token, routes, formEnabled, userInfo };
 };
 export default connect(mapStateToProps, {})(Profile);

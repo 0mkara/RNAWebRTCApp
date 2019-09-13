@@ -15,7 +15,6 @@ import axios from 'axios';
 import env from 'react-native-config'
 import LinearGradient from 'react-native-linear-gradient';
 import { Container, Text, Header, Content, Form, Item, Input, Label, Icon, Button } from 'native-base';
-import GoogleSignInButton from '../GoogleSigninButton/GoogleSignInButon';
 // import styles from './styles';
 
 class Registration extends Component {
@@ -151,7 +150,7 @@ class Registration extends Component {
                             >
                                 Already has an account, go to login?
                 </Text>
-                            <GoogleSignInButton></GoogleSignInButton>
+
                         </View>
                     </Content>
                 </LinearGradient>

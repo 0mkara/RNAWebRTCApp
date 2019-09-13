@@ -21,7 +21,7 @@ export default StyleSheet.create({
         borderLeftWidth: 5,
         borderRightWidth: 5,
         borderColor: '#00FB75',
-        borderRadius:3
+        borderRadius: 3
     },
     margin30: {
         marginTop: 30,
@@ -37,6 +37,8 @@ export default StyleSheet.create({
     inputStyle: {
         color: '#fff',
         width: 300,
+        fontSize: 16,
+        padding: 0
     },
     linearGradient: {
         flex: 1,
@@ -44,10 +46,11 @@ export default StyleSheet.create({
         paddingTop: verticalScale(65),
         padding: 14,
         width: '100%',
-        fontFamily:'Nunito-Regular'
+        fontFamily: 'Nunito-Regular'
     },
     labelText: {
         color: '#fff',
+        fontSize: 14,
     },
     navBar: {
         backgroundColor: 'transparent'
@@ -66,7 +69,7 @@ export default StyleSheet.create({
         shadowOpacity: 0,
         marginBottom: 0,
         padding: 0,
-        fontFamily:'Nunito-Regular'
+        fontFamily: 'Nunito-Regular'
     },
     navbarTitleStyles: {
         fontSize: 24,

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { GoogleSignin, GoogleSigninButton } from 'react-native-google-signin';
+import { GoogleSignin, GoogleSigninButton, statusCodes } from 'react-native-google-signin';
 
 class GoogleSignInButton extends Component {
     constructor(props) {
@@ -14,7 +14,7 @@ class GoogleSignInButton extends Component {
     }
     render() {
         return (<GoogleSigninButton
-            style={{ width: 192, height: 48 }}
+            style={{ width: 170, height: 48 }}
             size={GoogleSigninButton.Size.Wide}
             color={GoogleSigninButton.Color.Dark}
             onPress={this._signIn}

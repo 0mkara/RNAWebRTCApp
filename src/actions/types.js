@@ -24,3 +24,8 @@ export const SET_MY_ID = 'set_my_id';
 
 // Chat action
 export const USER_CHANGED = 'user_changed';
+
+// Profile action 
+export const TOGGLE_EDITABILITY = 'toggle_editability';
+export const SET_USER_INFO = 'set_user_profile'
+

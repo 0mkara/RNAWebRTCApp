@@ -15,6 +15,7 @@ import { Actions } from 'react-native-router-flux'
 import { Container, Content, Icon, Button } from 'native-base';
 import LinearGradient from 'react-native-linear-gradient';
 import commonStyle from '../../commonStyle/commonStyle';
+import GoogleSignInButton from '../GoogleSigninButton/GoogleSignInButon';
 
 // import styles from './styles';
 
@@ -31,10 +32,10 @@ class SplashScreen extends Component {
         this.goSignup = this.goSignup.bind(this);
         AsyncStorage.getItem('access_token').then((token) => {
             // this.setState({ access_token: token });
-            console.log(token)
-            if (token.length > 0) {
-                Actions.home_map();
-            }
+            // console.log(token)
+            // if (token.length > 0) {
+            //     Actions.home_map();
+            // }
 
         })
     }
@@ -56,21 +57,24 @@ class SplashScreen extends Component {
                     <Content contentContainerStyle={{ flex: 1 }} style={{ padding: 10 }}>
                         <View style={{ alignItems: 'center', flex: 1 }}>
                             <Icon name='chatbubbles' style={styles.logoStyle} />
-                            <View style={{ flexDirection: 'row', position: 'absolute', bottom: 0 }}>
-                                <Button
-                                    style={commonStyle.buttonStyle}
-                                    title="Login"
-                                    onPress={() => this.goLogin()}
-                                >
-                                    <Text style={commonStyle.buttonTextStyle}>Login</Text>
-                                </Button>
-                                <Button
-                                    style={commonStyle.buttonStyle}
-                                    title="Signup"
-                                    onPress={() => this.goSignup()}
-                                >
-                                    <Text style={commonStyle.buttonTextStyle}>Signup</Text>
-                                </Button>
+                            <View style={{ position: 'absolute', bottom: 0 }}>
+                                <GoogleSignInButton style={{ width: '10%' }}></GoogleSignInButton>
+                                <View style={{ flexDirection: 'row' }}>
+                                    <Button
+                                        style={commonStyle.buttonStyle}
+                                        title="Login"
+                                        onPress={() => this.goLogin()}
+                                    >
+                                        <Text style={commonStyle.buttonTextStyle}>Login</Text>
+                                    </Button>
+                                    <Button
+                                        style={commonStyle.buttonStyle}
+                                        title="Signup"
+                                        onPress={() => this.goSignup()}
+                                    >
+                                        <Text style={commonStyle.buttonTextStyle}>Signup</Text>
+                                    </Button>
+                                </View>
                             </View>
                         </View>
                     </Content>

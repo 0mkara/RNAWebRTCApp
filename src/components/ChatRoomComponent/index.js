@@ -135,7 +135,7 @@ class ChatRoom extends Component {
                             {
                                 this.state.chatMessage.map((i, e) => (
                                     i.selfMessage ?
-                                        <View>
+                                        <View key="i">
                                             <List>
                                                 <ListItem avatar>
                                                     <Left>
@@ -148,7 +148,7 @@ class ChatRoom extends Component {
                                                 </ListItem>
                                             </List>
                                         </View>
-                                        : < View >
+                                        : < View key="i">
                                             <List>
                                                 <ListItem avatar>
                                                     <Body style={{ borderBottomWidth: 0 }}>
