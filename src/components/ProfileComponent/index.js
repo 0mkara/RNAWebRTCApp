@@ -26,7 +26,7 @@ import env from 'react-native-config'
 import { login, set_access_token } from '../../actions/LoginAction';
 import LinearGradient from 'react-native-linear-gradient';
 import commonStyle from '../../commonStyle/commonStyle';
-import { set_editability } from '../../actions/ProfileAction';
+import { set_editability, set_user_info } from '../../actions/ProfileAction';
 import querystring from 'querystring';
 
 
@@ -86,6 +86,9 @@ class Profile extends Component {
                 axios.post(env.API_HOST + `:` + env.API_PORT + `/api/v1/auth/me?access_token=${token}`, userInfo)
                     .then(res => {
                         console.log(res);
+                        if (res.hasOwnProperty('data') && res['data']['message'] === 'Profile Updated') {
+                            this.props.store.dispatch(set_user_info(userInfo));
+                        }
                     })
             })
 

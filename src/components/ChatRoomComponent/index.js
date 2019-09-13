@@ -47,7 +47,6 @@ class ChatRoom extends Component {
             messages: [],
             chatMessage: [{ selfMessage: true, message: 'demo message' }]
         }
-
     }
 
     componentDidMount() {
