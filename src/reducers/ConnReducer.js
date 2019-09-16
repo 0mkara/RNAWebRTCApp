@@ -4,11 +4,13 @@ import {
     SOCKETIDS,
     MESSAGE,
     DATACHAN_STAT,
-    ROOM_JOIN
+    ROOM_JOIN,
+    SET_MY_ID
 } from '../actions/types';
 
 const INITIAL_STATE = {
     connected: false,
+    my_socket_id: '',
     socketids: [],
     message: {},
     datachan_stat: false,
@@ -28,6 +30,8 @@ export default (state = INITIAL_STATE, action) => {
             return { ...state, datachan_stat: action.payload };
         case ROOM_JOIN:
             return { ...state, room_joined: true };
+        case SET_MY_ID:
+            return { ...state, my_socket_id: action.payload }
         default:
             return state;
     }

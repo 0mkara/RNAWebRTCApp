@@ -3,27 +3,27 @@ import { WEBTRC_EXCHANGE, CREATE_OFFER, EXCHANGE, SEND_MESSAGE } from './actions
 import { incommingMessage, datachannelOpened } from './actions';
 import { RTCPeerConnection, RTCSessionDescription, RTCIceCandidate } from 'react-native-webrtc';
 
-const webrtcMiddleware = (function() {
+const webrtcMiddleware = (function () {
     let socketId = null;
-    const configuration = {"iceServers": [{"url": "stun:stun.l.google.com:19302"}]};
-    const connection = {'optional': [{'DtlsSrtpKeyAgreement': true}, {'RtpDataChannels': true }]};
+    const configuration = { "iceServers": [{ "url": "stun:stun.l.google.com:19302" }] };
+    const connection = { 'optional': [{ 'DtlsSrtpKeyAgreement': true }, { 'RtpDataChannels': true }] };
     const peerconn = new RTCPeerConnection(configuration, connection);
     // const sdpConstraints = {'mandatory': { 'OfferToReceiveAudio': false, 'OfferToReceiveVideo': false }};
     const offerOpts = { offertoreceiveaudio: false, offertoreceivevideo: false }
 
-    peerconn.onnegotiationneeded = function(event) {
-      console.log('onnegotiationneeded');
+    peerconn.onnegotiationneeded = function (event) {
+        console.log('onnegotiationneeded');
     };
-    peerconn.oniceconnectionstatechange = function(event) {
+    peerconn.oniceconnectionstatechange = function (event) {
         console.log('oniceconnectionstatechange');
     };
-    peerconn.onsignalingstatechange = function() {
+    peerconn.onsignalingstatechange = function () {
         console.log('onsignalingstatechange');
     };
-    peerconn.onaddstream = function() {
+    peerconn.onaddstream = function () {
         console.log('onaddstream');
     };
-    peerconn.onremovestream = function() {
+    peerconn.onremovestream = function () {
         console.log('onremovestream');
     };
 
@@ -31,17 +31,18 @@ const webrtcMiddleware = (function() {
         console.log("logError", error);
     }
     function createOffer(store, socketId, action) {
+        console.log(typeof (action.payload));
         const dataChannel = peerconn.createDataChannel("text_chan", { reliable: false });
         peerconn.createOffer(offerOpts)
             .then(desc => {
                 peerconn.setLocalDescription(desc)
                     .then(() => {
-                        store.dispatch({ type: EXCHANGE, payload: {'to': action.payload, 'sdp': peerconn.localDescription } })
+                        store.dispatch({ type: EXCHANGE, payload: { 'to': action.payload, 'sdp': peerconn.localDescription, from: '1' } })
                     })
                     .catch(err => console.error("createOffer error : ", err))
             })
 
-        dataChannel.onopen = function() {
+        dataChannel.onopen = function () {
             console.log('dataChannel.onopen');
             store.dispatch(datachannelOpened());
         };
@@ -58,7 +59,7 @@ const webrtcMiddleware = (function() {
         peerconn.textDataChannel = dataChannel;
     }
     function exchange(store, data) {
-        if(socketId === null) {
+        if (socketId === null) {
             socketId = data.from;
         }
         if (data.sdp) {
@@ -70,7 +71,7 @@ const webrtcMiddleware = (function() {
                             .then(desc => {
                                 peerconn.setLocalDescription(desc)
                                     .then(() => {
-                                        store.dispatch({ type: EXCHANGE, payload: {'to': data.from, 'sdp': peerconn.localDescription } });
+                                        store.dispatch({ type: EXCHANGE, payload: { 'to': data.from, 'sdp': peerconn.localDescription } });
                                     })
                                     .catch(err => console.error("exchange sdp error : ", err))
                             })
@@ -82,21 +83,21 @@ const webrtcMiddleware = (function() {
         }
     }
     return store => next => action => {
-        peerconn.onicecandidate = function(event) {
-          console.log('onicecandidate');
-          if(event.candidate && socketId !== null) {
-              store.dispatch({ type: EXCHANGE, payload: {'to': socketId, 'candidate': event.candidate } })
-          }
+        peerconn.onicecandidate = function (event) {
+            console.log('onicecandidate');
+            if (event.candidate && socketId !== null) {
+                store.dispatch({ type: EXCHANGE, payload: { 'to': socketId, 'candidate': event.candidate } })
+            }
         };
-        peerconn.ondatachannel = function(event) {
+        peerconn.ondatachannel = function (event) {
             const receiveChannel = event.channel;
-            if(!peerconn.textDataChannel) {
+            if (!peerconn.textDataChannel) {
                 peerconn.textDataChannel = receiveChannel;
                 store.dispatch(datachannelOpened());
             }
         }
 
-        switch(action.type) {
+        switch (action.type) {
             case CREATE_OFFER:
                 socketId = action.payload;
                 createOffer(store, socketId, action);
