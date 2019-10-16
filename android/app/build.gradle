@@ -193,11 +193,13 @@ android {
 }
 
 dependencies {
-    implementation project(':react-native-vector-icons')
-    implementation project(':react-native-config')
     implementation fileTree(dir: "libs", include: ["*.jar"])
+    implementation project(':react-native-community-geolocation')
+
     implementation "com.facebook.react:react-native:+"  // From node_modules
     compile project(':WebRTCModule')
+      compile project(':react-native-exit-app')
+
 
     if (enableHermes) {
       def hermesPath = "../../node_modules/hermesvm/android/";

@@ -7,6 +7,7 @@
     "test": "jest"
   },
   "dependencies": {
+    "@react-native-community/geolocation": "^2.0.2",
     "axios": "^0.19.0",
     "native-base": "^2.13.7",
     "prop-types": "^15.6.0",
@@ -17,6 +18,7 @@
     "react-native-config": "^0.11.7",
     "react-native-drawer": "^2.5.0",
     "react-native-elements": "^1.2.0",
+    "react-native-exit-app": "^1.1.0",
     "react-native-google-signin": "^2.0.0",
     "react-native-keyboard-aware-scroll-view": "^0.9.1",
     "react-native-linear-gradient": "^2.3.0",
