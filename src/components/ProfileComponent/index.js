@@ -51,7 +51,7 @@ class Profile extends Component {
       data => {
         console.log('SUCCESS', data);
         axios
-          .post('/api/v1/user/coords', { lat: data.coords.latitude, long: data.coords.longitude })
+          .post(env.API_HOST + `:` + env.API_PORT + '/api/v1/user/coords', { lat: data.coords.latitude, long: data.coords.longitude })
           .then(() => {
             ToastAndroid.show('Location Sent Successfully', ToastAndroid.LONG);
           })
