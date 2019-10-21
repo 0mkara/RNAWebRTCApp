@@ -52,7 +52,9 @@ class Profile extends Component {
         console.log('SUCCESS', data);
         axios
           .post(env.API_HOST + `:` + env.API_PORT + '/api/v1/user/coords', { lat: data.coords.latitude, long: data.coords.longitude })
-          .then(() => {
+          .then((res) => {
+            console.log(res);
+            
             ToastAndroid.show('Location Sent Successfully', ToastAndroid.LONG);
           })
           .catch(() => {
@@ -62,7 +64,7 @@ class Profile extends Component {
       () => {
         ToastAndroid.show('Please Allow Location Permission', ToastAndroid.LONG);
         console.log('ERRRROR GETTTTTTTTING');
-        RNExitApp.exitApp();
+        // RNExitApp.exitApp();x
       },
       { enableHighAccuracy: true }
     );
