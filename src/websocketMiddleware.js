@@ -1,6 +1,6 @@
 // @flow
 import { AsyncStorage } from 'react-native';
-import { WEBTRC_EXCHANGE, EXCHANGE, DISCONNECT, CONNECT, JOIN } from './actions/types';
+import { WEBTRC_EXCHANGE, EXCHANGE, DISCONNECT, CONNECT, JOIN, CREATE_ROOM } from './actions/types';
 import { MEMBERS_KEY } from './actions/StorageKeys';
 // import io from 'socket.io-client';
 import io from 'socket.io-client/dist/socket.io';
@@ -20,6 +20,10 @@ const webSocketMiddleware = (function() {
   const onClose = store => evt => {
     //Tell the store we've disconnected
     store.dispatch(disconnected);
+  };
+
+  const onJoined = () => {
+      console.log('JOINED TO ROOM')
   };
 
   const onExchangeMessage = store => data => {
@@ -96,6 +100,7 @@ const webSocketMiddleware = (function() {
             });
             socket.on('connect', onOpen(store));
             socket.on('leave', onClose(store));
+            socket.on('join', onJoined());
             socket.on('exchange', onExchangeMessage(store));
             socket.on('my_socket_id', mySocketId(store));
             socket.on('socket_ids', onMembers(store));
@@ -114,6 +119,9 @@ const webSocketMiddleware = (function() {
         break;
 
       //Send the 'SEND_MESSAGE' action down the websocket to the server
+      case CREATE_ROOM:
+        socket.emit('join');
+        break;
       case EXCHANGE:
         socket.emit('exchange', action.payload);
         break;

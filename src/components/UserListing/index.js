@@ -26,6 +26,10 @@ class UserListing extends Component {
     this.userList = [{ name: 'Peter Seller' }, { name: 'Marlo Brando' }, { name: 'Hound' }, { name: 'Ellen' }, { name: 'Rocky' }, { name: 'Fedrick' }];
   }
 
+  componentDidMount(){
+    this.props.createRoom()
+  }
+
   chat(name) {
     this.props.store.dispatch(userChanged(name));
     Actions.home_map();

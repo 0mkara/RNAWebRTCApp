@@ -4,6 +4,7 @@ import {
     CONNECTED,
     DISCONNECTED,
     SOCKETIDS,
+    CREATE_ROOM,
     MESSAGE,
     DATACHAN_STAT,
     ROOM_JOIN,
@@ -26,6 +27,12 @@ export const disconnected = (dispatch) => {
     dispatch({
         type: DISCONNECTED
     });
+}
+
+export const createRoom = dispatch => {
+    dispatch({
+        type: CREATE_ROOM
+    })
 }
 
 export const roomJoin = (dispatch) => {
