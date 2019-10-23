@@ -8,7 +8,7 @@ import { verticalScale } from '../scaling';
 import styles from './styles';
 import { MEMBERS_KEY } from '../../actions/StorageKeys';
 import { userChanged } from '../../actions/ChatAction';
-import { roomJoin } from '../../actions/WebSocketActions';
+import { createRoom, roomJoin } from '../../actions/WebSocketActions';
 
 import { Container, Text, Header, Content, Icon, Button, List, ListItem, Left, Body, Right, Switch, Thumbnail } from 'native-base';
 import commonStyle from '../../commonStyle/commonStyle';
@@ -27,7 +27,12 @@ class UserListing extends Component {
     this.userList = [{ name: 'Peter Seller' }, { name: 'Marlo Brando' }, { name: 'Hound' }, { name: 'Ellen' }, { name: 'Rocky' }, { name: 'Fedrick' }];
   }
 
-  componentDidMount() {
+  async componentDidMount() {
+    await this.props.store.dispatch({ type: CONNECT });
+
+    console.log(this.props);
+
+    // this.props.store.dispatch(createRoom());
     this.props.roomJoin();
   }
 
@@ -75,5 +80,5 @@ const mapStateToProps = ({ connection, routes, chatReducer }) => {
 };
 export default connect(
   mapStateToProps,
-  { roomJoin }
+  { createRoom, roomJoin }
 )(UserListing);

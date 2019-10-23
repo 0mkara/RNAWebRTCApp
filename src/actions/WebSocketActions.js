@@ -29,10 +29,10 @@ export const disconnected = (dispatch) => {
     });
 }
 
-export const createRoom = dispatch => {
-    dispatch({
+export const createRoom = () => {
+    return {
         type: CREATE_ROOM
-    })
+    }
 }
 
 export const roomJoin = (dispatch) => {

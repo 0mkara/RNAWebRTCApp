@@ -40,6 +40,7 @@ class ChatRoom extends Component {
   componentDidMount() {
     this.handleConnect();
     AsyncStorage.clear();
+    console.log(this.props);
 
     this.backHandler = BackHandler.addEventListener('hardwareBackPress', this.handleBackPress);
   }

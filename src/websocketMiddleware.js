@@ -4,6 +4,7 @@ import { WEBTRC_EXCHANGE, EXCHANGE, DISCONNECT, CONNECT, JOIN, CREATE_ROOM } fro
 import { MEMBERS_KEY } from './actions/StorageKeys';
 // import io from 'socket.io-client';
 import io from 'socket.io-client/dist/socket.io';
+import env from 'react-native-config';
 
 import { connecting, connected, disconnected, roomMembers, roomMember, roomJoin, setMySocketID } from './actions';
 const webSocketMiddleware = (function() {
@@ -23,7 +24,7 @@ const webSocketMiddleware = (function() {
   };
 
   const onJoined = () => {
-      console.log('JOINED TO ROOM')
+    console.log('JOINED TO ROOM');
   };
 
   const onExchangeMessage = store => data => {
@@ -77,6 +78,8 @@ const webSocketMiddleware = (function() {
     switch (action.type) {
       //The user wants us to connect
       case CONNECT:
+        console.log('CONNECTINGGGGGGGGGG');
+
         //console.log("Connecting websocket");
         //Start a new connection to the server
         if (socket !== null) {
@@ -90,7 +93,7 @@ const webSocketMiddleware = (function() {
         AsyncStorage.getItem('access_token').then(token => {
           if (token) {
             console.log(token);
-            socket = io('http://192.168.0.104:8080?access_token=' + token + '', {
+            socket = io(env.API_HOST + ':' + env.API_PORT + '?access_token=' + token + '', {
               transports: ['websocket']
             });
             socket.set('origins', '*');
@@ -98,6 +101,8 @@ const webSocketMiddleware = (function() {
             socket.on('connect_error', err => {
               console.log(JSON.stringify(err));
             });
+            console.log(socket);
+
             socket.on('connect', onOpen(store));
             socket.on('leave', onClose(store));
             socket.on('join', onJoined());
@@ -120,6 +125,8 @@ const webSocketMiddleware = (function() {
 
       //Send the 'SEND_MESSAGE' action down the websocket to the server
       case CREATE_ROOM:
+        console.log(socket);
+
         socket.emit('join');
         break;
       case EXCHANGE:
