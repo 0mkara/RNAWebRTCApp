@@ -33,7 +33,10 @@ class UserListing extends Component {
     console.log(this.props);
 
     // this.props.store.dispatch(createRoom());
-    this.props.roomJoin();
+  }
+
+  async componentWillUnmount() {
+    await this.props.store.dispatch({ type: DISCONNECT });
   }
 
   chat(name) {
@@ -80,5 +83,5 @@ const mapStateToProps = ({ connection, routes, chatReducer }) => {
 };
 export default connect(
   mapStateToProps,
-  { createRoom, roomJoin }
+  { createRoom }
 )(UserListing);

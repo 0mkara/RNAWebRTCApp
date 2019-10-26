@@ -24,6 +24,8 @@ export const connected = (dispatch) => {
 }
 
 export const disconnected = (dispatch) => {
+    console.log("DICON ACTION");
+    
     dispatch({
         type: DISCONNECTED
     });
@@ -36,9 +38,9 @@ export const createRoom = () => {
 }
 
 export const roomJoin = (dispatch) => {
-    dispatch({
+    return {
         type: ROOM_JOIN
-    });
+    };
 }
 export function roomMembers(socketIds) {
     return {

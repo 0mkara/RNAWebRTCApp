@@ -92,6 +92,7 @@ class ChatRoom extends Component {
     this.props.store.dispatch({ type: 'get', payload: this.state.room });
   }
   handleLeave() {
+    console.log("assdasdasdasdasd")
     this.props.store.dispatch({ type: DISCONNECT });
   }
   handleKeyboardHeight() {

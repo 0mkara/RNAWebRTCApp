@@ -10,7 +10,7 @@ import { connecting, connected, disconnected, roomMembers, roomMember, roomJoin,
 const webSocketMiddleware = (function() {
   let socket = null;
 
-  const onOpen = store => evt => {
+  const onOpen = store => {
     //Send a handshake, or authenticate with remote end
     //Tell the store we're connected
     // console.log(evt);
@@ -18,16 +18,24 @@ const webSocketMiddleware = (function() {
     store.dispatch(connected);
   };
 
-  const onClose = store => evt => {
+  const onClose = store => {
     //Tell the store we've disconnected
+    console.log('Connection is Closed');
+
     store.dispatch(disconnected);
   };
 
-  const onJoined = () => {
-    console.log('JOINED TO ROOM');
+  const onJoined = data => {
+    console.log('JOINED TO ROOM', data);
+  };
+
+  const onDisconnect = () => {
+    console.log('DISCONNECTED');
   };
 
   const onExchangeMessage = store => data => {
+    console.log('Message Exchanged');
+
     // exchange webrtc data
     store.dispatch({ type: WEBTRC_EXCHANGE, payload: data });
   };
@@ -49,9 +57,9 @@ const webSocketMiddleware = (function() {
     });
   };
 
-  const failed = () => {
+  const failed = (res) => {
     //Tell the store we've disconnected
-    console.log('Connection is lost');
+    console.log('Connection is lost', res);
   };
   const _retrieveAccessToken = async () => {
     try {
@@ -83,6 +91,7 @@ const webSocketMiddleware = (function() {
         //console.log("Connecting websocket");
         //Start a new connection to the server
         if (socket !== null) {
+          console.log(socket)
           socket.close();
         }
         //Send an action that shows a "connecting..." status for now
@@ -96,19 +105,19 @@ const webSocketMiddleware = (function() {
             socket = io(env.API_HOST + ':' + env.API_PORT + '?access_token=' + token + '', {
               transports: ['websocket']
             });
-            socket.set('origins', '*');
-            socket.on('connect_failed', failed());
-            socket.on('connect_error', err => {
-              console.log(JSON.stringify(err));
-            });
-            console.log(socket);
+            if (socket !== null) {
+              socket.on('connect_failed', failed);
+              socket.on('connect_error', err => {
+                console.log(JSON.stringify(err));
+              });
 
-            socket.on('connect', onOpen(store));
-            socket.on('leave', onClose(store));
-            socket.on('join', onJoined());
-            socket.on('exchange', onExchangeMessage(store));
-            socket.on('my_socket_id', mySocketId(store));
-            socket.on('socket_ids', onMembers(store));
+              socket.on('connect', onOpen(store));
+              socket.on('disconnect', onDisconnect);
+              socket.on('join', onJoined);
+              socket.on('exchange', onExchangeMessage(store));
+              socket.on('my_socket_id', mySocketId(store));
+              socket.on('socket_ids', onMembers(store));
+            }
           }
         });
 
@@ -119,20 +128,26 @@ const webSocketMiddleware = (function() {
         if (socket !== null) {
           socket.close();
         }
+        console.log('Disconnecting');
+
         socket = null;
         store.dispatch(disconnected);
         break;
 
       //Send the 'SEND_MESSAGE' action down the websocket to the server
       case CREATE_ROOM:
-        console.log(socket);
+        console.log('Creating Room');
 
-        socket.emit('join');
+        socket.emit('create');
         break;
       case EXCHANGE:
+        console.log('EXCHANGING');
+
         socket.emit('exchange', action.payload);
         break;
       case JOIN:
+        console.log('Join called');
+
         socket.emit('join', action.payload, socketIds => {
           console.log(socketIds);
           store.dispatch(roomJoin);
