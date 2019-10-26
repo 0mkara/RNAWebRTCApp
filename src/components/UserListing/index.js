@@ -29,10 +29,19 @@ class UserListing extends Component {
 
   async componentDidMount() {
     await this.props.store.dispatch({ type: CONNECT });
+  }
 
+  componentDidUpdate() {
     console.log(this.props);
 
-    // this.props.store.dispatch(createRoom());
+    this.createRoom();
+  }
+
+  async createRoom() {
+    console.log('CREATE ROOOOM CALLED ', this.props);
+    if (this.props.connected && this.props.room_joined === false && this.props.my_socket_id) {
+      await this.props.createRoom();
+    }
   }
 
   async componentWillUnmount() {

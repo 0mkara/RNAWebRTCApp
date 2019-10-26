@@ -101,10 +101,9 @@ const webSocketMiddleware = (function() {
         // socket = io.connect('https://100.26.248.243', { transports: ['websocket'], secure: true, reconnect: true, rejectUnauthorized: false });
         AsyncStorage.getItem('access_token').then(token => {
           if (token) {
-            console.log(token);
+            // console.log(token);
             socket = io(env.API_HOST + ':' + env.API_PORT + '?access_token=' + token + '', {
-              transports: ['websocket'],
-              reconnect: true
+              transports: ['websocket']
             });
             if (socket !== null) {
               socket.on('connect_failed', failed);
@@ -123,10 +122,13 @@ const webSocketMiddleware = (function() {
 
                 store.dispatch(disconnected);
               });
-              socket.on('join', onJoined);
-              // socket.on('exchange', onExchangeMessage(store));
-              // socket.on('my_socket_id', mySocketId(store));
-              // socket.on('socket_ids', onMembers(store));
+              socket.on('join', data => {
+                console.log('JOINED TO ROOM', data);
+                store.dispatch(roomJoin);
+              });
+              socket.on('exchange', onExchangeMessage(store));
+              socket.on('my_socket_id', mySocketId(store));
+              socket.on('socket_ids', onMembers(store));
             }
           }
         });
@@ -148,12 +150,12 @@ const webSocketMiddleware = (function() {
       case CREATE_ROOM:
         console.log('Creating Room');
 
-        // socket.emit('create');
+        socket.emit('create', action.payload);
         break;
       case EXCHANGE:
         console.log('EXCHANGING');
 
-        // socket.emit('exchange', action.payload);
+        socket.emit('exchange', action.payload);
         break;
       case JOIN:
         console.log('Join called');
@@ -167,9 +169,9 @@ const webSocketMiddleware = (function() {
         break;
       case 'get':
         console.log('GET CLICKED');
-        // socket.emit('get', action.payload, () => {
-        //   console.log('get called');
-        // });
+        socket.emit('get', action.payload, () => {
+          console.log('get called');
+        });
         break;
       //This action is irrelevant to us, pass it on to the next middleware
       default:
