@@ -24,8 +24,6 @@ export const connected = (dispatch) => {
 }
 
 export const disconnected = (dispatch) => {
-    console.log("DICON ACTION");
-    
     dispatch({
         type: DISCONNECTED
     });

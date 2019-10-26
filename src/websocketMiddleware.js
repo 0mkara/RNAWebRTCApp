@@ -57,7 +57,7 @@ const webSocketMiddleware = (function() {
     });
   };
 
-  const failed = (res) => {
+  const failed = res => {
     //Tell the store we've disconnected
     console.log('Connection is lost', res);
   };
@@ -91,7 +91,7 @@ const webSocketMiddleware = (function() {
         //console.log("Connecting websocket");
         //Start a new connection to the server
         if (socket !== null) {
-          console.log(socket)
+          console.log(socket);
           socket.close();
         }
         //Send an action that shows a "connecting..." status for now
@@ -103,7 +103,8 @@ const webSocketMiddleware = (function() {
           if (token) {
             console.log(token);
             socket = io(env.API_HOST + ':' + env.API_PORT + '?access_token=' + token + '', {
-              transports: ['websocket']
+              transports: ['websocket'],
+              reconnect: true
             });
             if (socket !== null) {
               socket.on('connect_failed', failed);
@@ -111,12 +112,21 @@ const webSocketMiddleware = (function() {
                 console.log(JSON.stringify(err));
               });
 
-              socket.on('connect', onOpen(store));
+              socket.on('connect', () => {
+                console.log('Connection is established');
+                store.dispatch(connected);
+              });
               socket.on('disconnect', onDisconnect);
+              socket.on('leave', () => {
+                //Tell the store we've disconnected
+                console.log('Connection is Closed');
+
+                store.dispatch(disconnected);
+              });
               socket.on('join', onJoined);
-              socket.on('exchange', onExchangeMessage(store));
-              socket.on('my_socket_id', mySocketId(store));
-              socket.on('socket_ids', onMembers(store));
+              // socket.on('exchange', onExchangeMessage(store));
+              // socket.on('my_socket_id', mySocketId(store));
+              // socket.on('socket_ids', onMembers(store));
             }
           }
         });
@@ -138,28 +148,28 @@ const webSocketMiddleware = (function() {
       case CREATE_ROOM:
         console.log('Creating Room');
 
-        socket.emit('create');
+        // socket.emit('create');
         break;
       case EXCHANGE:
         console.log('EXCHANGING');
 
-        socket.emit('exchange', action.payload);
+        // socket.emit('exchange', action.payload);
         break;
       case JOIN:
         console.log('Join called');
 
-        socket.emit('join', action.payload, socketIds => {
-          console.log(socketIds);
-          store.dispatch(roomJoin);
-          AsyncStorage.setItem(MEMBERS_KEY, JSON.stringify(socketIds));
-          store.dispatch(roomMembers(socketIds));
-        });
+        // socket.emit('join', action.payload, socketIds => {
+        //   console.log(socketIds);
+        //   store.dispatch(roomJoin);
+        //   AsyncStorage.setItem(MEMBERS_KEY, JSON.stringify(socketIds));
+        //   store.dispatch(roomMembers(socketIds));
+        // });
         break;
       case 'get':
         console.log('GET CLICKED');
-        socket.emit('get', action.payload, () => {
-          console.log('get called');
-        });
+        // socket.emit('get', action.payload, () => {
+        //   console.log('get called');
+        // });
         break;
       //This action is irrelevant to us, pass it on to the next middleware
       default:
