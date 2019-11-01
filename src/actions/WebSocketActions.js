@@ -1,5 +1,5 @@
 // @flow
-import { CONNECTING, CONNECTED, DISCONNECTED, SOCKETIDS, CREATE_ROOM, MESSAGE, DATACHAN_STAT, ROOM_JOIN, SET_MY_ID } from './types';
+import { CONNECTING, CONNECTED, DISCONNECTED, SOCKETIDS, CREATE_ROOM, LEAVE_ROOM, MESSAGE, DATACHAN_STAT, ROOM_JOIN, SET_MY_ID } from './types';
 import axios from 'axios';
 import env from 'react-native-config';
 import { AsyncStorage } from 'react-native';
@@ -27,13 +27,15 @@ export const createRoom = () => async dispatch => {
   const userid = await axios.get(env.API_HOST + ':' + env.API_PORT + '/api/v1/auth/me?access_token=' + token);
   AsyncStorage.setItem('userid', userid.data.id);
 
-  //   return {
-  //     type: CREATE_ROOM,
-  //     payload: userid
-  //   };
   dispatch({
     type: CREATE_ROOM,
     payload: userid.data.id
+  });
+};
+
+export const leaveRoom = () => dispatch => {
+  dispatch({
+    type: LEAVE_ROOM
   });
 };
 

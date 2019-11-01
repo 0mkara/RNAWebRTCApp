@@ -17,6 +17,7 @@ export const WEBTRC_EXCHANGE = 'webrtc_exchange';
 export const DATACHAN_STAT = 'datachan_stat';
 export const ROOM_JOIN = 'room_join';
 export const CREATE_ROOM = 'CREATE_ROOM';
+export const LEAVE_ROOM = 'LEAVE_ROOM';
 
 // Login action
 export const LOGIN = 'login';

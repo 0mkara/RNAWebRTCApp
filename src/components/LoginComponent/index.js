@@ -34,6 +34,8 @@ class Login extends Component {
   }
 
   validate = () => {
+    this.handleLogin();
+
     if (this.state.username.length <= 0) {
       this.setState({ userNameError: true });
       this.userInput.focus();
@@ -57,17 +59,17 @@ class Login extends Component {
     const password = this.state.password;
     // this.gotoHomePage()
     // this.props.store.dispatch(login(true));
+    const url =
+      env.API_HOST +
+      `:` +
+      env.API_PORT +
+      `/api/v1/login?grant_type=password&client_id=client@letsgo&client_secret=Va4a8bFFhTJZdybnzyhjHjj6P9UVh7UL&scope=read&username=${name}&password=${password}`;
     axios
-      .get(
-        env.API_HOST +
-          `:` +
-          env.API_PORT +
-          `/api/v1/login?grant_type=password&client_id=client@letsgo&client_secret=Va4a8bFFhTJZdybnzyhjHjj6P9UVh7UL&scope=read&username=${name}&password=${password}`
-      )
+      .get(url)
       .then(res => {
-        console.log("RES", res);
+        console.log('RES', res);
         if (res.hasOwnProperty('data') && res.data.hasOwnProperty('access_token')) {
-          console.log("TOKEN",res.data.access_token);
+          console.log('TOKEN', res.data.access_token);
           const token = res.data.access_token;
           axios
             .get(env.API_HOST + `:` + env.API_PORT + `/api/v1/auth/me?access_token=${token}`)

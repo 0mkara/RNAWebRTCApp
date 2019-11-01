@@ -8,7 +8,7 @@ import { verticalScale } from '../scaling';
 import styles from './styles';
 import { MEMBERS_KEY } from '../../actions/StorageKeys';
 import { userChanged } from '../../actions/ChatAction';
-import { createRoom, roomJoin } from '../../actions/WebSocketActions';
+import { createRoom, leaveRoom } from '../../actions/WebSocketActions';
 
 import { Container, Text, Header, Content, Icon, Button, List, ListItem, Left, Body, Right, Switch, Thumbnail } from 'native-base';
 import commonStyle from '../../commonStyle/commonStyle';
@@ -45,7 +45,7 @@ class UserListing extends Component {
   }
 
   async componentWillUnmount() {
-    await this.props.store.dispatch({ type: DISCONNECT });
+    await this.props.leaveRoom()
   }
 
   chat(name) {
@@ -92,5 +92,5 @@ const mapStateToProps = ({ connection, routes, chatReducer }) => {
 };
 export default connect(
   mapStateToProps,
-  { createRoom }
+  { createRoom, leaveRoom }
 )(UserListing);
