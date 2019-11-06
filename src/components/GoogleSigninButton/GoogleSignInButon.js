@@ -28,29 +28,22 @@ class GoogleSignInButton extends Component {
     try {
       await GoogleSignin.hasPlayServices({ showPlayServicesUpdateDialog: true });
       const userInfo = await GoogleSignin.signIn();
-      console.log(userInfo);
       const idToken = userInfo.idToken;
 
       axios
         .post(`${env.API_HOST}:${env.API_PORT}/api/v1/auth/google`, { idToken })
         .then(res => {
-          console.log('LOGGED IN', res);
           axios
-            .get(`${env.API_HOST}:${env.API_PORT}/api/v1/login?grant_type=client_credentials&client_id=google@letsgo&client_secret=Va4a8bFFhTJZdybnzyhjHjj6P9UVh7UL`)
-            .then(res => {
-              console.log('ACCESS', res);
-            })
+            .get(
+              `${env.API_HOST}:${env.API_PORT}/api/v1/login?grant_type=client_credentials&client_id=google@letsgo&client_secret=Va4a8bFFhTJZdybnzyhjHjj6P9UVh7UL`
+            )
+            .then(res => {})
             .catch(err => {
               console.log(err);
             });
         })
-        .catch(err => {
-          console.log('authGOOGLE', err);
-        });
-    } catch (error) {
-      // console.log(statusCodes)
-      console.log('SIGNIN', error);
-    }
+        .catch(err => {});
+    } catch (error) {}
   };
   render() {
     return (

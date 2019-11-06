@@ -59,22 +59,26 @@ class Login extends Component {
     const password = this.state.password;
     // this.gotoHomePage()
     // this.props.store.dispatch(login(true));
-    const url =
+    // const url =
+    //   env.API_HOST +
+    //   `:` +
+    //   env.API_PORT +
+    //   `/api/v1/login?grant_type=password&client_id=client@letsgo&client_secret=Va4a8bFFhTJZdybnzyhjHjj6P9UVh7UL&scope=read&username=${name}&password=${password}`;
+
+      // ! FOR DEVELOPMENT ONLY
+      const url =
       env.API_HOST +
       `:` +
       env.API_PORT +
-      `/api/v1/login?grant_type=password&client_id=client@letsgo&client_secret=Va4a8bFFhTJZdybnzyhjHjj6P9UVh7UL&scope=read&username=${name}&password=${password}`;
+      `/api/v1/login?grant_type=password&client_id=client@letsgo&client_secret=Va4a8bFFhTJZdybnzyhjHjj6P9UVh7UL&scope=read&username=a@a.com&password=1234`;
     axios
       .get(url)
       .then(res => {
-        console.log('RES', res);
         if (res.hasOwnProperty('data') && res.data.hasOwnProperty('access_token')) {
-          console.log('TOKEN', res.data.access_token);
           const token = res.data.access_token;
           axios
             .get(env.API_HOST + `:` + env.API_PORT + `/api/v1/auth/me?access_token=${token}`)
             .then(info => {
-              console.log(info);
               this.props.store.dispatch(set_user_info(info.data));
               AsyncStorage.setItem('access_token', res.data.access_token);
               ToastAndroid.show('Success', ToastAndroid.LONG);
@@ -93,13 +97,11 @@ class Login extends Component {
   };
 
   gotoHomePage() {
-    console.log('OK is pressed');
     Actions.profile();
   }
 
   render() {
     const { isLogin } = this.props;
-    console.log(this.props);
     return (
       <Container style={styles.container}>
         <LinearGradient colors={['#5C4DD0', '#491E5A']} style={styles.linearGradient}>

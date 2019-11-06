@@ -73,7 +73,6 @@ const MessageInput = ({ label, value, onChangeText, placeholder, placeholderText
             numberOfLines={heightOfInput}
             onContentSizeChange={(event) => {
                 heightOfInput = event.nativeEvent.contentSize.height;
-                console.log(heightOfInput)
             }}
         />
     );

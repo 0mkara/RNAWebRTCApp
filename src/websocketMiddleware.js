@@ -130,6 +130,9 @@ const webSocketMiddleware = (function() {
               socket.on('exchange', onExchangeMessage(store));
               socket.on('my_socket_id', mySocketId(store));
               socket.on('socket_ids', onMembers(store));
+              socket.on('get_user_details', data => {
+                console.log('Rooom DETAILS DATA', data);
+              });
             }
           }
         });
@@ -150,7 +153,7 @@ const webSocketMiddleware = (function() {
       //Send the 'SEND_MESSAGE' action down the websocket to the server
       case CREATE_ROOM:
         console.log('Creating Room');
-
+        console.log("USERID",action.payload)
         socket.emit('create', action.payload);
         break;
       case LEAVE_ROOM:

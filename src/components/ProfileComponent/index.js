@@ -46,15 +46,11 @@ class Profile extends Component {
   }
 
   componentDidMount() {
-    console.log('PROFILE MOUNTED');
     Geolocation.getCurrentPosition(
       data => {
-        console.log('SUCCESS', data);
         axios
           .post(env.API_HOST + `:` + env.API_PORT + '/api/v1/user/coords', { lat: data.coords.latitude, long: data.coords.longitude })
           .then(res => {
-            console.log(res);
-
             ToastAndroid.show('Location Sent Successfully', ToastAndroid.LONG);
           })
           .catch(() => {
@@ -63,17 +59,14 @@ class Profile extends Component {
       },
       () => {
         ToastAndroid.show('Please Allow Location Permission', ToastAndroid.LONG);
-        console.log('ERRRROR GETTTTTTTTING');
+
         // RNExitApp.exitApp();x
       },
       { enableHighAccuracy: true }
     );
   }
 
-  componentDidUpdate(prevProps) {
-    console.log('PREVIOUS PROPS');
-    console.log(prevProps);
-  }
+  componentDidUpdate(prevProps) {}
 
   enadleEdit() {
     const currentState = this.props.formEnabled;
@@ -81,20 +74,12 @@ class Profile extends Component {
   }
 
   saveInfo() {
-    console.log('info is saved');
     this.props.store.dispatch(set_editability(false));
     this.setState({ oldName: this.state.name });
     this.setState({ oldEmail: this.state.email });
     this.setState({ oldPhone: this.state.phone });
     this.setState({ oldAbout: this.state.about });
     AsyncStorage.getItem('access_token').then(token => {
-      //console.log(token)
-      console.log(
-        env.API_HOST +
-          `:` +
-          env.API_PORT +
-          `/api/v1/auth/me?access_token=${token}&name=${this.state.name}&email=${this.state.email}&phone=${this.state.phone}&id=${this.props.userInfo.id}`
-      );
       const userInfo = {
         avatar: '',
         email: this.state.email,
@@ -103,9 +88,8 @@ class Profile extends Component {
         phone: this.state.phone,
         username: this.state.username
       };
-      console.log(userInfo);
+
       axios.post(env.API_HOST + `:` + env.API_PORT + `/api/v1/auth/me?access_token=${token}`, userInfo).then(res => {
-        console.log(res);
         if (res.hasOwnProperty('data') && res.data.message === 'Profile Updated') {
           this.props.store.dispatch(set_user_info(userInfo));
         }
@@ -122,8 +106,7 @@ class Profile extends Component {
 
   render() {
     const { isLogin, formEnabled, userInfo } = this.props;
-    console.log('property');
-    console.log(this.props);
+
     return (
       <Container style={styles.container}>
         <LinearGradient colors={['#5C4DD0', '#491E5A']} style={styles.linearGradient}>

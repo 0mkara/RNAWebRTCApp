@@ -51,7 +51,6 @@ class DrawerContent extends React.Component {
   render() {
     const { flatlistData } = this.state;
     const { isLogin } = this.props;
-    console.log(this.props)
     return (
       <Container style={styles.container}>
         <LinearGradient colors={['#7BFFB8', '#11361C']} style={commonStyle.linearGradient}>

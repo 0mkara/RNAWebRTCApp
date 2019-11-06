@@ -66,21 +66,17 @@ class Registration extends Component {
   };
 
   async signup() {
-    console.log(this.state);
     const name = this.state.name;
     const username = this.state.username;
     const email = this.state.email;
     const password = this.state.password;
     const phone = this.state.phone;
     const url = env.API_HOST + `:` + env.API_PORT + `/api/v1/register`;
-    console.log(url);
 
     axios
       .post(url, { name, username, email, phone, password })
       .then(res => {
-        console.log(res);
         if (res.hasOwnProperty('data') && res.data.hasOwnProperty('message') && res.data.message.toLowerCase() === 'registration successful') {
-          console.log(res.data.message.toLowerCase());
           Actions.login();
         }
       })
