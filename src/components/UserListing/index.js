@@ -21,31 +21,34 @@ class UserListing extends Component {
     this.state = {
       text: null,
       room: 'private_room',
-      messages: []
+      messages: [],
+      userList: []
     };
     this.chat = this.chat.bind(this);
-    this.userList = [{ name: 'Peter Seller' }, { name: 'Marlo Brando' }, { name: 'Hound' }, { name: 'Ellen' }, { name: 'Rocky' }, { name: 'Fedrick' }];
+    // this.userList = [{ name: 'Peter Seller' }, { name: 'Marlo Brando' }, { name: 'Hound' }, { name: 'Ellen' }, { name: 'Rocky' }, { name: 'Fedrick' }];
   }
 
   async componentDidMount() {
     await this.props.store.dispatch({ type: CONNECT });
   }
 
-  componentDidUpdate() {
-    console.log(this.props);
-
+  componentDidUpdate(prevProps) {
+    console.log(prevProps);
     this.createRoom();
+
+    if (prevProps.roomInfo != this.props.roomInfo) {
+      this.setState({ userList: this.props.roomInfo });
+    }
   }
 
   async createRoom() {
-    console.log('CREATE ROOOOM CALLED ', this.props);
     if (this.props.connected && this.props.room_joined === false && this.props.my_socket_id) {
       await this.props.createRoom();
     }
   }
 
   async componentWillUnmount() {
-    await this.props.leaveRoom()
+    await this.props.leaveRoom();
   }
 
   chat(name) {
@@ -61,21 +64,22 @@ class UserListing extends Component {
           <Content>
             <View>
               <List>
-                {this.userList.map((e, i) => (
-                  <ListItem avatar key={i} style={{ paddingBottom: 15 }}>
-                    <TouchableOpacity
-                      onPress={() => {
-                        this.chat(e.name);
-                      }}
-                      style={{ width: '100%', margin: 0, padding: 0 }}
-                    >
-                      <Left tyle={{ width: '100%', margin: 0, padding: 0 }}>
-                        <Thumbnail style={commonStyle.chatingProfileImageStyle} source={require('../../images/profile.png')} />
-                        <Text style={{ marginLeft: 20, color: '#fff' }}>{e.name}</Text>
-                      </Left>
-                    </TouchableOpacity>
-                  </ListItem>
-                ))}
+                {this.state.userList &&
+                  this.state.userList.map((e, i) => (
+                    <ListItem avatar key={i} style={{ paddingBottom: 15 }}>
+                      <TouchableOpacity
+                        onPress={() => {
+                          this.chat(e.Name);
+                        }}
+                        style={{ width: '100%', margin: 0, padding: 0 }}
+                      >
+                        <Left tyle={{ width: '100%', margin: 0, padding: 0 }}>
+                          <Thumbnail style={commonStyle.chatingProfileImageStyle} source={require('../../images/profile.png')} />
+                          <Text style={{ marginLeft: 20, color: '#fff' }}>{e.Name}</Text>
+                        </Left>
+                      </TouchableOpacity>
+                    </ListItem>
+                  ))}
               </List>
             </View>
           </Content>
@@ -87,8 +91,8 @@ class UserListing extends Component {
 
 const mapStateToProps = ({ connection, routes, chatReducer }) => {
   const { connected, socketids, message, datachan_stat, room_joined, my_socket_id } = connection;
-  const { chatUser } = chatReducer;
-  return { connected, socketids, message, datachan_stat, room_joined, my_socket_id, routes, chatUser };
+  const { chatUser, roomInfo } = chatReducer;
+  return { connected, socketids, message, datachan_stat, room_joined, my_socket_id, routes, chatUser, roomInfo };
 };
 export default connect(
   mapStateToProps,

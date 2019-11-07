@@ -1,5 +1,18 @@
 // @flow
-import { CONNECTING, CONNECTED, DISCONNECTED, SOCKETIDS, CREATE_ROOM, LEAVE_ROOM, MESSAGE, DATACHAN_STAT, ROOM_JOIN, SET_MY_ID } from './types';
+import {
+  CONNECTING,
+  CONNECTED,
+  DISCONNECTED,
+  SOCKETIDS,
+  CREATE_ROOM,
+  LEAVE_ROOM,
+  MESSAGE,
+  DATACHAN_STAT,
+  ROOM_JOIN,
+  SET_MY_ID,
+  ROOM_INFO,
+  SAVE_ROOM_INFO
+} from './types';
 import axios from 'axios';
 import env from 'react-native-config';
 import { AsyncStorage } from 'react-native';
@@ -37,6 +50,19 @@ export const leaveRoom = () => dispatch => {
   dispatch({
     type: LEAVE_ROOM
   });
+};
+
+export const roomInfo = dispatch => {
+  dispatch({
+    type: ROOM_INFO
+  });
+};
+
+export const saveRoomInfo = data => {
+  return {
+    type: SAVE_ROOM_INFO,
+    payload: data
+  };
 };
 
 export const roomJoin = dispatch => {
