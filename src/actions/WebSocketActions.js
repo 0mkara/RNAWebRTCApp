@@ -10,7 +10,6 @@ import {
   DATACHAN_STAT,
   ROOM_JOIN,
   SET_MY_ID,
-  ROOM_INFO,
   SAVE_ROOM_INFO
 } from './types';
 import axios from 'axios';
@@ -49,12 +48,6 @@ export const createRoom = () => async dispatch => {
 export const leaveRoom = () => dispatch => {
   dispatch({
     type: LEAVE_ROOM
-  });
-};
-
-export const roomInfo = dispatch => {
-  dispatch({
-    type: ROOM_INFO
   });
 };
 

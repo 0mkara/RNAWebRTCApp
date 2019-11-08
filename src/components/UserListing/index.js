@@ -33,7 +33,6 @@ class UserListing extends Component {
   }
 
   componentDidUpdate(prevProps) {
-    console.log(prevProps);
     this.createRoom();
 
     if (prevProps.roomInfo != this.props.roomInfo) {

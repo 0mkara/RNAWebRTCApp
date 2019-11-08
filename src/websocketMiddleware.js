@@ -1,6 +1,6 @@
 // @flow
 import { AsyncStorage } from 'react-native';
-import { WEBTRC_EXCHANGE, EXCHANGE, DISCONNECT, CONNECT, JOIN, CREATE_ROOM, LEAVE_ROOM, ROOM_INFO } from './actions/types';
+import { WEBTRC_EXCHANGE, EXCHANGE, DISCONNECT, CONNECT, JOIN, CREATE_ROOM, LEAVE_ROOM } from './actions/types';
 import { MEMBERS_KEY } from './actions/StorageKeys';
 // import io from 'socket.io-client';
 import io from 'socket.io-client/dist/socket.io';
@@ -126,14 +126,13 @@ const webSocketMiddleware = (function() {
                 console.log('JOINED TO ROOM', data);
                 AsyncStorage.setItem('roomname', data);
                 store.dispatch(roomJoin);
-                store.dispatch(roomInfo);
               });
               socket.on('exchange', onExchangeMessage(store));
               socket.on('my_socket_id', mySocketId(store));
               socket.on('socket_ids', onMembers(store));
               socket.on('get_user_details', data => {
                 console.log('Rooom DETAILS DATA', data);
-                store.dispatch(saveRoomInfo(data))
+                store.dispatch(saveRoomInfo(data));
               });
             }
           }
@@ -163,12 +162,6 @@ const webSocketMiddleware = (function() {
         console.log('Leaving Room');
         socket.emit('leave');
         break;
-
-      case ROOM_INFO:
-        console.log('ROOM Info Called');
-        socket.emit('get_room_details');
-        break;
-
       case EXCHANGE:
         console.log('EXCHANGING');
         socket.emit('exchange', action.payload);
