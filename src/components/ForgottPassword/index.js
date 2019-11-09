@@ -34,11 +34,9 @@ class ForgotPassword extends Component {
 
 
     async changePassword() {
-        console.log('Clicked')
     }
 
     gotoHomePage() {
-        console.log('OK is pressed');
         Actions.login();
     }
 

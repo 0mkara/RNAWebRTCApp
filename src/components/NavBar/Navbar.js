@@ -17,7 +17,6 @@ class NavBar extends Component {
     }
     render() {
         const { chatUser } = this.props
-        console.log(chatUser)
         return (
             <Content style={commonStyle.navBarStyles} >
                 <View style={{ backgroundColor: 'transparent', flex: 1 }}>
