@@ -19,6 +19,7 @@ export const ROOM_JOIN = 'room_join';
 export const CREATE_ROOM = 'CREATE_ROOM';
 export const LEAVE_ROOM = 'LEAVE_ROOM';
 export const SAVE_ROOM_INFO = 'SAVE_ROOM_INFO';
+export const SET_CHATID = 'SET_CHATID';
 
 // Login action
 export const LOGIN = 'login';

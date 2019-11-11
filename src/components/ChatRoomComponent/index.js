@@ -37,9 +37,12 @@ class ChatRoom extends Component {
     };
   }
 
-  componentDidMount() {
-    this.handleConnect();
-    AsyncStorage.clear();
+  async componentDidMount() {
+    // this.handleConnect();
+    // AsyncStorage.clear();
+    AsyncStorage.getItem('socketID').then(socketID => {
+      this.onPressExchange(socketID);
+    });
 
     this.backHandler = BackHandler.addEventListener('hardwareBackPress', this.handleBackPress);
   }
@@ -64,7 +67,9 @@ class ChatRoom extends Component {
     }
   }
   onPressExchange(socketId) {
-    this.props.store.dispatch({ type: CREATE_OFFER, payload: socketId });
+    const to = this.props.chatID;
+    const from = socketId;
+    this.props.store.dispatch({ type: CREATE_OFFER, payload: { to, from } });
   }
   handleSend() {
     const messages = this.state.messages;
@@ -76,12 +81,12 @@ class ChatRoom extends Component {
     });
   }
   handleConnect = async () => {
-    this.props.store.dispatch({ type: CONNECT });
+    // this.props.store.dispatch({ type: CONNECT });
   };
   handleJoin = async () => {
     AsyncStorage.setItem(MEMBERS_KEY, '');
     if (this.props.connected) {
-      console.log('Connected');
+      // console.log('Connected');
       this.props.store.dispatch({ type: JOIN, payload: this.state.room });
       this.props.store.dispatch({ type: 'get', payload: this.state.room });
     }
@@ -91,7 +96,6 @@ class ChatRoom extends Component {
     this.props.store.dispatch({ type: 'get', payload: this.state.room });
   }
   handleLeave() {
-    console.log("assdasdasdasdasd")
     this.props.store.dispatch({ type: DISCONNECT });
   }
   handleKeyboardHeight() {
@@ -99,12 +103,7 @@ class ChatRoom extends Component {
   }
 
   demoMessageSend(msg) {
-    if (this.state.text.length > 0) {
-      const message = this.state.chatMessage;
-      message.push({ selfMessage: false, message: msg });
-      this.setState({ chatMessage: message });
-      this.setState({ text: '' });
-    }
+    this.props.store.dispatch({ type: SEND_MESSAGE, payload: this.state.text });
   }
   render() {
     const { messages } = this.state;
@@ -189,7 +188,7 @@ class ChatRoom extends Component {
                 <TouchableOpacity
                   style={commonStyle.buttonStyle}
                   onPress={() => {
-                    this.demoMessageSend(this.state.text);
+                    this.handleSend();
                   }}
                 >
                   <Text style={commonStyle.buttonTextStyle}>Send</Text>
@@ -205,9 +204,11 @@ class ChatRoom extends Component {
   }
 }
 
-const mapStateToProps = ({ connection, routes }) => {
+const mapStateToProps = ({ connection, routes, chatReducer }) => {
   const { connected, socketids, message, datachan_stat, room_joined, my_socket_id } = connection;
-  return { connected, socketids, message, datachan_stat, room_joined, my_socket_id, routes };
+  const { chatID } = chatReducer;
+  console.log(chatReducer);
+  return { connected, socketids, message, datachan_stat, room_joined, my_socket_id, routes, chatID };
 };
 export default connect(
   mapStateToProps,

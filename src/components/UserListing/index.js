@@ -7,7 +7,7 @@ import { WhiteBtn, GradientInput, ConnectBtn, MessageInput, SendBtn, MessageText
 import { verticalScale } from '../scaling';
 import styles from './styles';
 import { MEMBERS_KEY } from '../../actions/StorageKeys';
-import { userChanged } from '../../actions/ChatAction';
+import { userChanged, setChatID } from '../../actions/ChatAction';
 import { createRoom, leaveRoom } from '../../actions/WebSocketActions';
 
 import { Container, Text, Header, Content, Icon, Button, List, ListItem, Left, Body, Right, Switch, Thumbnail } from 'native-base';
@@ -19,13 +19,9 @@ class UserListing extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      text: null,
-      room: 'private_room',
-      messages: [],
       userList: []
     };
     this.chat = this.chat.bind(this);
-    // this.userList = [{ name: 'Peter Seller' }, { name: 'Marlo Brando' }, { name: 'Hound' }, { name: 'Ellen' }, { name: 'Rocky' }, { name: 'Fedrick' }];
   }
 
   async componentDidMount() {
@@ -47,11 +43,15 @@ class UserListing extends Component {
   }
 
   async componentWillUnmount() {
-    await this.props.leaveRoom();
+    // await this.props.leaveRoom();
   }
 
-  chat(name) {
+  chat(name, socketID) {
+    console.log(socketID, name);
+
     this.props.store.dispatch(userChanged(name));
+    this.props.store.dispatch(setChatID(socketID));
+
     Actions.home_map();
   }
 
@@ -66,12 +66,7 @@ class UserListing extends Component {
                 {this.state.userList &&
                   this.state.userList.map((e, i) => (
                     <ListItem avatar key={i} style={{ paddingBottom: 15 }}>
-                      <TouchableOpacity
-                        onPress={() => {
-                          this.chat(e.Name);
-                        }}
-                        style={{ width: '100%', margin: 0, padding: 0 }}
-                      >
+                      <TouchableOpacity onPress={() => this.chat(e.Name, e.SocketID)} style={{ width: '100%', margin: 0, padding: 0 }}>
                         <Left tyle={{ width: '100%', margin: 0, padding: 0 }}>
                           <Thumbnail style={commonStyle.chatingProfileImageStyle} source={require('../../images/profile.png')} />
                           <Text style={{ marginLeft: 20, color: '#fff' }}>{e.Name}</Text>

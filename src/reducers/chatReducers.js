@@ -1,18 +1,19 @@
-import {
-    USER_CHANGED, SAVE_ROOM_INFO
-} from '../actions/types';
+import { USER_CHANGED, SAVE_ROOM_INFO, SET_CHATID } from '../actions/types';
 
 const INITIAL_STATE = {
-    chatUser: ''
+  chatUser: '',
+  chatID: ''
 };
 export default (state = INITIAL_STATE, action) => {
-    switch (action.type) {
-        case USER_CHANGED:
-            return { ...state, chatUser: action.payload }
-        case SAVE_ROOM_INFO:
-            return {...state, roomInfo: action.payload}
+  switch (action.type) {
+    case USER_CHANGED:
+      return { ...state, chatUser: action.payload };
+    case SET_CHATID:
+      return { ...state, chatID: action.payload };
+    case SAVE_ROOM_INFO:
+      return { ...state, roomInfo: action.payload };
 
-        default:
-            return state;
-    }
-}
+    default:
+      return state;
+  }
+};

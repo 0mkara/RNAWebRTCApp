@@ -10,25 +10,6 @@ import { connecting, connected, disconnected, roomMembers, roomMember, roomJoin,
 const webSocketMiddleware = (function() {
   let socket = null;
 
-  const onOpen = store => {
-    //Send a handshake, or authenticate with remote end
-    //Tell the store we're connected
-    // console.log(evt);
-    console.log('Connection is established');
-    store.dispatch(connected);
-  };
-
-  const onClose = store => {
-    //Tell the store we've disconnected
-    console.log('Connection is Closed');
-
-    store.dispatch(disconnected);
-  };
-
-  const onJoined = data => {
-    console.log('JOINED TO ROOM', data);
-  };
-
   const onDisconnect = () => {
     console.log('DISCONNECTED');
   };
@@ -75,9 +56,10 @@ const webSocketMiddleware = (function() {
     }
   };
 
-  const mySocketId = store => mySocketId => {
+  const mySocketId = store => async mySocketId => {
     console.log('My ID');
     console.log(mySocketId);
+    await AsyncStorage.setItem('socketID', mySocketId);
     store.dispatch(setMySocketID(mySocketId));
   };
 
@@ -88,7 +70,6 @@ const webSocketMiddleware = (function() {
       case CONNECT:
         console.log('CONNECTINGGGGGGGGGG');
 
-        //console.log("Connecting websocket");
         //Start a new connection to the server
         if (socket !== null) {
           console.log(socket);
@@ -97,8 +78,6 @@ const webSocketMiddleware = (function() {
         //Send an action that shows a "connecting..." status for now
         store.dispatch(connecting);
 
-        //Attempt to connect (we could send a 'failed' action on error)
-        // socket = io.connect('https://100.26.248.243', { transports: ['websocket'], secure: true, reconnect: true, rejectUnauthorized: false });
         AsyncStorage.getItem('access_token').then(token => {
           if (token) {
             // console.log(token);
@@ -127,8 +106,17 @@ const webSocketMiddleware = (function() {
                 AsyncStorage.setItem('roomname', data);
                 store.dispatch(roomJoin);
               });
-              socket.on('exchange', onExchangeMessage(store));
-              socket.on('my_socket_id', mySocketId(store));
+              socket.on('exchange', data => {
+                console.log('Message Exchanged');
+                // exchange webrtc data
+                store.dispatch({ type: WEBTRC_EXCHANGE, payload: data });
+              });
+              socket.on('my_socket_id', async mySocketId => {
+                console.log('My ID');
+                console.log(mySocketId);
+                await AsyncStorage.setItem('socketID', mySocketId);
+                store.dispatch(setMySocketID(mySocketId));
+              });
               socket.on('socket_ids', onMembers(store));
               socket.on('get_user_details', data => {
                 console.log('Rooom DETAILS DATA', data);
