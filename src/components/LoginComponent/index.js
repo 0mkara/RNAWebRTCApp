@@ -59,18 +59,18 @@ class Login extends Component {
     const password = this.state.password;
     // this.gotoHomePage()
     // this.props.store.dispatch(login(true));
-    // const url =
-    //   env.API_HOST +
-    //   `:` +
-    //   env.API_PORT +
-    //   `/api/v1/login?grant_type=password&client_id=client@letsgo&client_secret=Va4a8bFFhTJZdybnzyhjHjj6P9UVh7UL&scope=read&username=${name}&password=${password}`;
-
-      // ! FOR DEVELOPMENT ONLY
-      const url =
+    const url =
       env.API_HOST +
       `:` +
       env.API_PORT +
-      `/api/v1/login?grant_type=password&client_id=client@letsgo&client_secret=Va4a8bFFhTJZdybnzyhjHjj6P9UVh7UL&scope=read&username=a@a.com&password=1234`;
+      `/api/v1/login?grant_type=password&client_id=client@letsgo&client_secret=Va4a8bFFhTJZdybnzyhjHjj6P9UVh7UL&scope=read&username=${name}&password=${password}`;
+
+      // ! FOR DEVELOPMENT ONLY
+      // const url =
+      // env.API_HOST +
+      // `:` +
+      // env.API_PORT +
+      // `/api/v1/login?grant_type=password&client_id=client@letsgo&client_secret=Va4a8bFFhTJZdybnzyhjHjj6P9UVh7UL&scope=read&username=a@a.com&password=1234`;
     axios
       .get(url)
       .then(res => {

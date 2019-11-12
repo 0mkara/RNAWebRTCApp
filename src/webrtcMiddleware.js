@@ -6,7 +6,7 @@ import { RTCPeerConnection, RTCSessionDescription, RTCIceCandidate } from 'react
 const webrtcMiddleware = (function() {
   let socketId = null;
   const configuration = { iceServers: [{ url: 'stun:stun.l.google.com:19302' }] };
-  const connection = { optional: [{ DtlsSrtpKeyAgreement: true }, { RtpDataChannels: true }] };
+  const connection = { optional: [{ DtlsSrtpKeyAgreement: true }] };
   const peerconn = new RTCPeerConnection(configuration, connection);
   // const sdpConstraints = {'mandatory': { 'OfferToReceiveAudio': false, 'OfferToReceiveVideo': false }};
   const offerOpts = { offertoreceiveaudio: false, offertoreceivevideo: false };
@@ -92,6 +92,14 @@ const webrtcMiddleware = (function() {
     };
     peerconn.ondatachannel = function(event) {
       const receiveChannel = event.channel;
+
+      receiveChannel.onopen = data => {
+        console.log('Datachanel Opened ', data);
+      };
+
+      receiveChannel.onmessage = data => {
+        console.log('Message Recieved ', data, data.data);
+      };
       if (!peerconn.textDataChannel) {
         peerconn.textDataChannel = receiveChannel;
         store.dispatch(datachannelOpened());
