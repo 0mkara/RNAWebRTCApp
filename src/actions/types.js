@@ -20,6 +20,8 @@ export const CREATE_ROOM = 'CREATE_ROOM';
 export const LEAVE_ROOM = 'LEAVE_ROOM';
 export const SAVE_ROOM_INFO = 'SAVE_ROOM_INFO';
 export const SET_CHATID = 'SET_CHATID';
+export const BROADCAST_OFFER = 'BROADCAST_OFFER';
+export const SET_OFFER_REQUEST = "SET_OFFER_REQUEST";
 
 // Login action
 export const LOGIN = 'login';

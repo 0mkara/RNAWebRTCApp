@@ -53,7 +53,7 @@ class Profile extends Component {
           .then(res => {
             ToastAndroid.show('Location Sent Successfully', ToastAndroid.LONG);
           })
-          .catch(() => {
+          .catch((e) => {
             ToastAndroid.show('Location Sent Failed', ToastAndroid.LONG);
           });
       },
@@ -62,7 +62,7 @@ class Profile extends Component {
 
         // RNExitApp.exitApp();x
       },
-      { enableHighAccuracy: true }
+      { enableHighAccuracy: false }
     );
   }
 

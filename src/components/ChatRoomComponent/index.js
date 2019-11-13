@@ -44,6 +44,10 @@ class ChatRoom extends Component {
       this.onPressExchange(socketID);
     });
 
+    this.props.store.subscribe(() => {
+      console.log(this.props.store.getState())
+    })  
+
     this.backHandler = BackHandler.addEventListener('hardwareBackPress', this.handleBackPress);
   }
 
@@ -205,10 +209,10 @@ class ChatRoom extends Component {
 }
 
 const mapStateToProps = ({ connection, routes, chatReducer }) => {
-  const { connected, socketids, message, datachan_stat, room_joined, my_socket_id } = connection;
+  const { connected, socketids, message, datachan_stat, room_joined, my_socket_id, offer } = connection;
   const { chatID } = chatReducer;
   console.log(chatReducer);
-  return { connected, socketids, message, datachan_stat, room_joined, my_socket_id, routes, chatID };
+  return { connected, socketids, message, datachan_stat, room_joined, my_socket_id, routes, chatID, offer };
 };
 export default connect(
   mapStateToProps,
