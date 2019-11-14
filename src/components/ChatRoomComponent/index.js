@@ -3,21 +3,21 @@
 /* eslint-disable react-native/no-color-literals */
 /* eslint-disable react-native/no-inline-styles */
 // @flow
-import React, { Component } from 'react';
-import { View, KeyboardAvoidingView, TextInput, Platform, SafeAreaView, AsyncStorage, BackHandler, TouchableOpacity, Alert, ScrollView } from 'react-native';
-import { connect } from 'react-redux';
-import { CONNECT, JOIN, CREATE_OFFER, SEND_MESSAGE, DISCONNECT } from '../../actions/types';
-import { WhiteBtn, GradientInput, ConnectBtn, MessageInput, SendBtn, MessageText } from '../common';
-import { verticalScale } from '../scaling';
-import styles from './styles';
-import io from 'socket.io-client/dist/socket.io';
-import { MEMBERS_KEY } from '../../actions/StorageKeys';
+import React, { Component } from "react";
+import { View, KeyboardAvoidingView, TextInput, Platform, SafeAreaView, AsyncStorage, BackHandler, TouchableOpacity, Alert, ScrollView } from "react-native";
+import { connect } from "react-redux";
+import { CONNECT, JOIN, CREATE_OFFER, SEND_MESSAGE, DISCONNECT } from "../../actions/types";
+import { WhiteBtn, GradientInput, ConnectBtn, MessageInput, SendBtn, MessageText } from "../common";
+import { verticalScale } from "../scaling";
+import styles from "./styles";
+import io from "socket.io-client/dist/socket.io";
+import { MEMBERS_KEY } from "../../actions/StorageKeys";
 
-import { Container, Text, Header, Content, Icon, Button, List, ListItem, Left, Body, Right, Switch, Thumbnail } from 'native-base';
-import commonStyle from '../../commonStyle/commonStyle';
-import LinearGradient from 'react-native-linear-gradient';
-import profileImage from '../../images/profile.png';
-import { Actions } from 'react-native-router-flux';
+import { Container, Text, Header, Content, Icon, Button, List, ListItem, Left, Body, Right, Switch, Thumbnail } from "native-base";
+import commonStyle from "../../commonStyle/commonStyle";
+import LinearGradient from "react-native-linear-gradient";
+import profileImage from "../../images/profile.png";
+import { Actions } from "react-native-router-flux";
 
 class ChatRoom extends Component {
   constructor(props) {
@@ -31,24 +31,21 @@ class ChatRoom extends Component {
     this.demoMessageSend = this.demoMessageSend.bind(this);
     this.state = {
       text: null,
-      room: 'private_room',
+      room: "private_room",
       messages: [],
-      chatMessage: [{ selfMessage: true, message: 'demo message' }]
+      chatMessage: [{ selfMessage: true, message: "demo message" }]
     };
   }
 
   async componentDidMount() {
     // this.handleConnect();
     // AsyncStorage.clear();
-    AsyncStorage.getItem('socketID').then(socketID => {
-      this.onPressExchange(socketID);
-    });
-
-    this.props.store.subscribe(() => {
-      console.log(this.props.store.getState())
-    })  
-
-    this.backHandler = BackHandler.addEventListener('hardwareBackPress', this.handleBackPress);
+    if (this.props.offer === null) {
+      AsyncStorage.getItem("socketID").then(socketID => {
+        this.onPressExchange(socketID);
+      });
+    }
+    this.backHandler = BackHandler.addEventListener("hardwareBackPress", this.handleBackPress);
   }
 
   componentWillUnmount() {
@@ -56,12 +53,16 @@ class ChatRoom extends Component {
   }
 
   handleBackPress() {
-    Alert.alert('Exit app', 'Do you want to exit ?', [{ text: 'No', onPress: () => 'no' }, { text: 'Yes', onPress: () => BackHandler.exitApp() }]);
+    Alert.alert("Exit app", "Do you want to exit ?", [
+      { text: "No", onPress: () => "no" },
+      { text: "Yes", onPress: () => BackHandler.exitApp() }
+    ]);
     return true;
   }
 
   componentDidUpdate(prevProps) {
     const { message } = this.props;
+
     const stmsg = this.state.messages;
     if (this.props.message !== prevProps.message && message.from !== undefined) {
       stmsg.push(message);
@@ -77,10 +78,10 @@ class ChatRoom extends Component {
   }
   handleSend() {
     const messages = this.state.messages;
-    messages.push({ from: 'self', message: this.state.text });
+    messages.push({ from: "self", message: this.state.text });
     this.props.store.dispatch({ type: SEND_MESSAGE, payload: this.state.text });
     this.setState({
-      text: '',
+      text: "",
       messages
     });
   }
@@ -88,16 +89,16 @@ class ChatRoom extends Component {
     // this.props.store.dispatch({ type: CONNECT });
   };
   handleJoin = async () => {
-    AsyncStorage.setItem(MEMBERS_KEY, '');
+    AsyncStorage.setItem(MEMBERS_KEY, "");
     if (this.props.connected) {
       // console.log('Connected');
       this.props.store.dispatch({ type: JOIN, payload: this.state.room });
-      this.props.store.dispatch({ type: 'get', payload: this.state.room });
+      this.props.store.dispatch({ type: "get", payload: this.state.room });
     }
     console.log(this.state.room);
   };
   handleGet() {
-    this.props.store.dispatch({ type: 'get', payload: this.state.room });
+    this.props.store.dispatch({ type: "get", payload: this.state.room });
   }
   handleLeave() {
     this.props.store.dispatch({ type: DISCONNECT });
@@ -116,17 +117,17 @@ class ChatRoom extends Component {
     let heightOfInput = 0;
     return (
       <Container>
-        <LinearGradient colors={['#5C4DD0', '#491E5A']} style={commonStyle.linearGradient}>
+        <LinearGradient colors={["#5C4DD0", "#491E5A"]} style={commonStyle.linearGradient}>
           <ScrollView>
-            <Content style={{ flex: 1, height: '100%' }}>
-              <Text style={{ color: '#fff', textAlignVertical: 'center', textAlign: 'center', fontSize: 12 }}>Today 4.35 PM</Text>
+            <Content style={{ flex: 1, height: "100%" }}>
+              <Text style={{ color: "#fff", textAlignVertical: "center", textAlign: "center", fontSize: 12 }}>Today 4.35 PM</Text>
               {this.state.chatMessage.map((i, e) =>
                 i.selfMessage ? (
                   <View key="i">
                     <List>
                       <ListItem avatar>
                         <Left>
-                          <Thumbnail style={commonStyle.chatingProfileImageStyle} source={require('../../images/profile.png')} />
+                          <Thumbnail style={commonStyle.chatingProfileImageStyle} source={require("../../images/profile.png")} />
                         </Left>
                         <Body style={{ borderBottomWidth: 0 }}>
                           <Text note style={commonStyle.chatTextStyle}>
@@ -144,7 +145,7 @@ class ChatRoom extends Component {
                     <List>
                       <ListItem avatar>
                         <Body style={{ borderBottomWidth: 0 }}>
-                          <Right style={{ position: 'absolute', right: 15 }}>
+                          <Right style={{ position: "absolute", right: 15 }}>
                             <Text note style={commonStyle.chatTextStyle}>
                               {i.message}
                             </Text>
@@ -154,7 +155,7 @@ class ChatRoom extends Component {
                           </Right>
                         </Body>
                         <Right style={{ borderBottomWidth: 0 }}>
-                          <Thumbnail style={commonStyle.chatingProfileImageStyle} source={require('../../images/profile.png')} />
+                          <Thumbnail style={commonStyle.chatingProfileImageStyle} source={require("../../images/profile.png")} />
                         </Right>
                       </ListItem>
                     </List>
@@ -211,10 +212,6 @@ class ChatRoom extends Component {
 const mapStateToProps = ({ connection, routes, chatReducer }) => {
   const { connected, socketids, message, datachan_stat, room_joined, my_socket_id, offer } = connection;
   const { chatID } = chatReducer;
-  console.log(chatReducer);
   return { connected, socketids, message, datachan_stat, room_joined, my_socket_id, routes, chatID, offer };
 };
-export default connect(
-  mapStateToProps,
-  {}
-)(ChatRoom);
+export default connect(mapStateToProps, {})(ChatRoom);
