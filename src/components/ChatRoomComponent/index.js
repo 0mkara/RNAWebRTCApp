@@ -58,10 +58,7 @@ class ChatRoom extends Component {
   }
 
   handleBackPress() {
-    Alert.alert("Exit app", "Do you want to exit ?", [
-      { text: "No", onPress: () => "no" },
-      { text: "Yes", onPress: () => BackHandler.exitApp() }
-    ]);
+    Actions.user_listing();
     return true;
   }
 

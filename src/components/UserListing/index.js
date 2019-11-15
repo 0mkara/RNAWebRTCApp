@@ -26,7 +26,9 @@ class UserListing extends Component {
   }
 
   async componentDidMount() {
-    await this.props.store.dispatch({ type: CONNECT });
+    if (!this.props.connected) {
+      await this.props.store.dispatch({ type: CONNECT });
+    }
   }
 
   componentDidUpdate(prevProps) {

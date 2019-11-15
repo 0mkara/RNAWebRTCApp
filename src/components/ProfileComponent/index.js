@@ -60,7 +60,7 @@ class Profile extends Component {
       () => {
         ToastAndroid.show('Please Allow Location Permission', ToastAndroid.LONG);
 
-        // RNExitApp.exitApp();x
+        RNExitApp.exitApp();
       },
       { enableHighAccuracy: false }
     );
