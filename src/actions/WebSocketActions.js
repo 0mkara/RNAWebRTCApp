@@ -82,13 +82,10 @@ export function roomMember(socketId) {
   };
 }
 
-export function incommingMessage(from, message) {
+export function incommingMessage(data) {
   return {
     type: MESSAGE,
-    payload: {
-      from,
-      message
-    }
+    payload: data
   };
 }
 

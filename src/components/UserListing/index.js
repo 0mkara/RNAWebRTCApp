@@ -35,10 +35,6 @@ class UserListing extends Component {
     if (prevProps.roomInfo != this.props.roomInfo) {
       this.setState({ userList: this.props.roomInfo });
     }
-
-    // if (this.props.offer) {
-    //   this.setState({ offer: this.props.offer });
-    // }
   }
 
   async createRoom() {
@@ -75,9 +71,7 @@ class UserListing extends Component {
                         <Left tyle={{ width: "100%", margin: 0, padding: 0 }}>
                           <Thumbnail style={commonStyle.chatingProfileImageStyle} source={require("../../images/profile.png")} />
                           <Text style={{ marginLeft: 20, color: "#fff" }}>{e.Name}</Text>
-                          {this.props.offer && console.log("FROM RENDER", this.props.offer.from, e.SocketID) && this.props.offer.from == e.SocketID && (
-                            <Text style={styles.offerCounterStyle}>1</Text>
-                          )}
+                          {this.props.offer && this.props.offer.from == e.SocketID && <Text style={styles.offerCounterStyle}>1</Text>}
                         </Left>
                       </TouchableOpacity>
                     </ListItem>

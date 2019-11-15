@@ -6,7 +6,7 @@
 import React, { Component } from "react";
 import { View, KeyboardAvoidingView, TextInput, Platform, SafeAreaView, AsyncStorage, BackHandler, TouchableOpacity, Alert, ScrollView } from "react-native";
 import { connect } from "react-redux";
-import { CONNECT, JOIN, CREATE_OFFER, SEND_MESSAGE, DISCONNECT } from "../../actions/types";
+import { CONNECT, WEBTRC_EXCHANGE, JOIN, CREATE_OFFER, SEND_MESSAGE, DISCONNECT, DELETE_OFFER_REQUEST } from "../../actions/types";
 import { WhiteBtn, GradientInput, ConnectBtn, MessageInput, SendBtn, MessageText } from "../common";
 import { verticalScale } from "../scaling";
 import styles from "./styles";
@@ -18,6 +18,7 @@ import commonStyle from "../../commonStyle/commonStyle";
 import LinearGradient from "react-native-linear-gradient";
 import profileImage from "../../images/profile.png";
 import { Actions } from "react-native-router-flux";
+import moment from "moment";
 
 class ChatRoom extends Component {
   constructor(props) {
@@ -45,6 +46,10 @@ class ChatRoom extends Component {
         this.onPressExchange(socketID);
       });
     }
+    if (this.props.offer) {
+      this.props.store.dispatch({ type: WEBTRC_EXCHANGE, payload: this.props.offer });
+      this.props.store.dispatch({ type: DELETE_OFFER_REQUEST });
+    }
     this.backHandler = BackHandler.addEventListener("hardwareBackPress", this.handleBackPress);
   }
 
@@ -62,10 +67,12 @@ class ChatRoom extends Component {
 
   componentDidUpdate(prevProps) {
     const { message } = this.props;
+    let stmsg = this.state.messages;
+    console.log(this.state);
 
-    const stmsg = this.state.messages;
-    if (this.props.message !== prevProps.message && message.from !== undefined) {
-      stmsg.push(message);
+    if (this.props.message !== prevProps.message) {
+      stmsg = stmsg.concat(message[message.length - 1]);
+
       this.setState({
         messages: stmsg
       });
@@ -77,9 +84,14 @@ class ChatRoom extends Component {
     this.props.store.dispatch({ type: CREATE_OFFER, payload: { to, from } });
   }
   handleSend() {
-    const messages = this.state.messages;
-    messages.push({ from: "self", message: this.state.text });
-    this.props.store.dispatch({ type: SEND_MESSAGE, payload: this.state.text });
+    const msg = {
+      from: this.props.my_socket_id,
+      msg: this.state.text,
+      time: moment().format("HH:mm")
+    };
+    const messages = this.state.messages.concat(msg);
+
+    this.props.store.dispatch({ type: SEND_MESSAGE, payload: JSON.stringify(msg) });
     this.setState({
       text: "",
       messages
@@ -91,11 +103,9 @@ class ChatRoom extends Component {
   handleJoin = async () => {
     AsyncStorage.setItem(MEMBERS_KEY, "");
     if (this.props.connected) {
-      // console.log('Connected');
       this.props.store.dispatch({ type: JOIN, payload: this.state.room });
       this.props.store.dispatch({ type: "get", payload: this.state.room });
     }
-    console.log(this.state.room);
   };
   handleGet() {
     this.props.store.dispatch({ type: "get", payload: this.state.room });
@@ -103,9 +113,7 @@ class ChatRoom extends Component {
   handleLeave() {
     this.props.store.dispatch({ type: DISCONNECT });
   }
-  handleKeyboardHeight() {
-    console.log(event);
-  }
+  handleKeyboardHeight() {}
 
   demoMessageSend(msg) {
     this.props.store.dispatch({ type: SEND_MESSAGE, payload: this.state.text });
@@ -113,7 +121,7 @@ class ChatRoom extends Component {
   render() {
     const { messages } = this.state;
     const { socketids, my_socket_id } = this.props;
-    console.log(this.props);
+
     let heightOfInput = 0;
     return (
       <Container>
@@ -121,9 +129,9 @@ class ChatRoom extends Component {
           <ScrollView>
             <Content style={{ flex: 1, height: "100%" }}>
               <Text style={{ color: "#fff", textAlignVertical: "center", textAlign: "center", fontSize: 12 }}>Today 4.35 PM</Text>
-              {this.state.chatMessage.map((i, e) =>
-                i.selfMessage ? (
-                  <View key="i">
+              {messages.map((i, e) =>
+                i.from !== my_socket_id ? (
+                  <View key={e}>
                     <List>
                       <ListItem avatar>
                         <Left>
@@ -131,26 +139,26 @@ class ChatRoom extends Component {
                         </Left>
                         <Body style={{ borderBottomWidth: 0 }}>
                           <Text note style={commonStyle.chatTextStyle}>
-                            {i.message}
+                            {i.msg}
                           </Text>
                           <Text note style={commonStyle.timeTextStyle}>
-                            3 minute ago
+                            {i.time}
                           </Text>
                         </Body>
                       </ListItem>
                     </List>
                   </View>
                 ) : (
-                  <View key="i">
+                  <View key={e}>
                     <List>
                       <ListItem avatar>
                         <Body style={{ borderBottomWidth: 0 }}>
                           <Right style={{ position: "absolute", right: 15 }}>
                             <Text note style={commonStyle.chatTextStyle}>
-                              {i.message}
+                              {i.msg}
                             </Text>
                             <Text note style={commonStyle.timeTextStyle}>
-                              3 minute ago
+                              {i.time}
                             </Text>
                           </Right>
                         </Body>
@@ -170,11 +178,11 @@ class ChatRoom extends Component {
               // keyboardVerticalOffset={verticalScale(123)}
               contentContainerStyle={styles.chatAvoidingViewStyle}
             >
-              <View style={styles.chatViewStyle}>
+              {/* <View style={styles.chatViewStyle}>
                 {messages.map((item, index) => (
                   <MessageText key={index}>{item}</MessageText>
                 ))}
-              </View>
+              </View> */}
               <View style={styles.messageViewStyle}>
                 <TextInput
                   placeholder="Enter your Message"
@@ -190,12 +198,7 @@ class ChatRoom extends Component {
                     heightOfInput = event.nativeEvent.contentSize.height;
                   }}
                 />
-                <TouchableOpacity
-                  style={commonStyle.buttonStyle}
-                  onPress={() => {
-                    this.handleSend();
-                  }}
-                >
+                <TouchableOpacity style={commonStyle.buttonStyle} onPress={this.handleSend}>
                   <Text style={commonStyle.buttonTextStyle}>Send</Text>
                 </TouchableOpacity>
               </View>

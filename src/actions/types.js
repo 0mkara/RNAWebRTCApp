@@ -22,6 +22,7 @@ export const SAVE_ROOM_INFO = 'SAVE_ROOM_INFO';
 export const SET_CHATID = 'SET_CHATID';
 export const BROADCAST_OFFER = 'BROADCAST_OFFER';
 export const SET_OFFER_REQUEST = "SET_OFFER_REQUEST";
+export const DELETE_OFFER_REQUEST = "DELETE_OFFER_REQUEST";
 
 // Login action
 export const LOGIN = 'login';

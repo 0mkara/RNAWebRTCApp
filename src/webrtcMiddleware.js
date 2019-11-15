@@ -1,17 +1,8 @@
 // @flow
-import {
-  WEBTRC_EXCHANGE,
-  CREATE_OFFER,
-  EXCHANGE,
-  SEND_MESSAGE,
-  BROADCAST_OFFER
-} from "./actions/types";
+import { WEBTRC_EXCHANGE, CREATE_OFFER, EXCHANGE, SEND_MESSAGE, BROADCAST_OFFER } from "./actions/types";
 import { incommingMessage, datachannelOpened } from "./actions";
-import {
-  RTCPeerConnection,
-  RTCSessionDescription,
-  RTCIceCandidate
-} from "react-native-webrtc";
+import { RTCPeerConnection, RTCSessionDescription, RTCIceCandidate } from "react-native-webrtc";
+import moment from "moment";
 
 const webrtcMiddleware = (function() {
   let socketId = null;
@@ -71,9 +62,10 @@ const webrtcMiddleware = (function() {
     dataChannel.onclose = function() {
       console.log("dataChannel.onclose");
     };
-    dataChannel.onmessage = function(event) {
-      console.log("dataChannel.onmessage [incomming message]:", event.data);
-      store.dispatch(incommingMessage(action.payload.from, event.data));
+    dataChannel.onmessage = function(data) {
+      console.log("dataChannel.onmessage [incomming message]:", data.data);
+      // store.dispatch(incommingMessage(action.payload.from, event.data));
+      store.dispatch(incommingMessage(JSON.parse(data.data)));
     };
     dataChannel.onerror = function(error) {
       console.log("dataChannel.onerror", error);
@@ -88,27 +80,25 @@ const webrtcMiddleware = (function() {
     }
     if (data.sdp) {
       console.log("exchange sdp", data);
-      peerconn
-        .setRemoteDescription(new RTCSessionDescription(data.sdp))
-        .then(() => {
-          if (peerconn.remoteDescription.type === "offer") {
-            peerconn.createAnswer(offerOpts).then(desc => {
-              peerconn
-                .setLocalDescription(desc)
-                .then(() => {
-                  store.dispatch({
-                    type: EXCHANGE,
-                    payload: {
-                      to: data.from,
-                      from: data.to,
-                      sdp: peerconn.localDescription
-                    }
-                  });
-                })
-                .catch(err => console.error("exchange sdp error : ", err));
-            });
-          }
-        });
+      peerconn.setRemoteDescription(new RTCSessionDescription(data.sdp)).then(() => {
+        if (peerconn.remoteDescription.type === "offer") {
+          peerconn.createAnswer(offerOpts).then(desc => {
+            peerconn
+              .setLocalDescription(desc)
+              .then(() => {
+                store.dispatch({
+                  type: EXCHANGE,
+                  payload: {
+                    to: data.from,
+                    from: data.to,
+                    sdp: peerconn.localDescription
+                  }
+                });
+              })
+              .catch(err => console.error("exchange sdp error : ", err));
+          });
+        }
+      });
     } else {
       console.log("exchange candidate");
       peerconn.addIceCandidate(new RTCIceCandidate(data.candidate));
@@ -135,6 +125,8 @@ const webrtcMiddleware = (function() {
 
       receiveChannel.onmessage = data => {
         console.log("Message Recieved ", data, data.data);
+
+        store.dispatch(incommingMessage(JSON.parse(data.data)));
       };
       if (!peerconn.textDataChannel) {
         peerconn.textDataChannel = receiveChannel;
